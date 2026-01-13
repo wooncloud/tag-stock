@@ -11,6 +11,7 @@ import {
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { ThemeToggle } from '@/components/theme-toggle'
+import { signOut } from '@/app/actions/auth'
 
 interface DashboardHeaderProps {
   userEmail: string
@@ -25,6 +26,10 @@ export function DashboardHeader({
   creditsRemaining,
   plan,
 }: DashboardHeaderProps) {
+  const handleSignOut = async () => {
+    await signOut()
+  }
+
   return (
     <header className="border-b bg-background">
       <div className="flex h-16 items-center justify-between px-6">
@@ -58,12 +63,11 @@ export function DashboardHeader({
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <form action="/api/auth/signout" method="POST">
-                  <button type="submit" className="w-full text-left">
-                    로그아웃
-                  </button>
-                </form>
+              <DropdownMenuItem
+                className="text-destructive focus:text-destructive cursor-pointer"
+                onSelect={handleSignOut}
+              >
+                로그아웃
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
