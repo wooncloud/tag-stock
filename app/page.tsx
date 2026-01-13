@@ -3,6 +3,12 @@ import { Footer } from '@/components/layout/footer'
 import { OAuthButtonsWrapper } from '@/components/auth/oauth-buttons-wrapper'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Check, Sparkles, Zap, FileImage, Globe } from 'lucide-react'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: "AI Stock Photo Tagging & Metadata Generator",
+  description: "The complete tagging solution for Adobe Stock and Shutterstock. Perfect IPTC metadata, titles, and descriptions in seconds.",
+}
 
 export default function Home() {
   return (
