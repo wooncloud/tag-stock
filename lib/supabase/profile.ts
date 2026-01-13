@@ -1,6 +1,7 @@
 import { SupabaseClient } from '@supabase/supabase-js'
+import { cache } from 'react'
 
-export async function getProfile(supabase: SupabaseClient, userId: string, email: string) {
+export const getProfile = cache(async (supabase: SupabaseClient, userId: string, email: string) => {
     let { data: profile, error } = await supabase
         .from('profiles')
         .select('*')
@@ -34,4 +35,4 @@ export async function getProfile(supabase: SupabaseClient, userId: string, email
     }
 
     return profile
-}
+})
