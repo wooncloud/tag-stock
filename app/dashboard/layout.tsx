@@ -4,6 +4,8 @@ import { redirect } from 'next/navigation'
 import { Sidebar } from '@/components/layout/sidebar'
 import { DashboardHeader } from '@/components/dashboard/dashboard-header'
 
+import { getProfile } from '@/lib/supabase/profile'
+
 export default async function DashboardLayout({
   children,
 }: {
@@ -20,11 +22,7 @@ export default async function DashboardLayout({
     redirect('/')
   }
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', user.id)
-    .single()
+  const profile = await getProfile(supabase, user.id, user.email!)
 
   const userInitial = user.email?.charAt(0).toUpperCase() || 'U'
 
@@ -40,7 +38,7 @@ export default async function DashboardLayout({
           plan={profile?.plan || 'free'}
         />
 
-        {/* Main Content */}
+        {/* 메인 콘텐츠 */}
         <main className="flex-1 overflow-auto bg-muted/40 p-6">
           {children}
         </main>

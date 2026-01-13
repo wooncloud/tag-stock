@@ -24,6 +24,6 @@ export async function GET(request: Request) {
     }
   }
 
-  // return the user to an error page with instructions
+  // 사용자를 지침이 포함된 에러 페이지로 리다이렉트합니다.
   return NextResponse.redirect(`${origin}/auth/auth-code-error`)
 }

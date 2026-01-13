@@ -25,27 +25,12 @@ export function Footer() {
                   가격
                 </Link>
               </li>
-              <li>
-                <Link href="#faq" className="text-muted-foreground hover:underline">
-                  FAQ
-                </Link>
-              </li>
             </ul>
           </div>
 
           <div>
             <h4 className="font-semibold mb-4">회사</h4>
             <ul className="space-y-2 text-sm">
-              <li>
-                <Link href="/about" className="text-muted-foreground hover:underline">
-                  소개
-                </Link>
-              </li>
-              <li>
-                <Link href="/blog" className="text-muted-foreground hover:underline">
-                  블로그
-                </Link>
-              </li>
               <li>
                 <Link href="/contact" className="text-muted-foreground hover:underline">
                   문의

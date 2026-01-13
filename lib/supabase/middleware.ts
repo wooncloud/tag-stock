@@ -5,7 +5,7 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY
 
 export const updateSession = async (request: NextRequest) => {
-  // Create an unmodified response
+  // 수정되지 않은 응답 생성
   let supabaseResponse = NextResponse.next({
     request: {
       headers: request.headers,
@@ -33,9 +33,8 @@ export const updateSession = async (request: NextRequest) => {
     }
   )
 
-  // IMPORTANT: Avoid writing any logic between createServerClient and
-  // supabase.auth.getUser(). A simple mistake could make it very hard to debug
-  // issues with users being randomly logged out.
+  // 중요: createServerClient와 supabase.auth.getUser() 사이에 어떠한 로직도 작성하지 마세요.
+  // 사소한 실수가 사용자가 무작위로 로그아웃되는 문제를 디버깅하기 매우 어렵게 만들 수 있습니다.
 
   const {
     data: { user },
@@ -46,7 +45,7 @@ export const updateSession = async (request: NextRequest) => {
     !request.nextUrl.pathname.startsWith('/auth') &&
     request.nextUrl.pathname.startsWith('/dashboard')
   ) {
-    // no user, potentially respond by redirecting the user to the login page
+    // 사용자가 없는 경우, 로그인 페이지로 리다이렉트하여 응답할 수 있습니다.
     const url = request.nextUrl.clone()
     url.pathname = '/'
     return NextResponse.redirect(url)

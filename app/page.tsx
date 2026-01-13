@@ -9,7 +9,7 @@ export default function Home() {
     <div className="flex min-h-screen flex-col">
       <Header />
 
-      {/* Hero Section */}
+      {/* 히어로 섹션 */}
       <section className="flex-1">
         <div className="container mx-auto px-4 py-24 lg:py-32">
           <div className="grid gap-12 lg:grid-cols-2 lg:gap-8 items-center">
@@ -24,29 +24,12 @@ export default function Home() {
                 </p>
               </div>
 
-              <div className="flex flex-col gap-4">
-                <OAuthButtonsWrapper />
-                <p className="text-sm text-muted-foreground text-center">
-                  회원가입하고 무료로 10 크레딧을 받으세요 🎉
-                </p>
-              </div>
-            </div>
-
-            <div className="relative lg:ml-auto">
-              <div className="relative aspect-square rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 p-8">
-                <div className="flex h-full items-center justify-center text-white">
-                  <div className="text-center space-y-4">
-                    <Sparkles className="h-24 w-24 mx-auto" />
-                    <p className="text-2xl font-bold">AI 자동 태깅</p>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
+      {/* 기능 섹션 */}
       <section id="features" className="border-t bg-muted/50">
         <div className="container mx-auto px-4 py-24">
           <div className="text-center mb-12">
@@ -102,7 +85,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Pricing Section */}
+      {/* 요금제 섹션 */}
       <section id="pricing" className="border-t">
         <div className="container mx-auto px-4 py-24">
           <div className="text-center mb-12">
@@ -115,7 +98,7 @@ export default function Home() {
           </div>
 
           <div className="grid gap-8 md:grid-cols-2 max-w-4xl mx-auto">
-            {/* Free Plan */}
+            {/* 무료 플랜 */}
             <Card>
               <CardHeader>
                 <CardTitle className="text-2xl">Free</CardTitle>
@@ -147,7 +130,7 @@ export default function Home() {
               </CardContent>
             </Card>
 
-            {/* Pro Plan */}
+            {/* 프로 플랜 */}
             <Card className="border-purple-600 border-2 relative">
               <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                 <span className="bg-purple-600 text-white text-sm font-semibold px-3 py-1 rounded-full">
@@ -158,7 +141,7 @@ export default function Home() {
                 <CardTitle className="text-2xl">Pro</CardTitle>
                 <CardDescription>전문가를 위한</CardDescription>
                 <div className="mt-4">
-                  <span className="text-4xl font-bold">$19</span>
+                  <span className="text-4xl font-bold">$5</span>
                   <span className="text-muted-foreground">/월</span>
                 </div>
               </CardHeader>
@@ -195,7 +178,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* CTA 섹션 */}
       <section className="border-t bg-gradient-to-br from-purple-600 to-pink-600">
         <div className="container mx-auto px-4 py-24 text-center text-white">
           <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl mb-4">

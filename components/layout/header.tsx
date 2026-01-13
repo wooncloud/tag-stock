@@ -19,15 +19,12 @@ export function Header() {
           <Link href="#pricing" className="text-sm font-medium hover:underline">
             가격
           </Link>
-          <Link href="#faq" className="text-sm font-medium hover:underline">
-            FAQ
-          </Link>
         </nav>
 
         <div className="flex items-center space-x-2">
           <ThemeToggle />
           <Button variant="ghost" asChild>
-            <Link href="/">로그인</Link>
+            <Link href="/login">로그인</Link>
           </Button>
         </div>
       </div>

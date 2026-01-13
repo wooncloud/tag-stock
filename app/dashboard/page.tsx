@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { Upload, Image as ImageIcon, Sparkles } from 'lucide-react'
 
+import { getProfile } from '@/lib/supabase/profile'
+
 export default async function DashboardPage() {
   const cookieStore = await cookies()
   const supabase = createClient(cookieStore)
@@ -18,11 +20,7 @@ export default async function DashboardPage() {
     return null
   }
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', user.id)
-    .single()
+  const profile = await getProfile(supabase, user.id, user.email!)
 
   const { data: images, count } = await supabase
     .from('images')
@@ -42,7 +40,7 @@ export default async function DashboardPage() {
         </p>
       </div>
 
-      {/* Stats Cards */}
+      {/* 통계 카드 */}
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -86,7 +84,7 @@ export default async function DashboardPage() {
         </Card>
       </div>
 
-      {/* Recent Images or Empty State */}
+      {/* 최근 이미지 또는 빈 상태 */}
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
@@ -126,23 +124,22 @@ export default async function DashboardPage() {
                   </div>
                   <div>
                     <span
-                      className={`text-xs px-2 py-1 rounded-full ${
-                        image.status === 'completed'
-                          ? 'bg-green-100 text-green-700'
-                          : image.status === 'processing'
+                      className={`text-xs px-2 py-1 rounded-full ${image.status === 'completed'
+                        ? 'bg-green-100 text-green-700'
+                        : image.status === 'processing'
                           ? 'bg-blue-100 text-blue-700'
                           : image.status === 'failed'
-                          ? 'bg-red-100 text-red-700'
-                          : 'bg-gray-100 text-gray-700'
-                      }`}
+                            ? 'bg-red-100 text-red-700'
+                            : 'bg-gray-100 text-gray-700'
+                        }`}
                     >
                       {image.status === 'completed'
                         ? '완료'
                         : image.status === 'processing'
-                        ? '처리 중'
-                        : image.status === 'failed'
-                        ? '실패'
-                        : '대기 중'}
+                          ? '처리 중'
+                          : image.status === 'failed'
+                            ? '실패'
+                            : '대기 중'}
                     </span>
                   </div>
                 </div>
@@ -154,7 +151,7 @@ export default async function DashboardPage() {
         </CardContent>
       </Card>
 
-      {/* Quick Actions */}
+      {/* 빠른 작업 */}
       {!hasImages && (
         <Card>
           <CardHeader>

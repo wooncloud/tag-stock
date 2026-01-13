@@ -5,9 +5,9 @@ import nextTs from "eslint-config-next/typescript";
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
-  // Override default ignores of eslint-config-next.
+  // eslint-config-next의 기본 무시 항목을 재정의합니다.
   globalIgnores([
-    // Default ignores of eslint-config-next:
+    // eslint-config-next의 기본 무시 항목:
     ".next/**",
     "out/**",
     "build/**",

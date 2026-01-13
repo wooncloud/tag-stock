@@ -34,11 +34,11 @@ npm install
 `.env.local` 파일을 생성하고 다음 변수를 설정하세요:
 
 ```bash
-# Supabase Configuration
+# Supabase 설정
 NEXT_PUBLIC_SUPABASE_URL=your-project-url.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 
-# App Configuration
+# 앱 설정
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
