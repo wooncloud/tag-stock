@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { ThemeToggle } from '@/components/theme-toggle'
 
 export function Header() {
   return (
@@ -23,7 +24,8 @@ export function Header() {
           </Link>
         </nav>
 
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-2">
+          <ThemeToggle />
           <Button variant="ghost" asChild>
             <Link href="/">로그인</Link>
           </Button>
