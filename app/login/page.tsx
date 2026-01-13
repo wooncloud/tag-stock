@@ -3,6 +3,7 @@ import { Footer } from '@/components/layout/footer';
 import { OAuthButtonsWrapper } from '@/components/auth/oauth-buttons-wrapper';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Sparkles } from 'lucide-react';
+import Link from 'next/link';
 
 export default function LoginPage() {
   return (
@@ -31,13 +32,13 @@ export default function LoginPage() {
             <div className="mt-6 text-center text-sm text-muted-foreground">
               <p>
                 By signing in, you agree to our{' '}
-                <a href="#" className="underline hover:text-primary">
+                <Link href="/terms" className="underline hover:text-primary">
                   Terms of Service
-                </a>{' '}
+                </Link>{' '}
                 and{' '}
-                <a href="#" className="underline hover:text-primary">
+                <Link href="/privacy" className="underline hover:text-primary">
                   Privacy Policy
-                </a>
+                </Link>
               </p>
             </div>
           </CardContent>
