@@ -81,36 +81,6 @@ export default async function UploadPage() {
           <UploadWorkflow disabled={isOutOfCredits} />
         </CardContent>
       </Card>
-
-      {/* 주요 기능 안내 */}
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">AI-Powered Tagging</CardTitle>
-          </CardHeader>
-          <CardContent className="text-sm text-muted-foreground">
-            Generate SEO-optimized keywords and descriptions using Google Gemini 3.0 Flash
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Stock Photo Standards</CardTitle>
-          </CardHeader>
-          <CardContent className="text-sm text-muted-foreground">
-            Metadata optimized for Adobe Stock and Shutterstock requirements
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">IPTC Embedding</CardTitle>
-          </CardHeader>
-          <CardContent className="text-sm text-muted-foreground">
-            Pro users can embed metadata directly into image files (IPTC/XMP)
-          </CardContent>
-        </Card>
-      </div>
     </div>
   );
 }
