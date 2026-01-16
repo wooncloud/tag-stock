@@ -4,9 +4,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { EmptyState } from '@/components/dashboard/empty-state'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import { Upload, Image as ImageIcon, Sparkles } from 'lucide-react'
+import { CreditCard, Image as ImageIcon, Sparkles, Upload } from 'lucide-react'
 
 import { getProfile } from '@/lib/supabase/profile'
+import { getDisplayName } from '@/lib/utils'
 
 export default async function DashboardPage() {
   const cookieStore = await cookies()
@@ -29,7 +30,25 @@ export default async function DashboardPage() {
     .order('created_at', { ascending: false })
     .limit(5)
 
-  const hasImages = images && images.length > 0
+  // 이미지용 Signed URL 생성
+  let imagesWithUrls = images || []
+  if (images && images.length > 0) {
+    const { data: signedUrls } = await supabase.storage
+      .from('user-images')
+      .createSignedUrls(
+        images.map((img) => img.storage_path),
+        3600
+      )
+
+    if (signedUrls) {
+      imagesWithUrls = images.map((img, index) => ({
+        ...img,
+        url: signedUrls[index]?.signedUrl,
+      }))
+    }
+  }
+
+  const hasImages = imagesWithUrls && imagesWithUrls.length > 0
 
   return (
     <div className="space-y-6">
@@ -71,7 +90,7 @@ export default async function DashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">플랜</CardTitle>
-            <Upload className="h-4 w-4 text-muted-foreground" />
+            <CreditCard className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
@@ -104,18 +123,26 @@ export default async function DashboardPage() {
         <CardContent>
           {hasImages ? (
             <div className="space-y-4">
-              {images.map((image) => (
+              {imagesWithUrls.map((image) => (
                 <div
                   key={image.id}
                   className="flex items-center justify-between border-b pb-4 last:border-0"
                 >
                   <div className="flex items-center space-x-4">
-                    <div className="h-12 w-12 rounded bg-muted flex items-center justify-center">
-                      <ImageIcon className="h-6 w-6 text-muted-foreground" />
+                    <div className="h-12 w-12 rounded bg-muted flex items-center justify-center overflow-hidden border">
+                      {image.url ? (
+                        <img
+                          src={image.url}
+                          alt={image.original_filename}
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <ImageIcon className="h-6 w-6 text-muted-foreground" />
+                      )}
                     </div>
                     <div>
                       <p className="text-sm font-medium">
-                        {image.storage_path.split('/').pop()}
+                        {getDisplayName(image.original_filename)}
                       </p>
                       <p className="text-xs text-muted-foreground">
                         {new Date(image.created_at).toLocaleDateString('ko-KR')}

@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { ImageGallery } from '@/components/dashboard/image-gallery';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -31,7 +31,25 @@ export default async function ImagesPage() {
     .eq('user_id', user.id)
     .order('created_at', { ascending: false });
 
-  const hasImages = images && images.length > 0;
+  // 이미지용 Signed URL 생성
+  let imagesWithUrls = images || [];
+  if (images && images.length > 0) {
+    const { data: signedUrls } = await supabase.storage
+      .from('user-images')
+      .createSignedUrls(
+        images.map((img) => img.storage_path),
+        3600
+      );
+
+    if (signedUrls) {
+      imagesWithUrls = images.map((img, index) => ({
+        ...img,
+        url: signedUrls[index]?.signedUrl,
+      }));
+    }
+  }
+
+  const hasImages = imagesWithUrls && imagesWithUrls.length > 0;
 
   return (
     <div className="space-y-6">
@@ -51,7 +69,7 @@ export default async function ImagesPage() {
       </div>
 
       {hasImages ? (
-        <ImageGallery images={images} isPro={profile?.plan === 'pro'} />
+        <ImageGallery images={imagesWithUrls as any[]} isPro={profile?.plan === 'pro'} />
       ) : (
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-16">

@@ -26,18 +26,21 @@ import {
   FileDown,
   Copy,
   Check,
+  Image as ImageIcon,
 } from 'lucide-react';
 import { deleteImage } from '@/app/actions/upload';
 import { regenerateMetadata } from '@/app/actions/ai';
 import { embedMetadataIntoImage, downloadImage } from '@/app/actions/embed';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import { getDisplayName } from '@/lib/utils';
 
 interface ImageWithMetadata {
   id: string;
   storage_path: string;
   original_filename: string;
   status: string;
+  url?: string;
   created_at: string;
   metadata: Array<{
     id: string;
@@ -146,9 +149,18 @@ export function ImageGallery({ images, isPro }: ImageGalleryProps) {
             <Card key={image.id} className="overflow-hidden group">
               <div className="aspect-video bg-muted relative">
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-muted-foreground">
-                    Image Preview (Storage URL)
-                  </div>
+                  {image.url ? (
+                    <img
+                      src={image.url}
+                      alt={image.original_filename}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="text-muted-foreground flex flex-col items-center gap-2">
+                      <ImageIcon className="h-8 w-8 opacity-20" />
+                      <span className="text-xs">No Preview</span>
+                    </div>
+                  )}
                 </div>
 
                 <div className="absolute top-2 left-2">
@@ -214,7 +226,9 @@ export function ImageGallery({ images, isPro }: ImageGalleryProps) {
               </div>
 
               <div className="p-4 space-y-2">
-                <h3 className="font-medium truncate">{image.original_filename}</h3>
+                <h3 className="font-medium truncate" title={image.original_filename}>
+                  {getDisplayName(image.original_filename)}
+                </h3>
 
                 {metadata && (
                   <>
@@ -253,143 +267,169 @@ export function ImageGallery({ images, isPro }: ImageGalleryProps) {
       <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
         <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>{selectedImage?.original_filename}</DialogTitle>
+            <DialogTitle>{selectedImage ? getDisplayName(selectedImage.original_filename) : ''}</DialogTitle>
             <DialogDescription>Image metadata and details</DialogDescription>
           </DialogHeader>
 
-          {selectedImage?.metadata?.[0] && (
-            <div className="space-y-4">
-              {/* 제목 */}
-              <div>
-                <div className="flex items-center justify-between mb-1">
-                  <label className="text-sm font-medium">Title</label>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() =>
-                      copyToClipboard(selectedImage.metadata[0].title, 'title')
-                    }
-                  >
-                    {copiedField === 'title' ? (
-                      <Check className="h-4 w-4" />
-                    ) : (
-                      <Copy className="h-4 w-4" />
-                    )}
-                  </Button>
-                </div>
-                <p className="text-sm p-2 bg-muted rounded">
-                  {selectedImage.metadata[0].title}
-                </p>
+          {selectedImage && (
+            <div className="space-y-6">
+              {/* 이미지 프리뷰 추가 */}
+              <div className="aspect-video w-full bg-muted rounded-lg overflow-hidden border">
+                {selectedImage.url ? (
+                  <img
+                    src={selectedImage.url}
+                    alt={selectedImage.original_filename}
+                    className="w-full h-full object-contain"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                    No preview available
+                  </div>
+                )}
               </div>
 
-              {/* 설명 */}
-              <div>
-                <div className="flex items-center justify-between mb-1">
-                  <label className="text-sm font-medium">Description</label>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() =>
-                      copyToClipboard(selectedImage.metadata[0].description, 'description')
-                    }
-                  >
-                    {copiedField === 'description' ? (
-                      <Check className="h-4 w-4" />
-                    ) : (
-                      <Copy className="h-4 w-4" />
-                    )}
-                  </Button>
-                </div>
-                <p className="text-sm p-2 bg-muted rounded">
-                  {selectedImage.metadata[0].description}
-                </p>
-              </div>
+              {selectedImage.metadata?.[0] ? (
+                <div className="space-y-4">
+                  {/* 제목 */}
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="text-sm font-medium">Title</label>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() =>
+                          copyToClipboard(selectedImage.metadata[0].title, 'title')
+                        }
+                      >
+                        {copiedField === 'title' ? (
+                          <Check className="h-4 w-4" />
+                        ) : (
+                          <Copy className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </div>
+                    <p className="text-sm p-2 bg-muted rounded">
+                      {selectedImage.metadata[0].title}
+                    </p>
+                  </div>
 
-              {/* 카테고리 */}
-              <div>
-                <label className="text-sm font-medium">Category</label>
-                <p className="text-sm p-2 bg-muted rounded mt-1">
-                  {selectedImage.metadata[0].category}
-                </p>
-              </div>
+                  {/* 설명 */}
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="text-sm font-medium">Description</label>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() =>
+                          copyToClipboard(selectedImage.metadata[0].description, 'description')
+                        }
+                      >
+                        {copiedField === 'description' ? (
+                          <Check className="h-4 w-4" />
+                        ) : (
+                          <Copy className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </div>
+                    <p className="text-sm p-2 bg-muted rounded">
+                      {selectedImage.metadata[0].description}
+                    </p>
+                  </div>
 
-              {/* 키워드 */}
-              <div>
-                <div className="flex items-center justify-between mb-1">
-                  <label className="text-sm font-medium">
-                    Keywords ({selectedImage.metadata[0].keywords?.length || 0})
-                  </label>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() =>
-                      copyToClipboard(
-                        selectedImage.metadata[0].keywords?.join(', ') || '',
-                        'keywords'
-                      )
-                    }
-                  >
-                    {copiedField === 'keywords' ? (
-                      <Check className="h-4 w-4" />
-                    ) : (
-                      <Copy className="h-4 w-4" />
-                    )}
-                  </Button>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {selectedImage.metadata[0].keywords?.map((keyword, i) => (
-                    <Badge key={i} variant="outline">
-                      {keyword}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
+                  {/* 카테고리 */}
+                  <div>
+                    <label className="text-sm font-medium">Category</label>
+                    <p className="text-sm p-2 bg-muted rounded mt-1">
+                      {selectedImage.metadata[0].category}
+                    </p>
+                  </div>
 
-              {/* 태그 */}
-              <div>
-                <div className="flex items-center justify-between mb-1">
-                  <label className="text-sm font-medium">
-                    Tags ({selectedImage.metadata[0].tags?.length || 0})
-                  </label>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() =>
-                      copyToClipboard(
-                        selectedImage.metadata[0].tags?.join(', ') || '',
-                        'tags'
-                      )
-                    }
-                  >
-                    {copiedField === 'tags' ? (
-                      <Check className="h-4 w-4" />
-                    ) : (
-                      <Copy className="h-4 w-4" />
-                    )}
-                  </Button>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {selectedImage.metadata[0].tags?.map((tag, i) => (
-                    <Badge key={i} variant="secondary">
-                      {tag}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
+                  {/* 키워드 */}
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="text-sm font-medium">
+                        Keywords ({selectedImage.metadata[0].keywords?.length || 0})
+                      </label>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() =>
+                          copyToClipboard(
+                            selectedImage.metadata[0].keywords?.join(', ') || '',
+                            'keywords'
+                          )
+                        }
+                      >
+                        {copiedField === 'keywords' ? (
+                          <Check className="h-4 w-4" />
+                        ) : (
+                          <Copy className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedImage.metadata[0].keywords?.map((keyword, i) => (
+                        <Badge key={i} variant="outline">
+                          {keyword}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
 
-              {/* 메타데이터 상태 */}
-              <div className="pt-4 border-t">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">
-                    Metadata embedded in file:
-                  </span>
-                  <Badge variant={selectedImage.metadata[0].embedded ? 'default' : 'secondary'}>
-                    {selectedImage.metadata[0].embedded ? 'Yes' : 'No'}
-                  </Badge>
+                  {/* 태그 */}
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="text-sm font-medium">
+                        Tags ({selectedImage.metadata[0].tags?.length || 0})
+                      </label>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() =>
+                          copyToClipboard(
+                            selectedImage.metadata[0].tags?.join(', ') || '',
+                            'tags'
+                          )
+                        }
+                      >
+                        {copiedField === 'tags' ? (
+                          <Check className="h-4 w-4" />
+                        ) : (
+                          <Copy className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedImage.metadata[0].tags?.map((tag, i) => (
+                        <Badge key={i} variant="secondary">
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* 메타데이터 상태 */}
+                  <div className="pt-4 border-t">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-muted-foreground">
+                        Metadata embedded in file:
+                      </span>
+                      <Badge variant={selectedImage.metadata[0].embedded ? 'default' : 'secondary'}>
+                        {selectedImage.metadata[0].embedded ? 'Yes' : 'No'}
+                      </Badge>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <div className="text-center py-8 text-muted-foreground bg-muted/30 rounded-lg border border-dashed">
+                  <RefreshCw className="h-8 w-8 mx-auto mb-2 opacity-20 animate-spin" />
+                  <p className="text-sm">AI is analyzing your image or no metadata found...</p>
+                  <p className="text-xs mt-1 text-muted-foreground">Please wait a few seconds and refresh.</p>
+                </div>
+              )}
             </div>
           )}
+
         </DialogContent>
       </Dialog>
     </>
