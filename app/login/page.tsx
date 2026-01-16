@@ -19,7 +19,7 @@ export default function LoginPage() {
               </div>
             </div>
             <div>
-              <CardTitle className="text-2xl">Welcome to TagStock.ai</CardTitle>
+              <CardTitle className="text-2xl">Welcome to TagStock</CardTitle>
               <CardDescription className="mt-2">
                 Sign in to start generating AI-powered metadata for your stock photos
               </CardDescription>

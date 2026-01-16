@@ -6,7 +6,7 @@ export function Footer() {
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <h3 className="font-bold text-lg mb-4">TagStock.ai</h3>
+            <h3 className="font-bold text-lg mb-4">TagStock</h3>
             <p className="text-sm text-muted-foreground">
               AI로 스톡 사진 메타데이터를 자동 생성하세요
             </p>
@@ -57,7 +57,7 @@ export function Footer() {
         </div>
 
         <div className="mt-8 pt-8 border-t text-center text-sm text-muted-foreground">
-          <p>&copy; {new Date().getFullYear()} TagStock.ai. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} TagStock. All rights reserved.</p>
         </div>
       </div>
     </footer>

@@ -4,8 +4,8 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 export const metadata: Metadata = {
-    title: '개인정보처리방침 | TagStock.ai',
-    description: 'TagStock.ai의 개인정보 수집 및 처리 방침을 확인하세요.',
+    title: '개인정보처리방침 | TagStock',
+    description: 'TagStock의 개인정보 수집 및 처리 방침을 확인하세요.',
 }
 
 export default function PrivacyPage() {
@@ -23,9 +23,9 @@ export default function PrivacyPage() {
                 {/* Content */}
                 <Card className="max-w-4xl mx-auto">
                     <CardHeader>
-                        <CardTitle>TagStock.ai 개인정보처리방침</CardTitle>
+                        <CardTitle>TagStock 개인정보처리방침</CardTitle>
                         <CardDescription>
-                            TagStock.ai(이하 "회사")는 정보통신망 이용촉진 및 정보보호 등에 관한 법률, 개인정보보호법 등 관련 법령을 준수하며, 이용자의 개인정보를 보호하고 관련된 고충을 신속하게 처리하기 위하여 다음과 같이 개인정보처리방침을 수립·공개합니다.
+                            TagStock(이하 "회사")는 정보통신망 이용촉진 및 정보보호 등에 관한 법률, 개인정보보호법 등 관련 법령을 준수하며, 이용자의 개인정보를 보호하고 관련된 고충을 신속하게 처리하기 위하여 다음과 같이 개인정보처리방침을 수립·공개합니다.
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="prose prose-sm max-w-none dark:prose-invert">
@@ -269,7 +269,7 @@ export default function PrivacyPage() {
                                     <ul className="space-y-1 text-muted-foreground">
                                         <li>성명: 김태그</li>
                                         <li>직책: 개인정보보호팀장</li>
-                                        <li>이메일: privacy@tagstock.ai</li>
+                                        <li>이메일: privacy@tagstock</li>
                                         <li>전화: 02-1234-5678</li>
                                     </ul>
                                 </div>

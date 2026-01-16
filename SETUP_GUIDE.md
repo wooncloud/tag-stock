@@ -1,4 +1,4 @@
-# TagStock.ai 설정 가이드
+# TagStock 설정 가이드
 
 Phase 2 구현을 위한 전체 설정 가이드입니다.
 

@@ -1,9 +1,9 @@
 
-# 🚀 Updated Prompt for Claude: Build TagStock.ai
+# 🚀 Updated Prompt for Claude: Build TagStock
 
 ## Context
 
-**Project Name:** TagStock.ai (GitHub: `tag-stock`)
+**Project Name:** TagStock (GitHub: `tag-stock`)
 
 **Target Audience:** Global Stock Photographers (Adobe Stock, Shutterstock)
 

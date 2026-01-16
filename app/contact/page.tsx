@@ -8,8 +8,8 @@ import { Textarea } from '@/components/ui/textarea'
 import { Mail, MessageSquare, Phone } from 'lucide-react'
 
 export const metadata: Metadata = {
-    title: '문의 | TagStock.ai',
-    description: 'TagStock.ai에 대한 문의사항을 남겨주세요. 빠른 시일 내에 답변드리겠습니다.',
+    title: '문의 | TagStock',
+    description: 'TagStock에 대한 문의사항을 남겨주세요. 빠른 시일 내에 답변드리겠습니다.',
 }
 
 export default function ContactPage() {
@@ -98,7 +98,7 @@ export default function ContactPage() {
                                     </div>
                                     <div>
                                         <h3 className="font-semibold mb-1">이메일</h3>
-                                        <p className="text-sm text-muted-foreground">support@tagstock.ai</p>
+                                        <p className="text-sm text-muted-foreground">support@tagstock</p>
                                         <p className="text-sm text-muted-foreground">평일 09:00 - 18:00</p>
                                     </div>
                                 </div>

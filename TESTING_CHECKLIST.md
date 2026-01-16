@@ -1,4 +1,4 @@
-# TagStock.ai 테스트 체크리스트
+# TagStock 테스트 체크리스트
 
 Phase 2 MVP를 위한 종합 테스트 체크리스트입니다.
 

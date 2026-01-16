@@ -15,23 +15,23 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "TagStock.ai - AI-Powered Stock Photo Metadata Generator",
-    template: "%s | TagStock.ai",
+    default: "TagStock - AI-Powered Stock Photo Metadata Generator",
+    template: "%s | TagStock",
   },
   description: "Automatically generate SEO-optimized keywords, titles, and descriptions for your stock photos using Google Gemini AI. Perfect for Adobe Stock and Shutterstock creators.",
   keywords: ["stock photo", "AI tagging", "metadata generator", "IPTC embedding", "stock photography tools", "Adobe Stock", "Shutterstock"],
-  authors: [{ name: "TagStock.ai Team" }],
+  authors: [{ name: "TagStock Team" }],
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://tagstock.ai",
-    title: "TagStock.ai - AI-Powered Stock Photo Metadata Generator",
+    url: "https://tagstock",
+    title: "TagStock - AI-Powered Stock Photo Metadata Generator",
     description: "Save hours of manual tagging. Let AI generate perfect metadata for your stock photos.",
-    siteName: "TagStock.ai",
+    siteName: "TagStock",
   },
   twitter: {
     card: "summary_large_image",
-    title: "TagStock.ai - AI-Powered Stock Photo Metadata Generator",
+    title: "TagStock - AI-Powered Stock Photo Metadata Generator",
     description: "Automatically generate SEO-optimized keywords and meta for stock photos.",
   },
 };

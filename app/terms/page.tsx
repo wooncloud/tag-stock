@@ -4,8 +4,8 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 export const metadata: Metadata = {
-    title: '이용약관 | TagStock.ai',
-    description: 'TagStock.ai 서비스 이용약관을 확인하세요.',
+    title: '이용약관 | TagStock',
+    description: 'TagStock 서비스 이용약관을 확인하세요.',
 }
 
 export default function TermsPage() {
@@ -23,9 +23,9 @@ export default function TermsPage() {
                 {/* Content */}
                 <Card className="max-w-4xl mx-auto">
                     <CardHeader>
-                        <CardTitle>TagStock.ai 서비스 이용약관</CardTitle>
+                        <CardTitle>TagStock 서비스 이용약관</CardTitle>
                         <CardDescription>
-                            본 약관은 TagStock.ai가 제공하는 서비스의 이용 조건 및 절차, 권리와 의무 등을 규정합니다.
+                            본 약관은 TagStock가 제공하는 서비스의 이용 조건 및 절차, 권리와 의무 등을 규정합니다.
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="prose prose-sm max-w-none dark:prose-invert">
@@ -33,7 +33,7 @@ export default function TermsPage() {
                             <div>
                                 <h2 className="text-2xl font-semibold mb-4">제1조 (목적)</h2>
                                 <p className="text-muted-foreground leading-relaxed">
-                                    본 약관은 TagStock.ai(이하 "회사")가 제공하는 AI 기반 스톡 사진 메타데이터 생성 서비스(이하 "서비스")의 이용과 관련하여 회사와 이용자 간의 권리, 의무 및 책임사항, 기타 필요한 사항을 규정함을 목적으로 합니다.
+                                    본 약관은 TagStock(이하 "회사")가 제공하는 AI 기반 스톡 사진 메타데이터 생성 서비스(이하 "서비스")의 이용과 관련하여 회사와 이용자 간의 권리, 의무 및 책임사항, 기타 필요한 사항을 규정함을 목적으로 합니다.
                                 </p>
                             </div>
 

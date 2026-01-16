@@ -46,7 +46,7 @@ export function Sidebar() {
     <div className="pb-12 w-64 border-r bg-muted/40">
       <div className="space-y-4 py-4">
         <div className="px-3 py-2">
-          <h2 className="mb-2 px-4 text-lg font-semibold">TagStock.ai</h2>
+          <h2 className="mb-2 px-4 text-lg font-semibold">TagStock</h2>
           <div className="space-y-1">
             {sidebarItems.map((item) => (
               <Link

@@ -157,7 +157,7 @@ export default async function DashboardPage() {
           <CardHeader>
             <CardTitle>빠른 시작</CardTitle>
             <CardDescription>
-              TagStock.ai로 첫 걸음을 시작하세요
+              TagStock로 첫 걸음을 시작하세요
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4 md:grid-cols-2">

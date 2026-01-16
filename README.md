@@ -1,4 +1,4 @@
-# TagStock.ai
+# TagStock
 
 AI 기반 스톡 사진 메타데이터 자동 생성 도구
 
