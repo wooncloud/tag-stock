@@ -1,13 +1,14 @@
 'use server';
 
-import { createClient } from '@/lib/supabase/server';
-import {
-  getOrCreateStripeCustomer,
-  createCheckoutSession,
-  createBillingPortalSession,
-} from '@/lib/stripe';
-import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+
+import {
+  createBillingPortalSession,
+  createCheckoutSession,
+  getOrCreateStripeCustomer,
+} from '@/lib/stripe';
+import { createClient } from '@/lib/supabase/server';
 
 export async function createSubscriptionCheckout(priceId: string) {
   try {

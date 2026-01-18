@@ -1,38 +1,50 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
+import type { Metadata } from 'next';
+import { Geist, Geist_Mono } from 'next/font/google';
+
+import { ThemeProvider } from '@/components/theme-provider';
+
+import './globals.css';
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+  variable: '--font-geist-sans',
+  subsets: ['latin'],
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
 });
 
 export const metadata: Metadata = {
   title: {
-    default: "TagStock - AI-Powered Stock Photo Metadata Generator",
-    template: "%s | TagStock",
+    default: 'TagStock - AI-Powered Stock Photo Metadata Generator',
+    template: '%s | TagStock',
   },
-  description: "Automatically generate SEO-optimized keywords, titles, and descriptions for your stock photos using Google Gemini AI. Perfect for Adobe Stock and Shutterstock creators.",
-  keywords: ["stock photo", "AI tagging", "metadata generator", "IPTC embedding", "stock photography tools", "Adobe Stock", "Shutterstock"],
-  authors: [{ name: "TagStock Team" }],
+  description:
+    'Automatically generate SEO-optimized keywords, titles, and descriptions for your stock photos using Google Gemini AI. Perfect for Adobe Stock and Shutterstock creators.',
+  keywords: [
+    'stock photo',
+    'AI tagging',
+    'metadata generator',
+    'IPTC embedding',
+    'stock photography tools',
+    'Adobe Stock',
+    'Shutterstock',
+  ],
+  authors: [{ name: 'TagStock Team' }],
   openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: "https://tagstock",
-    title: "TagStock - AI-Powered Stock Photo Metadata Generator",
-    description: "Save hours of manual tagging. Let AI generate perfect metadata for your stock photos.",
-    siteName: "TagStock",
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://tagstock',
+    title: 'TagStock - AI-Powered Stock Photo Metadata Generator',
+    description:
+      'Save hours of manual tagging. Let AI generate perfect metadata for your stock photos.',
+    siteName: 'TagStock',
   },
   twitter: {
-    card: "summary_large_image",
-    title: "TagStock - AI-Powered Stock Photo Metadata Generator",
-    description: "Automatically generate SEO-optimized keywords and meta for stock photos.",
+    card: 'summary_large_image',
+    title: 'TagStock - AI-Powered Stock Photo Metadata Generator',
+    description: 'Automatically generate SEO-optimized keywords and meta for stock photos.',
   },
 };
 
@@ -43,9 +55,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

@@ -32,10 +32,7 @@ export const STRIPE_CONFIG = {
 /**
  * 사용자를 위한 Stripe 고객 정보를 생성하거나 조회합니다.
  */
-export async function getOrCreateStripeCustomer(
-  userId: string,
-  email: string
-): Promise<string> {
+export async function getOrCreateStripeCustomer(userId: string, email: string): Promise<string> {
   const { createClient } = await import('@/lib/supabase/server');
   const { cookies } = await import('next/headers');
   const cookieStore = await cookies();
@@ -61,10 +58,7 @@ export async function getOrCreateStripeCustomer(
   });
 
   // 프로필을 고객 ID로 업데이트합니다.
-  await supabase
-    .from('profiles')
-    .update({ stripe_customer_id: customer.id })
-    .eq('id', userId);
+  await supabase.from('profiles').update({ stripe_customer_id: customer.id }).eq('id', userId);
 
   return customer.id;
 }
@@ -122,9 +116,7 @@ export async function cancelSubscription(subscriptionId: string): Promise<Stripe
 /**
  * 구독 상세 정보를 가져옵니다.
  */
-export async function getSubscription(
-  subscriptionId: string
-): Promise<Stripe.Subscription | null> {
+export async function getSubscription(subscriptionId: string): Promise<Stripe.Subscription | null> {
   try {
     const subscription = await stripe.subscriptions.retrieve(subscriptionId);
     return subscription;

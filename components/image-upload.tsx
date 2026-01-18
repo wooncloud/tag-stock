@@ -1,11 +1,14 @@
 'use client';
 
-import { useState, useCallback } from 'react';
-import { useDropzone } from 'react-dropzone';
-import { Upload, X, Image as ImageIcon, Loader2 } from 'lucide-react';
+import { useCallback, useState } from 'react';
+
+import Image from 'next/image';
+
+import { Image as ImageIcon, Loader2, Upload, X } from 'lucide-react';
+import { type FileRejection, useDropzone } from 'react-dropzone';
+
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { toast } from 'sonner';
 
 interface UploadedFile {
   file: File;
@@ -36,38 +39,41 @@ export function ImageUpload({
   const [files, setFiles] = useState<UploadedFile[]>([]);
   const [isUploading, setIsUploading] = useState(false);
 
-  const onDrop = useCallback((acceptedFiles: File[], rejectedFiles: any[]) => {
-    // 거부된 파일 처리
-    if (rejectedFiles.length > 0) {
-      rejectedFiles.forEach(({ file, errors }) => {
-        errors.forEach((error: any) => {
-          if (error.code === 'file-too-large') {
-            toast.error(`${file.name} is too large. Max size is ${maxSize}MB`);
-          } else if (error.code === 'file-invalid-type') {
-            toast.error(`${file.name} is not a supported format`);
-          } else {
-            toast.error(`Error with ${file.name}: ${error.message}`);
-          }
+  const onDrop = useCallback(
+    (acceptedFiles: File[], rejectedFiles: FileRejection[]) => {
+      // 거부된 파일 처리
+      if (rejectedFiles.length > 0) {
+        rejectedFiles.forEach(({ file, errors }) => {
+          errors.forEach((error) => {
+            if (error.code === 'file-too-large') {
+              alert(`${file.name} is too large. Max size is ${maxSize}MB`);
+            } else if (error.code === 'file-invalid-type') {
+              alert(`${file.name} is not a supported format`);
+            } else {
+              alert(`Error with ${file.name}: ${error.message}`);
+            }
+          });
         });
-      });
-    }
-
-    // 허용된 파일 추가
-    const newFiles: UploadedFile[] = acceptedFiles.map((file) => ({
-      file,
-      preview: URL.createObjectURL(file),
-      id: Math.random().toString(36).substr(2, 9),
-    }));
-
-    setFiles((prev) => {
-      const combined = [...prev, ...newFiles];
-      if (combined.length > maxFiles) {
-        toast.error(`Maximum ${maxFiles} files allowed`);
-        return prev;
       }
-      return combined;
-    });
-  }, [maxFiles, maxSize]);
+
+      // 허용된 파일 추가
+      const newFiles: UploadedFile[] = acceptedFiles.map((file) => ({
+        file,
+        preview: URL.createObjectURL(file),
+        id: Math.random().toString(36).substr(2, 9),
+      }));
+
+      setFiles((prev) => {
+        const combined = [...prev, ...newFiles];
+        if (combined.length > maxFiles) {
+          alert(`Maximum ${maxFiles} files allowed`);
+          return prev;
+        }
+        return combined;
+      });
+    },
+    [maxFiles, maxSize]
+  );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -89,7 +95,7 @@ export function ImageUpload({
 
   const handleUpload = async () => {
     if (files.length === 0) {
-      toast.error('Please select at least one image');
+      alert('Please select at least one image');
       return;
     }
 
@@ -101,10 +107,10 @@ export function ImageUpload({
       files.forEach((f) => URL.revokeObjectURL(f.preview));
       setFiles([]);
 
-      toast.success('Images uploaded successfully!');
+      alert('Images uploaded successfully!');
     } catch (error) {
       console.error('Upload error:', error);
-      toast.error('Failed to upload images. Please try again.');
+      alert('Failed to upload images. Please try again.');
     } finally {
       setIsUploading(false);
     }
@@ -115,7 +121,7 @@ export function ImageUpload({
     const k = 1024;
     const sizes = ['Bytes', 'KB', 'MB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
   };
 
   return (
@@ -123,16 +129,12 @@ export function ImageUpload({
       {/* 드롭 존 영역 */}
       <Card
         {...getRootProps()}
-        className={`
-          border-2 border-dashed p-8 transition-all cursor-pointer
-          ${isDragActive ? 'border-primary bg-primary/5' : 'border-muted-foreground/25'}
-          ${disabled || isUploading ? 'opacity-50 cursor-not-allowed' : 'hover:border-primary hover:bg-primary/5'}
-        `}
+        className={`cursor-pointer border-2 border-dashed p-8 transition-all ${isDragActive ? 'border-primary bg-primary/5' : 'border-muted-foreground/25'} ${disabled || isUploading ? 'cursor-not-allowed opacity-50' : 'hover:border-primary hover:bg-primary/5'} `}
       >
         <input {...getInputProps()} />
-        <div className="flex flex-col items-center justify-center text-center space-y-4">
-          <div className="p-4 rounded-full bg-primary/10">
-            <Upload className="h-8 w-8 text-primary" />
+        <div className="flex flex-col items-center justify-center space-y-4 text-center">
+          <div className="bg-primary/10 rounded-full p-4">
+            <Upload className="text-primary h-8 w-8" />
           </div>
 
           <div className="space-y-2">
@@ -141,12 +143,10 @@ export function ImageUpload({
                 ? 'Drop your images here'
                 : 'Drag & drop images here, or click to select'}
             </p>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               Supports JPEG, PNG, WebP, TIFF (max {maxSize}MB per file)
             </p>
-            <p className="text-xs text-muted-foreground">
-              Up to {maxFiles} files at once
-            </p>
+            <p className="text-muted-foreground text-xs">Up to {maxFiles} files at once</p>
           </div>
         </div>
       </Card>
@@ -155,12 +155,11 @@ export function ImageUpload({
       {files.length > 0 && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-medium">
-              Selected Files ({files.length})
-            </h3>
+            <h3 className="text-sm font-medium">Selected Files ({files.length})</h3>
             <Button
               variant="outline"
               size="sm"
+              className="cursor-pointer"
               onClick={() => {
                 files.forEach((f) => URL.revokeObjectURL(f.preview));
                 setFiles([]);
@@ -171,20 +170,22 @@ export function ImageUpload({
             </Button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {files.map((uploadedFile) => (
-              <Card key={uploadedFile.id} className="relative overflow-hidden group">
-                <div className="aspect-video relative bg-muted">
-                  <img
+              <Card key={uploadedFile.id} className="group relative overflow-hidden">
+                <div className="bg-muted relative aspect-video">
+                  <Image
                     src={uploadedFile.preview}
                     alt={uploadedFile.file.name}
-                    className="object-cover w-full h-full"
+                    fill
+                    className="object-cover"
+                    unoptimized
                   />
 
                   <Button
                     variant="destructive"
                     size="icon"
-                    className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                    className="absolute top-2 right-2 opacity-0 transition-opacity group-hover:opacity-100"
                     onClick={() => removeFile(uploadedFile.id)}
                     disabled={isUploading}
                   >
@@ -192,11 +193,9 @@ export function ImageUpload({
                   </Button>
                 </div>
 
-                <div className="p-3 space-y-1">
-                  <p className="text-sm font-medium truncate">
-                    {uploadedFile.file.name}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
+                <div className="space-y-1 p-3">
+                  <p className="truncate text-sm font-medium">{uploadedFile.file.name}</p>
+                  <p className="text-muted-foreground text-xs">
                     {formatFileSize(uploadedFile.file.size)}
                   </p>
                 </div>
@@ -207,7 +206,7 @@ export function ImageUpload({
           <Button
             onClick={handleUpload}
             disabled={isUploading || files.length === 0}
-            className="w-full"
+            className="w-full cursor-pointer"
             size="lg"
           >
             {isUploading ? (

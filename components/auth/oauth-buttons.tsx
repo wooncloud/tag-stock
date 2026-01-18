@@ -1,10 +1,11 @@
-'use client'
+'use client';
 
-import { Button } from '@/components/ui/button'
-import { createClient } from '@/lib/supabase/client'
+import { createClient } from '@/lib/supabase/client';
+
+import { Button } from '@/components/ui/button';
 
 export function OAuthButtons() {
-  const supabase = createClient()
+  const supabase = createClient();
 
   const handleGoogleLogin = async () => {
     await supabase.auth.signInWithOAuth({
@@ -12,8 +13,8 @@ export function OAuthButtons() {
       options: {
         redirectTo: `${location.origin}/auth/callback`,
       },
-    })
-  }
+    });
+  };
 
   const handleAppleLogin = async () => {
     await supabase.auth.signInWithOAuth({
@@ -21,8 +22,8 @@ export function OAuthButtons() {
       options: {
         redirectTo: `${location.origin}/auth/callback`,
       },
-    })
-  }
+    });
+  };
 
   const handleTwitterLogin = async () => {
     await supabase.auth.signInWithOAuth({
@@ -30,15 +31,15 @@ export function OAuthButtons() {
       options: {
         redirectTo: `${location.origin}/auth/callback`,
       },
-    })
-  }
+    });
+  };
 
   return (
-    <div className="flex flex-col gap-3 w-full max-w-sm">
+    <div className="flex w-full max-w-sm flex-col gap-3">
       <Button
         onClick={handleGoogleLogin}
         variant="outline"
-        className="w-full text-foreground hover:bg-accent"
+        className="text-foreground hover:bg-accent w-full"
         size="lg"
       >
         <svg className="mr-2 h-5 w-5" viewBox="0 0 24 24">
@@ -65,7 +66,7 @@ export function OAuthButtons() {
       <Button
         onClick={handleAppleLogin}
         variant="outline"
-        className="w-full text-foreground hover:bg-accent"
+        className="text-foreground hover:bg-accent w-full"
         size="lg"
       >
         <svg className="mr-2 h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
@@ -77,7 +78,7 @@ export function OAuthButtons() {
       <Button
         onClick={handleTwitterLogin}
         variant="outline"
-        className="w-full text-foreground hover:bg-accent"
+        className="text-foreground hover:bg-accent w-full"
         size="lg"
       >
         <svg className="mr-2 h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
@@ -86,5 +87,5 @@ export function OAuthButtons() {
         Continue with X
       </Button>
     </div>
-  )
+  );
 }

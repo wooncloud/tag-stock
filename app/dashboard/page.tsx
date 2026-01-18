@@ -1,121 +1,117 @@
-import { createClient } from '@/lib/supabase/server'
-import { cookies } from 'next/headers'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { EmptyState } from '@/components/dashboard/empty-state'
-import { Button } from '@/components/ui/button'
-import Link from 'next/link'
-import { CreditCard, Image as ImageIcon, Sparkles, Upload } from 'lucide-react'
+import { cookies } from 'next/headers';
+import Image from 'next/image';
+import Link from 'next/link';
 
-import { getProfile } from '@/lib/supabase/profile'
-import { getDisplayName } from '@/lib/utils'
+import { CreditCard, Image as ImageIcon, Sparkles, Upload } from 'lucide-react';
+
+import { getProfile } from '@/lib/supabase/profile';
+import { createClient } from '@/lib/supabase/server';
+import { getDisplayName } from '@/lib/utils';
+
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+
+import { EmptyState } from '@/components/dashboard/shared/empty-state';
 
 export default async function DashboardPage() {
-  const cookieStore = await cookies()
-  const supabase = createClient(cookieStore)
+  const cookieStore = await cookies();
+  const supabase = createClient(cookieStore);
 
   const {
     data: { user },
-  } = await supabase.auth.getUser()
+  } = await supabase.auth.getUser();
 
   if (!user) {
-    return null
+    return null;
   }
 
-  const profile = await getProfile(supabase, user.id, user.email!)
+  const profile = await getProfile(supabase, user.id, user.email!);
 
   const { data: images, count } = await supabase
     .from('images')
     .select('*', { count: 'exact' })
     .eq('user_id', user.id)
     .order('created_at', { ascending: false })
-    .limit(5)
+    .limit(5);
 
-  // 이미지용 Signed URL 생성
-  let imagesWithUrls = images || []
+  // Generate Signed URLs for images
+  let imagesWithUrls = images || [];
   if (images && images.length > 0) {
-    const { data: signedUrls } = await supabase.storage
-      .from('user-images')
-      .createSignedUrls(
-        images.map((img) => img.storage_path),
-        3600
-      )
+    const { data: signedUrls } = await supabase.storage.from('user-images').createSignedUrls(
+      images.map((img) => img.storage_path),
+      3600
+    );
 
     if (signedUrls) {
       imagesWithUrls = images.map((img, index) => ({
         ...img,
         url: signedUrls[index]?.signedUrl,
-      }))
+      }));
     }
   }
 
-  const hasImages = imagesWithUrls && imagesWithUrls.length > 0
+  const hasImages = imagesWithUrls && imagesWithUrls.length > 0;
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">안녕하세요! 👋</h1>
+        <h1 className="text-3xl font-bold">Hello! 👋</h1>
         <p className="text-muted-foreground mt-1">
-          AI로 스톡 사진 메타데이터를 자동 생성하세요
+          Automatically generate stock photo metadata with AI
         </p>
       </div>
 
-      {/* 통계 카드 */}
+      {/* Stats Cards */}
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">남은 크레딧</CardTitle>
-            <Sparkles className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Credits Remaining</CardTitle>
+            <Sparkles className="text-muted-foreground h-4 w-4" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{profile?.credits_remaining || 0}</div>
-            <p className="text-xs text-muted-foreground">
-              {profile?.plan === 'pro' ? '무제한' : '이번 달'}
+            <p className="text-muted-foreground text-xs">
+              {profile?.plan === 'pro' ? 'Unlimited' : 'This Month'}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">총 이미지</CardTitle>
-            <ImageIcon className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Total Images</CardTitle>
+            <ImageIcon className="text-muted-foreground h-4 w-4" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{count || 0}</div>
-            <p className="text-xs text-muted-foreground">
-              전체 업로드된 이미지
-            </p>
+            <p className="text-muted-foreground text-xs">Total uploaded images</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">플랜</CardTitle>
-            <CreditCard className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Plan</CardTitle>
+            <CreditCard className="text-muted-foreground h-4 w-4" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {profile?.plan === 'pro' ? 'Pro' : 'Free'}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              {profile?.plan === 'pro' ? '무제한 크레딧' : '10 크레딧/월'}
+            <div className="text-2xl font-bold">{profile?.plan === 'pro' ? 'Pro' : 'Free'}</div>
+            <p className="text-muted-foreground text-xs">
+              {profile?.plan === 'pro' ? 'Unlimited Credits' : '10 Credits/Month'}
             </p>
           </CardContent>
         </Card>
       </div>
 
-      {/* 최근 이미지 또는 빈 상태 */}
+      {/* Recent Images or Empty State */}
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>최근 이미지</CardTitle>
-              <CardDescription>
-                최근에 업로드한 이미지 목록
-              </CardDescription>
+              <CardTitle>Recent Images</CardTitle>
+              <CardDescription>List of recently uploaded images</CardDescription>
             </div>
             {hasImages && (
               <Button asChild>
-                <Link href="/dashboard/images">전체 보기</Link>
+                <Link href="/dashboard/images">View All</Link>
               </Button>
             )}
           </div>
@@ -129,44 +125,46 @@ export default async function DashboardPage() {
                   className="flex items-center justify-between border-b pb-4 last:border-0"
                 >
                   <div className="flex items-center space-x-4">
-                    <div className="h-12 w-12 rounded bg-muted flex items-center justify-center overflow-hidden border">
+                    <div className="bg-muted relative flex h-12 w-12 items-center justify-center overflow-hidden rounded border">
                       {image.url ? (
-                        <img
+                        <Image
                           src={image.url}
                           alt={image.original_filename}
-                          className="h-full w-full object-cover"
+                          fill
+                          className="object-cover"
                         />
                       ) : (
-                        <ImageIcon className="h-6 w-6 text-muted-foreground" />
+                        <ImageIcon className="text-muted-foreground h-6 w-6" />
                       )}
                     </div>
                     <div>
                       <p className="text-sm font-medium">
                         {getDisplayName(image.original_filename)}
                       </p>
-                      <p className="text-xs text-muted-foreground">
-                        {new Date(image.created_at).toLocaleDateString('ko-KR')}
+                      <p className="text-muted-foreground text-xs">
+                        {new Date(image.created_at).toLocaleDateString()}
                       </p>
                     </div>
                   </div>
                   <div>
                     <span
-                      className={`text-xs px-2 py-1 rounded-full ${image.status === 'completed'
-                        ? 'bg-green-100 text-green-700'
-                        : image.status === 'processing'
-                          ? 'bg-blue-100 text-blue-700'
-                          : image.status === 'failed'
-                            ? 'bg-red-100 text-red-700'
-                            : 'bg-gray-100 text-gray-700'
-                        }`}
+                      className={`rounded-full px-2 py-1 text-xs ${
+                        image.status === 'completed'
+                          ? 'bg-green-100 text-green-700'
+                          : image.status === 'processing'
+                            ? 'bg-blue-100 text-blue-700'
+                            : image.status === 'failed'
+                              ? 'bg-red-100 text-red-700'
+                              : 'bg-gray-100 text-gray-700'
+                      }`}
                     >
                       {image.status === 'completed'
-                        ? '완료'
+                        ? 'Completed'
                         : image.status === 'processing'
-                          ? '처리 중'
+                          ? 'Processing'
                           : image.status === 'failed'
-                            ? '실패'
-                            : '대기 중'}
+                            ? 'Failed'
+                            : 'Pending'}
                     </span>
                   </div>
                 </div>
@@ -178,32 +176,30 @@ export default async function DashboardPage() {
         </CardContent>
       </Card>
 
-      {/* 빠른 작업 */}
+      {/* Quick Actions */}
       {!hasImages && (
         <Card>
           <CardHeader>
-            <CardTitle>빠른 시작</CardTitle>
-            <CardDescription>
-              TagStock로 첫 걸음을 시작하세요
-            </CardDescription>
+            <CardTitle>Quick Start</CardTitle>
+            <CardDescription>Take your first step with TagStock</CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4 md:grid-cols-2">
             <Button asChild variant="outline" className="h-auto p-6">
               <Link href="/dashboard/upload" className="flex flex-col items-center gap-2">
                 <Upload className="h-8 w-8" />
-                <span className="font-semibold">이미지 업로드</span>
-                <span className="text-xs text-muted-foreground text-center">
-                  첫 이미지를 업로드하고 AI 태깅을 시작하세요
+                <span className="font-semibold">Upload Image</span>
+                <span className="text-muted-foreground text-center text-xs">
+                  Upload your first image and start AI tagging
                 </span>
               </Link>
             </Button>
 
             <Button asChild variant="outline" className="h-auto p-6">
-              <Link href="/dashboard/plan" className="flex flex-col items-center gap-2">
+              <Link href="/dashboard/pricing" className="flex flex-col items-center gap-2">
                 <Sparkles className="h-8 w-8" />
-                <span className="font-semibold">Pro로 업그레이드</span>
-                <span className="text-xs text-muted-foreground text-center">
-                  무제한 크레딧과 IPTC 메타데이터 임베딩
+                <span className="font-semibold">Upgrade to Pro</span>
+                <span className="text-muted-foreground text-center text-xs">
+                  Unlimited credits and IPTC metadata embedding
                 </span>
               </Link>
             </Button>
@@ -211,5 +207,5 @@ export default async function DashboardPage() {
         </Card>
       )}
     </div>
-  )
+  );
 }

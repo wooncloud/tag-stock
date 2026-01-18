@@ -1,36 +1,33 @@
-import { createClient } from '@/lib/supabase/server'
-import { cookies } from 'next/headers'
-import { redirect } from 'next/navigation'
-import { Sidebar } from '@/components/layout/sidebar'
-import { DashboardHeader } from '@/components/dashboard/dashboard-header'
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
-import { getProfile } from '@/lib/supabase/profile'
+import { getProfile } from '@/lib/supabase/profile';
+import { createClient } from '@/lib/supabase/server';
 
-export default async function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
-  const cookieStore = await cookies()
-  const supabase = createClient(cookieStore)
+import { DashboardHeader } from '@/components/dashboard/layout/header';
+import { Sidebar } from '@/components/layout/sidebar';
+
+export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const cookieStore = await cookies();
+  const supabase = createClient(cookieStore);
 
   const {
     data: { user },
-  } = await supabase.auth.getUser()
+  } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect('/')
+    redirect('/');
   }
 
-  const profile = await getProfile(supabase, user.id, user.email!)
+  const profile = await getProfile(supabase, user.id, user.email!);
 
-  const userInitial = user.email?.charAt(0).toUpperCase() || 'U'
+  const userInitial = user.email?.charAt(0).toUpperCase() || 'U';
 
   return (
     <div className="flex min-h-screen">
       <Sidebar />
 
-      <div className="flex-1 flex flex-col">
+      <div className="flex flex-1 flex-col">
         <DashboardHeader
           userEmail={user.email || ''}
           userInitial={userInitial}
@@ -39,10 +36,8 @@ export default async function DashboardLayout({
         />
 
         {/* 메인 콘텐츠 */}
-        <main className="flex-1 overflow-auto bg-muted/40 p-6">
-          {children}
-        </main>
+        <main className="bg-muted/40 flex-1 overflow-auto p-6">{children}</main>
       </div>
     </div>
-  )
+  );
 }

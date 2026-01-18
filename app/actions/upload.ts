@@ -1,9 +1,11 @@
 'use server';
 
-import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
-import sharp from 'sharp';
 import { cookies } from 'next/headers';
+
+import sharp from 'sharp';
+
+import { createClient } from '@/lib/supabase/server';
 
 interface UploadResult {
   success: boolean;
@@ -47,7 +49,14 @@ export async function uploadImage(formData: FormData): Promise<UploadResult> {
     }
 
     // 파일을 검증합니다.
-    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/tiff', 'image/tif'];
+    const validTypes = [
+      'image/jpeg',
+      'image/jpg',
+      'image/png',
+      'image/webp',
+      'image/tiff',
+      'image/tif',
+    ];
     if (!validTypes.includes(file.type)) {
       return { success: false, error: 'Invalid file type' };
     }
@@ -101,7 +110,7 @@ export async function uploadImage(formData: FormData): Promise<UploadResult> {
         mime_type: file.type,
         width,
         height,
-        status: 'processing',
+        status: 'uploading',
       })
       .select()
       .single();
@@ -171,10 +180,7 @@ export async function deleteImage(imageId: string): Promise<{ success: boolean; 
     }
 
     // 데이터베이스에서 삭제합니다. (연쇄 삭제로 메타데이터도 삭제됨)
-    const { error: deleteError } = await supabase
-      .from('images')
-      .delete()
-      .eq('id', imageId);
+    const { error: deleteError } = await supabase.from('images').delete().eq('id', imageId);
 
     if (deleteError) {
       return { success: false, error: 'Failed to delete image' };

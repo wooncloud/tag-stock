@@ -1,12 +1,18 @@
-import { createClient } from '@/lib/supabase/server';
-import { redirect } from 'next/navigation';
-import { Card, CardContent } from '@/components/ui/card';
-import { ImageGallery } from '@/components/dashboard/image-gallery';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
-import { Upload, Image as ImageIcon } from 'lucide-react';
 import { cookies } from 'next/headers';
+import Link from 'next/link';
+import { redirect } from 'next/navigation';
+
+import { Image as ImageIcon, Upload } from 'lucide-react';
+
+import { ImageWithMetadata } from '@/types/image';
+
 import { getProfile } from '@/lib/supabase/profile';
+import { createClient } from '@/lib/supabase/server';
+
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+
+import { ImageGallery } from '@/components/dashboard/image-gallery';
 
 export default async function ImagesPage() {
   const cookieStore = await cookies();
@@ -24,22 +30,22 @@ export default async function ImagesPage() {
 
   const { data: images } = await supabase
     .from('images')
-    .select(`
+    .select(
+      `
       *,
       metadata (*)
-    `)
+    `
+    )
     .eq('user_id', user.id)
     .order('created_at', { ascending: false });
 
   // 이미지용 Signed URL 생성
   let imagesWithUrls = images || [];
   if (images && images.length > 0) {
-    const { data: signedUrls } = await supabase.storage
-      .from('user-images')
-      .createSignedUrls(
-        images.map((img) => img.storage_path),
-        3600
-      );
+    const { data: signedUrls } = await supabase.storage.from('user-images').createSignedUrls(
+      images.map((img) => img.storage_path),
+      3600
+    );
 
     if (signedUrls) {
       imagesWithUrls = images.map((img, index) => ({
@@ -69,15 +75,18 @@ export default async function ImagesPage() {
       </div>
 
       {hasImages ? (
-        <ImageGallery images={imagesWithUrls as any[]} isPro={profile?.plan === 'pro'} />
+        <ImageGallery
+          images={imagesWithUrls as ImageWithMetadata[]}
+          isPro={profile?.plan === 'pro'}
+        />
       ) : (
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-16">
-            <div className="rounded-full bg-muted p-4 mb-4">
-              <ImageIcon className="h-8 w-8 text-muted-foreground" />
+            <div className="bg-muted mb-4 rounded-full p-4">
+              <ImageIcon className="text-muted-foreground h-8 w-8" />
             </div>
-            <h3 className="text-lg font-semibold mb-2">No images yet</h3>
-            <p className="text-muted-foreground text-center mb-6 max-w-sm">
+            <h3 className="mb-2 text-lg font-semibold">No images yet</h3>
+            <p className="text-muted-foreground mb-6 max-w-sm text-center">
               Upload your first image to get started with AI-powered metadata generation
             </p>
             <Button asChild>

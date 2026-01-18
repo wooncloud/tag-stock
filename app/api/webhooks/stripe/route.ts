@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { stripe } from '@/lib/stripe';
+
 import { createClient } from '@supabase/supabase-js';
 import Stripe from 'stripe';
+
+import { stripe } from '@/lib/stripe';
 
 // 웹훅 핸들러에는 서비스 역할 키(Service Role Key)를 사용합니다.
 const supabaseAdmin = createClient(
@@ -25,12 +27,15 @@ async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
     return;
   }
 
-  await supabaseAdmin.from('profiles').update({
-    stripe_subscription_id: subscription.id,
-    subscription_status: subscription.status,
-    plan: 'pro',
-    credits_remaining: 999999, // Pro 플랜은 무제한 전용 수치
-  }).eq('id', userId);
+  await supabaseAdmin
+    .from('profiles')
+    .update({
+      stripe_subscription_id: subscription.id,
+      subscription_status: subscription.status,
+      plan: 'pro',
+      credits_remaining: 999999, // Pro 플랜은 무제한 전용 수치
+    })
+    .eq('id', userId);
 
   console.log(`Subscription created for user ${userId}`);
 }
@@ -51,17 +56,23 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
       return;
     }
 
-    await supabaseAdmin.from('profiles').update({
-      subscription_status: subscription.status,
-      plan: subscription.status === 'active' ? 'pro' : 'free',
-      credits_remaining: subscription.status === 'active' ? 999999 : 10,
-    }).eq('id', profile.id);
+    await supabaseAdmin
+      .from('profiles')
+      .update({
+        subscription_status: subscription.status,
+        plan: subscription.status === 'active' ? 'pro' : 'free',
+        credits_remaining: subscription.status === 'active' ? 999999 : 10,
+      })
+      .eq('id', profile.id);
   } else {
-    await supabaseAdmin.from('profiles').update({
-      subscription_status: subscription.status,
-      plan: subscription.status === 'active' ? 'pro' : 'free',
-      credits_remaining: subscription.status === 'active' ? 999999 : 10,
-    }).eq('id', userId);
+    await supabaseAdmin
+      .from('profiles')
+      .update({
+        subscription_status: subscription.status,
+        plan: subscription.status === 'active' ? 'pro' : 'free',
+        credits_remaining: subscription.status === 'active' ? 999999 : 10,
+      })
+      .eq('id', userId);
   }
 
   console.log(`Subscription updated: ${subscription.id}`);
@@ -80,11 +91,14 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
     return;
   }
 
-  await supabaseAdmin.from('profiles').update({
-    subscription_status: 'canceled',
-    plan: 'free',
-    credits_remaining: 10,
-  }).eq('id', profile.id);
+  await supabaseAdmin
+    .from('profiles')
+    .update({
+      subscription_status: 'canceled',
+      plan: 'free',
+      credits_remaining: 10,
+    })
+    .eq('id', profile.id);
 
   console.log(`Subscription canceled for user ${profile.id}`);
 }
@@ -98,16 +112,17 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   }
 
   if (session.mode === 'subscription' && session.subscription) {
-    const subscription = await stripe.subscriptions.retrieve(
-      session.subscription as string
-    );
+    const subscription = await stripe.subscriptions.retrieve(session.subscription as string);
 
-    await supabaseAdmin.from('profiles').update({
-      stripe_subscription_id: subscription.id,
-      subscription_status: subscription.status,
-      plan: 'pro',
-      credits_remaining: 999999,
-    }).eq('id', userId);
+    await supabaseAdmin
+      .from('profiles')
+      .update({
+        stripe_subscription_id: subscription.id,
+        subscription_status: subscription.status,
+        plan: 'pro',
+        credits_remaining: 999999,
+      })
+      .eq('id', userId);
 
     console.log(`Checkout completed for user ${userId}`);
   }
@@ -124,10 +139,7 @@ export async function POST(request: NextRequest) {
       event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
     } catch (err) {
       console.error('Webhook signature verification failed:', err);
-      return NextResponse.json(
-        { error: 'Webhook signature verification failed' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Webhook signature verification failed' }, { status: 400 });
     }
 
     // 이벤트 처리
@@ -164,9 +176,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ received: true });
   } catch (error) {
     console.error('Webhook error:', error);
-    return NextResponse.json(
-      { error: 'Webhook handler failed' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Webhook handler failed' }, { status: 500 });
   }
 }

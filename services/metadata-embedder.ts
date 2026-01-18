@@ -11,7 +11,7 @@ import { Metadata } from '@/types/database';
 export async function embedMetadata(
   imageBuffer: Buffer,
   metadata: Metadata,
-  originalFilename: string
+  _originalFilename: string
 ): Promise<Buffer> {
   try {
     // Phase 2에서는 원본 버퍼를 반환합니다.

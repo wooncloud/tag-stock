@@ -1,9 +1,11 @@
 'use server';
 
-import { createClient } from '@/lib/supabase/server';
-import { embedMetadata } from '@/services/metadata-embedder';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
+
+import { embedMetadata } from '@/services/metadata-embedder';
+
+import { createClient } from '@/lib/supabase/server';
 
 interface EmbedMetadataResult {
   success: boolean;
@@ -76,17 +78,10 @@ export async function embedMetadataIntoImage(imageId: string): Promise<EmbedMeta
     const originalBuffer = Buffer.from(arrayBuffer);
 
     // 메타데이터를 임베딩합니다.
-    const embeddedBuffer = await embedMetadata(
-      originalBuffer,
-      metadata,
-      image.original_filename
-    );
+    const embeddedBuffer = await embedMetadata(originalBuffer, metadata, image.original_filename);
 
     // 임베딩된 버전을 업로드합니다.
-    const embeddedPath = image.storage_path.replace(
-      /(\.[^.]+)$/,
-      '-embedded$1'
-    );
+    const embeddedPath = image.storage_path.replace(/(\.[^.]+)$/, '-embedded$1');
 
     const { error: uploadError } = await supabase.storage
       .from('user-images')
@@ -101,10 +96,7 @@ export async function embedMetadataIntoImage(imageId: string): Promise<EmbedMeta
     }
 
     // 메타데이터 레코드를 업데이트합니다.
-    await supabase
-      .from('metadata')
-      .update({ embedded: true })
-      .eq('id', metadata.id);
+    await supabase.from('metadata').update({ embedded: true }).eq('id', metadata.id);
 
     // 다운로드를 위한 서명된 URL을 가져옵니다. (1시간 유효)
     const { data: signedUrlData } = await supabase.storage

@@ -1,33 +1,35 @@
-'use client'
+'use client';
 
-import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import { ThemeToggle } from '@/components/theme-toggle'
+import Link from 'next/link';
+
+import { Button } from '@/components/ui/button';
+
+import { ThemeToggle } from '@/components/theme-toggle';
 
 export function Header() {
   return (
     <header className="border-b">
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+      <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Link href="/" className="flex items-center space-x-2">
-          <div className="font-bold text-xl">TagStock</div>
+          <div className="text-xl font-bold">TagStock</div>
         </Link>
 
-        <nav className="hidden md:flex items-center space-x-6">
+        <nav className="hidden items-center space-x-6 md:flex">
           <Link href="#features" className="text-sm font-medium hover:underline">
-            기능
+            Features
           </Link>
           <Link href="#pricing" className="text-sm font-medium hover:underline">
-            가격
+            Pricing
           </Link>
         </nav>
 
         <div className="flex items-center space-x-2">
           <ThemeToggle />
           <Button variant="ghost" asChild>
-            <Link href="/login">로그인</Link>
+            <Link href="/login">Login</Link>
           </Button>
         </div>
       </div>
     </header>
-  )
+  );
 }

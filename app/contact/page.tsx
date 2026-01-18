@@ -1,163 +1,152 @@
-import { Metadata } from 'next'
-import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Mail, MessageSquare, Phone } from 'lucide-react'
+import { Metadata } from 'next';
+import Link from 'next/link';
+
+import { Mail, MessageSquare, Phone } from 'lucide-react';
+
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 
 export const metadata: Metadata = {
-    title: '문의 | TagStock',
-    description: 'TagStock에 대한 문의사항을 남겨주세요. 빠른 시일 내에 답변드리겠습니다.',
-}
+  title: 'Contact | TagStock',
+  description: 'Please leave your inquiries about TagStock. We will respond as soon as possible.',
+};
 
 export default function ContactPage() {
-    return (
-        <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
-            <div className="container mx-auto px-4 py-16">
-                {/* Header */}
-                <div className="text-center mb-12">
-                    <h1 className="text-4xl font-bold mb-4">문의하기</h1>
-                    <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                        궁금한 점이 있으시거나 도움이 필요하신가요?<br />
-                        언제든지 문의해 주세요. 빠르게 답변드리겠습니다.
-                    </p>
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-                    {/* Contact Form */}
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>메시지 보내기</CardTitle>
-                            <CardDescription>
-                                아래 양식을 작성해주시면 빠른 시일 내에 답변드리겠습니다.
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <form className="space-y-4">
-                                <div className="space-y-2">
-                                    <Label htmlFor="name">이름</Label>
-                                    <Input
-                                        id="name"
-                                        placeholder="홍길동"
-                                        required
-                                    />
-                                </div>
-
-                                <div className="space-y-2">
-                                    <Label htmlFor="email">이메일</Label>
-                                    <Input
-                                        id="email"
-                                        type="email"
-                                        placeholder="example@email.com"
-                                        required
-                                    />
-                                </div>
-
-                                <div className="space-y-2">
-                                    <Label htmlFor="subject">제목</Label>
-                                    <Input
-                                        id="subject"
-                                        placeholder="문의 제목을 입력해주세요"
-                                        required
-                                    />
-                                </div>
-
-                                <div className="space-y-2">
-                                    <Label htmlFor="message">메시지</Label>
-                                    <Textarea
-                                        id="message"
-                                        placeholder="문의 내용을 상세히 작성해주세요..."
-                                        rows={6}
-                                        required
-                                    />
-                                </div>
-
-                                <Button type="submit" className="w-full">
-                                    <MessageSquare className="mr-2 h-4 w-4" />
-                                    문의하기
-                                </Button>
-                            </form>
-                        </CardContent>
-                    </Card>
-
-                    {/* Contact Information */}
-                    <div className="space-y-6">
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>연락처 정보</CardTitle>
-                                <CardDescription>
-                                    다양한 방법으로 연락하실 수 있습니다.
-                                </CardDescription>
-                            </CardHeader>
-                            <CardContent className="space-y-4">
-                                <div className="flex items-start space-x-4">
-                                    <div className="bg-primary/10 p-3 rounded-lg">
-                                        <Mail className="h-6 w-6 text-primary" />
-                                    </div>
-                                    <div>
-                                        <h3 className="font-semibold mb-1">이메일</h3>
-                                        <p className="text-sm text-muted-foreground">support@tagstock</p>
-                                        <p className="text-sm text-muted-foreground">평일 09:00 - 18:00</p>
-                                    </div>
-                                </div>
-
-                                <div className="flex items-start space-x-4">
-                                    <div className="bg-primary/10 p-3 rounded-lg">
-                                        <Phone className="h-6 w-6 text-primary" />
-                                    </div>
-                                    <div>
-                                        <h3 className="font-semibold mb-1">전화</h3>
-                                        <p className="text-sm text-muted-foreground">02-1234-5678</p>
-                                        <p className="text-sm text-muted-foreground">평일 09:00 - 18:00 (점심시간 12:00-13:00)</p>
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
-
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>자주 묻는 질문</CardTitle>
-                                <CardDescription>
-                                    문의하기 전에 FAQ를 확인해보세요.
-                                </CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="space-y-4">
-                                    <div>
-                                        <h4 className="font-semibold mb-2">Q. 무료 체험이 가능한가요?</h4>
-                                        <p className="text-sm text-muted-foreground">
-                                            네, 회원가입 시 무료 크레딧이 제공되어 서비스를 체험하실 수 있습니다.
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <h4 className="font-semibold mb-2">Q. 환불 정책은 어떻게 되나요?</h4>
-                                        <p className="text-sm text-muted-foreground">
-                                            사용하지 않은 크레딧은 구매 후 7일 이내 100% 환불 가능합니다.
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <h4 className="font-semibold mb-2">Q. 대량 구매 할인이 있나요?</h4>
-                                        <p className="text-sm text-muted-foreground">
-                                            기업 고객을 위한 별도 할인 플랜이 있습니다. 이메일로 문의해주세요.
-                                        </p>
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </div>
-                </div>
-
-                {/* Back to Home */}
-                <div className="text-center mt-12">
-                    <Link href="/">
-                        <Button variant="ghost">
-                            ← 홈으로 돌아가기
-                        </Button>
-                    </Link>
-                </div>
-            </div>
+  return (
+    <div className="from-background to-muted/20 min-h-screen bg-linear-to-b">
+      <div className="container mx-auto px-4 py-16">
+        {/* Header */}
+        <div className="mb-12 text-center">
+          <h1 className="mb-4 text-4xl font-bold">Contact Us</h1>
+          <p className="text-muted-foreground mx-auto max-w-2xl text-xl">
+            Have any questions or need help?
+            <br />
+            Please feel free to contact us. We will respond quickly.
+          </p>
         </div>
-    )
+
+        <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-2">
+          {/* Contact Form */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Send Message</CardTitle>
+              <CardDescription>
+                Fill out the form below and we will get back to you soon.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="name">Name</Label>
+                  <Input id="name" placeholder="John Doe" required />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Input id="email" type="email" placeholder="example@email.com" required />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="subject">Subject</Label>
+                  <Input id="subject" placeholder="Enter subject" required />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="message">Message</Label>
+                  <Textarea
+                    id="message"
+                    placeholder="Please describe your inquiry in detail..."
+                    rows={6}
+                    required
+                  />
+                </div>
+
+                <Button type="submit" className="w-full cursor-pointer">
+                  <MessageSquare className="mr-2 h-4 w-4" />
+                  Contact Us
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+
+          {/* Contact Information */}
+          <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Contact Information</CardTitle>
+                <CardDescription>You can contact us in several ways.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-start space-x-4">
+                  <div className="bg-primary/10 rounded-lg p-3">
+                    <Mail className="text-primary h-6 w-6" />
+                  </div>
+                  <div>
+                    <h3 className="mb-1 font-semibold">Email</h3>
+                    <p className="text-muted-foreground text-sm">support@tagstock</p>
+                    <p className="text-muted-foreground text-sm">Weekdays 09:00 - 18:00</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start space-x-4">
+                  <div className="bg-primary/10 rounded-lg p-3">
+                    <Phone className="text-primary h-6 w-6" />
+                  </div>
+                  <div>
+                    <h3 className="mb-1 font-semibold">Phone</h3>
+                    <p className="text-muted-foreground text-sm">02-1234-5678</p>
+                    <p className="text-muted-foreground text-sm">
+                      Weekdays 09:00 - 18:00 (Lunch 12:00 - 13:00)
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>FAQ</CardTitle>
+                <CardDescription>Check out our FAQ before contacting us.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div>
+                    <h4 className="mb-2 font-semibold">Q. Is a free trial available?</h4>
+                    <p className="text-muted-foreground text-sm">
+                      Yes, free credits are provided upon signup to experience the service.
+                    </p>
+                  </div>
+                  <div>
+                    <h4 className="mb-2 font-semibold">Q. What is the refund policy?</h4>
+                    <p className="text-muted-foreground text-sm">
+                      Unused credits can be fully refunded within 7 days of purchase.
+                    </p>
+                  </div>
+                  <div>
+                    <h4 className="mb-2 font-semibold">Q. Is there a bulk purchase discount?</h4>
+                    <p className="text-muted-foreground text-sm">
+                      We have separate discount plans for corporate customers. Please contact us via
+                      email.
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        {/* Back to Home */}
+        <div className="mt-12 text-center">
+          <Link href="/">
+            <Button variant="ghost" className="cursor-pointer">
+              ← Back to Home
+            </Button>
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
 }

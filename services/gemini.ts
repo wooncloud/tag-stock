@@ -1,11 +1,12 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
+
 import { AIGeneratedMetadata } from '@/types/database';
 
 // Gemini AI 초기화
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_API_KEY || '');
 
 const model = genAI.getGenerativeModel({
-  model: 'gemini-2.0-flash-exp',
+  model: 'gemini-flash-latest',
 });
 
 /**

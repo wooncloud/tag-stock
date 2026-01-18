@@ -1,16 +1,21 @@
 'use server';
 
-import { createClient } from '@/lib/supabase/server';
-import { generateImageMetadata } from '@/services/gemini';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
+
+import { generateImageMetadata } from '@/services/gemini';
+
+import { createClient } from '@/lib/supabase/server';
 
 interface GenerateMetadataResult {
   success: boolean;
   error?: string;
 }
 
-export async function generateMetadata(imageId: string): Promise<GenerateMetadataResult> {
+export async function generateMetadata(
+  imageId: string,
+  options?: { force?: boolean }
+): Promise<GenerateMetadataResult> {
   try {
     const cookieStore = await cookies();
     const supabase = createClient(cookieStore);
@@ -37,7 +42,14 @@ export async function generateMetadata(imageId: string): Promise<GenerateMetadat
       return { success: false, error: 'Image not found' };
     }
 
-    if (image.status === 'processing') {
+    // 이미 처리가 완료되었거나 진행 중인지 확인합니다.
+    if (image.status === 'completed' && !options?.force) {
+      return { success: true }; // 이미 완료됨
+    }
+
+    if (image.status === 'processing' && !image.error_message) {
+      // 에러 없이 'processing' 상태라면 정말로 작업 중일 가능성이 높음
+      // 하지만 5분이 지났다면 무시하고 재시도할 수 있도록 로직을 추가할 수도 있습니다.
       return { success: false, error: 'Image is already being processed' };
     }
 
@@ -61,8 +73,13 @@ export async function generateMetadata(imageId: string): Promise<GenerateMetadat
       const arrayBuffer = await fileData.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
 
+      console.log(`Starting AI metadata generation for image: ${imageId}`);
       // Gemini AI를 사용하여 메타데이터를 생성합니다.
       const aiMetadata = await generateImageMetadata(buffer, image.mime_type);
+      console.log(`AI metadata generated successfully for: ${imageId}`);
+
+      // 기존 메타데이터가 있다면 삭제합니다 (중복 방지).
+      await supabase.from('metadata').delete().eq('image_id', imageId);
 
       // 데이터베이스에 메타데이터를 저장합니다.
       const { error: metadataError } = await supabase.from('metadata').insert({
@@ -81,12 +98,12 @@ export async function generateMetadata(imageId: string): Promise<GenerateMetadat
       }
 
       // 이미지 상태를 '완료'로 업데이트합니다.
-      await supabase
-        .from('images')
-        .update({ status: 'completed' })
-        .eq('id', imageId);
+      await supabase.from('images').update({ status: 'completed' }).eq('id', imageId);
+
+      console.log(`Image ${imageId} status updated to completed`);
 
       revalidatePath('/dashboard');
+      revalidatePath('/dashboard/images');
       return { success: true };
     } catch (processingError) {
       console.error('Processing error:', processingError);
@@ -125,11 +142,42 @@ export async function regenerateMetadata(imageId: string): Promise<GenerateMetad
       return { success: false, error: 'Unauthorized' };
     }
 
+    // 사용자의 크레딧을 확인합니다.
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('credits_remaining, plan')
+      .eq('id', user.id)
+      .single();
+
+    if (profileError || !profile) {
+      return { success: false, error: 'Profile not found' };
+    }
+
+    if (profile.credits_remaining <= 0 && profile.plan === 'free') {
+      return { success: false, error: 'Insufficient credits. Please upgrade to Pro.' };
+    }
+
     // 기존 메타데이터를 삭제합니다.
     await supabase.from('metadata').delete().eq('image_id', imageId);
 
+    // 이미지 상태를 다시 'uploading'으로 변경하여 재처리 가능하게 합니다.
+    await supabase
+      .from('images')
+      .update({ status: 'uploading', error_message: null })
+      .eq('id', imageId);
+
     // 새로운 메타데이터를 생성합니다.
-    return await generateMetadata(imageId);
+    const result = await generateMetadata(imageId, { force: true });
+
+    if (result.success && profile.plan === 'free') {
+      // 무료 사용자의 경우 크레딧을 차감합니다.
+      await supabase.rpc('decrement_user_credits', {
+        user_uuid: user.id,
+        amount: 1,
+      });
+    }
+
+    return result;
   } catch (error) {
     console.error('Regenerate metadata error:', error);
     return { success: false, error: 'Internal server error' };

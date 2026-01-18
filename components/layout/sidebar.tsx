@@ -1,49 +1,45 @@
-'use client'
+'use client';
 
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { cn } from '@/lib/utils'
-import {
-  LayoutDashboard,
-  Upload,
-  Image as ImageIcon,
-  Settings,
-  CreditCard,
-} from 'lucide-react'
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+
+import { CreditCard, Image as ImageIcon, LayoutDashboard, Settings, Upload } from 'lucide-react';
+
+import { cn } from '@/lib/utils';
 
 const sidebarItems = [
   {
-    title: '대시보드',
+    title: 'Dashboard',
     href: '/dashboard',
     icon: LayoutDashboard,
   },
   {
-    title: '업로드',
+    title: 'Upload',
     href: '/dashboard/upload',
     icon: Upload,
   },
   {
-    title: '내 이미지',
+    title: 'My Images',
     href: '/dashboard/images',
     icon: ImageIcon,
   },
   {
-    title: '설정',
+    title: 'Settings',
     href: '/dashboard/settings',
     icon: Settings,
   },
   {
-    title: '플랜',
-    href: '/dashboard/plan',
+    title: 'Pricing',
+    href: '/dashboard/pricing',
     icon: CreditCard,
   },
-]
+];
 
 export function Sidebar() {
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   return (
-    <div className="pb-12 w-64 border-r bg-muted/40">
+    <div className="bg-muted/40 w-64 border-r pb-12">
       <div className="space-y-4 py-4">
         <div className="px-3 py-2">
           <h2 className="mb-2 px-4 text-lg font-semibold">TagStock</h2>
@@ -53,10 +49,8 @@ export function Sidebar() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'flex items-center rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground',
-                  pathname === item.href
-                    ? 'bg-accent text-accent-foreground'
-                    : 'transparent'
+                  'hover:bg-accent hover:text-accent-foreground flex items-center rounded-lg px-3 py-2 text-sm font-medium',
+                  pathname === item.href ? 'bg-accent text-accent-foreground' : 'transparent'
                 )}
               >
                 <item.icon className="mr-2 h-4 w-4" />
@@ -67,5 +61,5 @@ export function Sidebar() {
         </div>
       </div>
     </div>
-  )
+  );
 }
