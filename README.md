@@ -19,3 +19,12 @@ All project documentation has been moved to the [`/docs`](./docs) directory:
 - **Backend:** Supabase (PostgreSQL, Storage)
 - **AI:** Google Gemini 3.0 Flash
 - **Payments:** Stripe
+
+## TODO
+
+- [ ] IPTC 구현
+- [ ] stripe 구현
+- [ ] 결제 구현
+- [ ] 플랜
+- [ ] 크롬 익스텐션 개발
+- [ ] 랜딩 페이지 좀 더 꾸미기
