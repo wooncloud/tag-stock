@@ -28,7 +28,7 @@ export function Header() {
 
         <div className="flex items-center space-x-2">
           <ThemeToggle />
-          <Button variant="ghost" asChild>
+          <Button className="bg-purple-600 hover:bg-purple-700 text-white" asChild>
             <Link href="/login">Login</Link>
           </Button>
         </div>
