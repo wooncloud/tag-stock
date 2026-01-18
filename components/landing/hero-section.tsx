@@ -1,4 +1,6 @@
-'use client';
+import Link from 'next/link';
+
+import { Button } from '@/components/ui/button';
 
 export function HeroSection() {
   return (
@@ -11,9 +13,17 @@ export function HeroSection() {
                 Automatically generate stock photo metadata with AI
               </h1>
               <p className="text-muted-foreground max-w-[600px] md:text-xl">
-                The complete tagging solution for Adobe Stock and Shutterstock. Google Gemini AI
+                The complete tagging solution for Adobe Stock and Shutterstock. Our advanced AI
                 generates accurate keywords and descriptions in seconds.
               </p>
+            </div>
+            <div className="flex flex-col gap-4 sm:flex-row">
+              <div className="flex flex-col gap-2">
+                <p className="text-sm font-medium text-purple-600">Experience it now</p>
+                <Button asChild size="lg" className="bg-purple-600 hover:bg-purple-700">
+                  <Link href="/login">Get Started</Link>
+                </Button>
+              </div>
             </div>
           </div>
         </div>

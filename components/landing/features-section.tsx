@@ -1,6 +1,6 @@
 'use client';
 
-import { FileImage, Globe, Sparkles, Zap } from 'lucide-react';
+import { FileImage, Sparkles, Zap } from 'lucide-react';
 
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
@@ -17,11 +17,11 @@ export function FeaturesSection() {
           </p>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           <FeatureCard
             icon={<Sparkles className="mb-2 h-10 w-10 text-purple-600" />}
             title="AI Auto-Tagging"
-            description="Generate accurate keywords using Google Gemini 3.0 Flash"
+            description="Generate accurate keywords using our advanced AI model"
           />
           <FeatureCard
             icon={<FileImage className="mb-2 h-10 w-10 text-blue-600" />}
@@ -32,11 +32,6 @@ export function FeaturesSection() {
             icon={<Zap className="mb-2 h-10 w-10 text-yellow-600" />}
             title="Multi-Image"
             description="Upload and batch process multiple images at once"
-          />
-          <FeatureCard
-            icon={<Globe className="mb-2 h-10 w-10 text-green-600" />}
-            title="SEO Optimized"
-            description="Automatically generate titles and descriptions optimized for search engines"
           />
         </div>
       </div>

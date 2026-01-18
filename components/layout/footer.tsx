@@ -21,6 +21,11 @@ export function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="#extension" className="text-muted-foreground hover:underline">
+                  Chrome Extension
+                </Link>
+              </li>
+              <li>
                 <Link href="#pricing" className="text-muted-foreground hover:underline">
                   Pricing
                 </Link>

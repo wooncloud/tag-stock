@@ -58,6 +58,7 @@ export function PricingPreviewSection() {
                 <PricingFeature text="Title & Description generation" />
                 <PricingFeature text="CSV Export" />
                 <PricingFeature text="IPTC Metadata Embedding" bold />
+                <PricingFeature text="Chrome Extension Access" bold />
                 <PricingFeature text="Priority Support" bold />
               </ul>
             </CardContent>

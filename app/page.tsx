@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 
-import { CTASection } from '@/components/landing/cta-section';
+import { ExtensionSection } from '@/components/landing/extension-section';
 import { FeaturesSection } from '@/components/landing/features-section';
 import { HeroSection } from '@/components/landing/hero-section';
 import { PricingPreviewSection } from '@/components/landing/pricing-preview-section';
@@ -20,8 +20,8 @@ export default function Home() {
       <main className="flex-1">
         <HeroSection />
         <FeaturesSection />
+        <ExtensionSection />
         <PricingPreviewSection />
-        <CTASection />
       </main>
       <Footer />
     </div>
