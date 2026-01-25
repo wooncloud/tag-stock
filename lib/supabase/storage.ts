@@ -1,5 +1,82 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 
+const BUCKET_NAME = 'user-images';
+
+/**
+ * Downloads an image from Supabase Storage and returns it as a Buffer
+ */
+export async function downloadImageFromStorage(
+  supabase: SupabaseClient,
+  storagePath: string
+): Promise<Buffer> {
+  const { data, error } = await supabase.storage.from(BUCKET_NAME).download(storagePath);
+
+  if (error || !data) {
+    throw new Error(`Failed to download image: ${error?.message || 'Unknown error'}`);
+  }
+
+  const arrayBuffer = await data.arrayBuffer();
+  return Buffer.from(arrayBuffer);
+}
+
+/**
+ * Uploads an image buffer to Supabase Storage
+ */
+export async function uploadImageToStorage(
+  supabase: SupabaseClient,
+  path: string,
+  buffer: Buffer,
+  mimeType: string,
+  options?: { upsert?: boolean }
+): Promise<void> {
+  const { error } = await supabase.storage.from(BUCKET_NAME).upload(path, buffer, {
+    contentType: mimeType,
+    cacheControl: '3600',
+    upsert: options?.upsert ?? false,
+  });
+
+  if (error) {
+    throw new Error(`Failed to upload image: ${error.message}`);
+  }
+}
+
+/**
+ * Creates a signed URL for downloading an image
+ * @param expiresIn - Expiration time in seconds (default: 1 hour)
+ */
+export async function createSignedDownloadUrl(
+  supabase: SupabaseClient,
+  path: string,
+  expiresIn: number = 3600
+): Promise<string> {
+  const { data, error } = await supabase.storage.from(BUCKET_NAME).createSignedUrl(path, expiresIn);
+
+  if (error || !data?.signedUrl) {
+    throw new Error(`Failed to create signed URL: ${error?.message || 'Unknown error'}`);
+  }
+
+  return data.signedUrl;
+}
+
+/**
+ * Deletes files from Supabase Storage
+ */
+export async function deleteFromStorage(supabase: SupabaseClient, paths: string[]): Promise<void> {
+  const { error } = await supabase.storage.from(BUCKET_NAME).remove(paths);
+
+  if (error) {
+    console.error('Storage delete error:', error);
+  }
+}
+
+/**
+ * Generates the embedded version path from an original storage path
+ * Example: "user123/original/image.jpg" -> "user123/original/image-embedded.jpg"
+ */
+export function getEmbeddedPath(originalPath: string): string {
+  return originalPath.replace(/(\.[^.]+)$/, '-embedded$1');
+}
+
 /**
  * Supabase Storage의 storage_path 배열을 받아 Signed URL이 포함된 객체 배열로 변환합니다.
  * @param supabase Supabase 클라이언트

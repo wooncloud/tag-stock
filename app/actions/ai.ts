@@ -5,6 +5,8 @@ import { revalidatePath } from 'next/cache';
 import { generateImageMetadata } from '@/services/gemini';
 
 import { ensureAuthenticated } from '@/lib/supabase/auth';
+import { deleteImageMetadata, getImageById, updateImageStatus } from '@/lib/supabase/image';
+import { downloadImageFromStorage } from '@/lib/supabase/storage';
 
 interface GenerateMetadataResult {
   success: boolean;
@@ -19,14 +21,9 @@ export async function generateMetadata(
     const { user, supabase } = await ensureAuthenticated();
 
     // 이미지 레코드를 가져옵니다.
-    const { data: image, error: imageError } = await supabase
-      .from('images')
-      .select('*')
-      .eq('id', imageId)
-      .eq('user_id', user.id)
-      .single();
+    const image = await getImageById(supabase, imageId, user.id);
 
-    if (imageError || !image) {
+    if (!image) {
       return { success: false, error: 'Image not found' };
     }
 
@@ -37,29 +34,15 @@ export async function generateMetadata(
 
     if (image.status === 'processing' && !image.error_message) {
       // 에러 없이 'processing' 상태라면 정말로 작업 중일 가능성이 높음
-      // 하지만 5분이 지났다면 무시하고 재시도할 수 있도록 로직을 추가할 수도 있습니다.
       return { success: false, error: 'Image is already being processed' };
     }
 
     // 상태를 '처리 중'으로 업데이트합니다.
-    await supabase
-      .from('images')
-      .update({ status: 'processing', error_message: null })
-      .eq('id', imageId);
+    await updateImageStatus(supabase, imageId, 'processing', null);
 
     try {
       // 스토리지에서 이미지를 다운로드합니다.
-      const { data: fileData, error: downloadError } = await supabase.storage
-        .from('user-images')
-        .download(image.storage_path);
-
-      if (downloadError || !fileData) {
-        throw new Error('Failed to download image');
-      }
-
-      // 버퍼로 변환합니다.
-      const arrayBuffer = await fileData.arrayBuffer();
-      const buffer = Buffer.from(arrayBuffer);
+      const buffer = await downloadImageFromStorage(supabase, image.storage_path);
 
       console.log(`Starting AI metadata generation for image: ${imageId}`);
       // Gemini AI를 사용하여 메타데이터를 생성합니다.
@@ -67,7 +50,7 @@ export async function generateMetadata(
       console.log(`AI metadata generated successfully for: ${imageId}`);
 
       // 기존 메타데이터가 있다면 삭제합니다 (중복 방지).
-      await supabase.from('metadata').delete().eq('image_id', imageId);
+      await deleteImageMetadata(supabase, imageId);
 
       // 데이터베이스에 메타데이터를 저장합니다.
       const { error: metadataError } = await supabase.from('metadata').insert({
@@ -86,7 +69,7 @@ export async function generateMetadata(
       }
 
       // 이미지 상태를 '완료'로 업데이트합니다.
-      await supabase.from('images').update({ status: 'completed' }).eq('id', imageId);
+      await updateImageStatus(supabase, imageId, 'completed');
 
       console.log(`Image ${imageId} status updated to completed`);
 
@@ -97,16 +80,9 @@ export async function generateMetadata(
       console.error('Processing error:', processingError);
 
       // 이미지 상태를 '실패'로 업데이트합니다.
-      await supabase
-        .from('images')
-        .update({
-          status: 'failed',
-          error_message:
-            processingError instanceof Error
-              ? processingError.message
-              : 'Failed to generate metadata',
-        })
-        .eq('id', imageId);
+      const errorMessage =
+        processingError instanceof Error ? processingError.message : 'Failed to generate metadata';
+      await updateImageStatus(supabase, imageId, 'failed', errorMessage);
 
       return { success: false, error: 'Failed to generate metadata' };
     }
@@ -125,13 +101,10 @@ export async function regenerateMetadata(imageId: string): Promise<GenerateMetad
     }
 
     // 기존 메타데이터를 삭제합니다.
-    await supabase.from('metadata').delete().eq('image_id', imageId);
+    await deleteImageMetadata(supabase, imageId);
 
     // 이미지 상태를 다시 'uploading'으로 변경하여 재처리 가능하게 합니다.
-    await supabase
-      .from('images')
-      .update({ status: 'uploading', error_message: null })
-      .eq('id', imageId);
+    await updateImageStatus(supabase, imageId, 'uploading', null);
 
     // 새로운 메타데이터를 생성합니다.
     const result = await generateMetadata(imageId, { force: true });

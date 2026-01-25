@@ -8,6 +8,8 @@ import type { StorageType, UserPlan } from '@/types/database';
 
 import { PLAN_LIMITS, getStoragePath } from '@/lib/plan-limits';
 import { ensureAuthenticated } from '@/lib/supabase/auth';
+import { verifyImageOwnership } from '@/lib/supabase/image';
+import { deleteFromStorage } from '@/lib/supabase/storage';
 
 interface UploadResult {
   success: boolean;
@@ -130,28 +132,16 @@ export async function deleteImage(imageId: string): Promise<{ success: boolean; 
     const { user, supabase } = await ensureAuthenticated();
 
     // 소유권을 확인하고 저장 경로를 가져오기 위해 이미지를 가져옵니다.
-    const { data: image, error: imageError } = await supabase
-      .from('images')
-      .select('storage_path, user_id')
-      .eq('id', imageId)
-      .single();
+    const result = await verifyImageOwnership(supabase, imageId, user.id);
 
-    if (imageError || !image) {
-      return { success: false, error: 'Image not found' };
+    if (!result.success) {
+      return { success: false, error: result.error };
     }
 
-    if (image.user_id !== user.id) {
-      return { success: false, error: 'Unauthorized' };
-    }
+    const { image } = result;
 
     // 스토리지에서 삭제합니다.
-    const { error: storageError } = await supabase.storage
-      .from('user-images')
-      .remove([image.storage_path]);
-
-    if (storageError) {
-      console.error('Storage delete error:', storageError);
-    }
+    await deleteFromStorage(supabase, [image.storage_path]);
 
     // 데이터베이스에서 삭제합니다. (연쇄 삭제로 메타데이터도 삭제됨)
     const { error: deleteError } = await supabase.from('images').delete().eq('id', imageId);

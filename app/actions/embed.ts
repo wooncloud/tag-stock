@@ -5,6 +5,13 @@ import { revalidatePath } from 'next/cache';
 import { embedMetadata } from '@/services/metadata-embedder';
 
 import { ensureAuthenticated } from '@/lib/supabase/auth';
+import { getImageWithMetadata, updateMetadataEmbedded } from '@/lib/supabase/image';
+import {
+  createSignedDownloadUrl,
+  downloadImageFromStorage,
+  getEmbeddedPath,
+  uploadImageToStorage,
+} from '@/lib/supabase/storage';
 
 interface EmbedMetadataResult {
   success: boolean;
@@ -21,14 +28,9 @@ export async function embedMetadataIntoImage(imageId: string): Promise<EmbedMeta
     }
 
     // 이미지와 메타데이터를 가져옵니다.
-    const { data: image, error: imageError } = await supabase
-      .from('images')
-      .select('*, metadata(*)')
-      .eq('id', imageId)
-      .eq('user_id', user.id)
-      .single();
+    const image = await getImageWithMetadata(supabase, imageId, user.id);
 
-    if (imageError || !image) {
+    if (!image) {
       return { success: false, error: 'Image not found' };
     }
 
@@ -43,48 +45,29 @@ export async function embedMetadataIntoImage(imageId: string): Promise<EmbedMeta
     }
 
     // 원본 이미지를 다운로드합니다.
-    const { data: fileData, error: downloadError } = await supabase.storage
-      .from('user-images')
-      .download(image.storage_path);
-
-    if (downloadError || !fileData) {
-      return { success: false, error: 'Failed to download image' };
-    }
-
-    const arrayBuffer = await fileData.arrayBuffer();
-    const originalBuffer = Buffer.from(arrayBuffer);
+    const originalBuffer = await downloadImageFromStorage(supabase, image.storage_path);
 
     // 메타데이터를 임베딩합니다.
     const embeddedBuffer = await embedMetadata(originalBuffer, metadata, image.original_filename);
 
     // 임베딩된 버전을 업로드합니다.
-    const embeddedPath = image.storage_path.replace(/(\.[^.]+)$/, '-embedded$1');
+    const embeddedPath = getEmbeddedPath(image.storage_path);
 
-    const { error: uploadError } = await supabase.storage
-      .from('user-images')
-      .upload(embeddedPath, embeddedBuffer, {
-        contentType: image.mime_type,
-        cacheControl: '3600',
-        upsert: true,
-      });
-
-    if (uploadError) {
-      return { success: false, error: 'Failed to upload embedded image' };
-    }
+    await uploadImageToStorage(supabase, embeddedPath, embeddedBuffer, image.mime_type, {
+      upsert: true,
+    });
 
     // 메타데이터 레코드를 업데이트합니다.
-    await supabase.from('metadata').update({ embedded: true }).eq('id', metadata.id);
+    await updateMetadataEmbedded(supabase, metadata.id, true);
 
     // 다운로드를 위한 서명된 URL을 가져옵니다. (1시간 유효)
-    const { data: signedUrlData } = await supabase.storage
-      .from('user-images')
-      .createSignedUrl(embeddedPath, 3600); // 1 hour expiry
+    const downloadUrl = await createSignedDownloadUrl(supabase, embeddedPath, 3600);
 
     revalidatePath('/dashboard');
 
     return {
       success: true,
-      downloadUrl: signedUrlData?.signedUrl,
+      downloadUrl,
     };
   } catch (error) {
     console.error('Embed metadata error:', error);
@@ -99,7 +82,7 @@ export async function downloadImage(
   try {
     const { user, supabase } = await ensureAuthenticated();
 
-    // 이미지를 가져옵니다.
+    // 이미지를 가져오고 소유권을 확인합니다.
     const { data: image, error: imageError } = await supabase
       .from('images')
       .select('storage_path, user_id')
@@ -115,20 +98,12 @@ export async function downloadImage(
     }
 
     // 경로를 결정합니다.
-    const downloadPath = embedded
-      ? image.storage_path.replace(/(\.[^.]+)$/, '-embedded$1')
-      : image.storage_path;
+    const downloadPath = embedded ? getEmbeddedPath(image.storage_path) : image.storage_path;
 
     // 서명된 URL을 가져옵니다. (5분 유효)
-    const { data: signedUrlData, error: urlError } = await supabase.storage
-      .from('user-images')
-      .createSignedUrl(downloadPath, 300); // 5 minutes
+    const url = await createSignedDownloadUrl(supabase, downloadPath, 300);
 
-    if (urlError || !signedUrlData) {
-      return { success: false, error: 'Failed to generate download URL' };
-    }
-
-    return { success: true, url: signedUrlData.signedUrl };
+    return { success: true, url };
   } catch (error) {
     console.error('Download error:', error);
     return { success: false, error: 'Internal server error' };
