@@ -3,21 +3,25 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { createClient } from '@supabase/supabase-js';
 
+// Lazy initialization to avoid build-time errors
+function getSupabaseAdmin() {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-const supabaseAdmin = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-    process.env.SUPABASE_SERVICE_ROLE_KEY || '',
-    {
+    if (!url || !key) {
+        throw new Error('Supabase credentials not configured');
+    }
+
+    return createClient(url, key, {
         auth: {
             autoRefreshToken: false,
             persistSession: false,
         },
-    }
-);
-
-const webhookSecret = process.env.LEMON_SQUEEZY_WEBHOOK_SECRET || '';
+    });
+}
 
 export async function POST(request: NextRequest) {
+    const webhookSecret = process.env.LEMON_SQUEEZY_WEBHOOK_SECRET || '';
     try {
         const rawBody = await request.text();
         const signature = request.headers.get('x-signature') || '';
@@ -70,7 +74,7 @@ export async function POST(request: NextRequest) {
                     plan = 'max';
                 }
 
-                await supabaseAdmin
+                await getSupabaseAdmin()
                     .from('profiles')
                     .update({
                         plan,
@@ -87,7 +91,7 @@ export async function POST(request: NextRequest) {
             case 'subscription_expired': {
                 const userId = payload.meta.custom_data?.user_id;
                 if (userId) {
-                    await supabaseAdmin
+                    await getSupabaseAdmin()
                         .from('profiles')
                         .update({
                             plan: 'free',
