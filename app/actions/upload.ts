@@ -95,7 +95,6 @@ export async function uploadImage(formData: FormData): Promise<UploadResult> {
         width,
         height,
         status: 'uploading',
-        storage_type: storageType,
       })
       .select()
       .single();

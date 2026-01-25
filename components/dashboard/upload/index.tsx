@@ -1,11 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-import { Crown, RefreshCw, Upload } from 'lucide-react';
+import { AlertTriangle, Crown, RefreshCw, Upload } from 'lucide-react';
+
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 import type { UserPlan } from '@/types/database';
 import { FileWithProgress } from '@/types/upload';
@@ -34,6 +36,20 @@ export function UploadWorkflow({ disabled, userPlan = 'free' }: UploadWorkflowPr
   const planLimit = PLAN_LIMITS[userPlan];
   const canMultipleUpload = isPaidPlan(userPlan);
 
+  // 업로드 중 페이지 이탈 방지
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (isUploading) {
+        e.preventDefault();
+        e.returnValue = '';
+        return '';
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [isUploading]);
+
   const onFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
 
@@ -50,63 +66,94 @@ export function UploadWorkflow({ disabled, userPlan = 'free' }: UploadWorkflowPr
     setFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
+  // 단일 파일 처리 함수
+  const processFile = async (index: number) => {
+    try {
+      setFiles((prev) => {
+        const next = [...prev];
+        next[index].status = 'uploading';
+        return next;
+      });
+
+      // 1. 이미지 처리 및 압축
+      const processedFile = await processAndCompressImage(files[index].file, { userPlan });
+
+      // 2. 파일 업로드
+      const formData = new FormData();
+      formData.append('file', processedFile);
+
+      const uploadResult = await uploadImage(formData);
+
+      if (!uploadResult.success || !uploadResult.imageId) {
+        throw new Error(uploadResult.error || 'Upload failed');
+      }
+
+      const imageId = uploadResult.imageId;
+
+      setFiles((prev) => {
+        const next = [...prev];
+        next[index].status = 'processing';
+        next[index].progress = 100;
+        next[index].imageId = imageId;
+        return next;
+      });
+
+      // 3. AI 분석 트리거
+      const aiResult = await generateMetadata(imageId);
+
+      if (!aiResult.success) {
+        throw new Error(aiResult.error || 'AI processing failed');
+      }
+
+      setFiles((prev) => {
+        const next = [...prev];
+        next[index].status = 'completed';
+        return next;
+      });
+    } catch (error) {
+      console.error('Upload process error:', error);
+      setFiles((prev) => {
+        const next = [...prev];
+        next[index].status = 'error';
+        next[index].error = error instanceof Error ? error.message : 'Unknown error';
+        return next;
+      });
+    }
+  };
+
   const startUpload = async () => {
     setIsUploading(true);
 
-    for (let i = 0; i < files.length; i++) {
-      if (files[i].status !== 'pending') continue;
+    // pending 상태인 파일들의 인덱스 수집
+    const pendingIndexes = files
+      .map((f, i) => (f.status === 'pending' ? i : -1))
+      .filter((i) => i !== -1);
 
-      try {
-        setFiles((prev) => {
-          const next = [...prev];
-          next[i].status = 'uploading';
-          return next;
-        });
+    // 동시성 제한: 최대 3개 동시 처리 (슬라이딩 윈도우)
+    const CONCURRENCY = 3;
+    let currentIndex = 0;
+    const inProgress = new Set<Promise<void>>();
 
-        // 1. 이미지 처리 및 압축 (Free: 압축, Pro: 원본 유지)
-        const processedFile = await processAndCompressImage(files[i].file, { userPlan });
+    const startNext = (): Promise<void> | null => {
+      if (currentIndex >= pendingIndexes.length) return null;
 
-        // 2. 파일 업로드
-        const formData = new FormData();
-        formData.append('file', processedFile);
+      const index = pendingIndexes[currentIndex++];
+      const promise = processFile(index).finally(() => {
+        inProgress.delete(promise);
+      });
+      inProgress.add(promise);
+      return promise;
+    };
 
-        const uploadResult = await uploadImage(formData);
+    // 초기 CONCURRENCY 개수만큼 시작
+    for (let i = 0; i < Math.min(CONCURRENCY, pendingIndexes.length); i++) {
+      startNext();
+    }
 
-        if (!uploadResult.success || !uploadResult.imageId) {
-          throw new Error(uploadResult.error || 'Upload failed');
-        }
-
-        const imageId = uploadResult.imageId;
-
-        setFiles((prev) => {
-          const next = [...prev];
-          next[i].status = 'processing';
-          next[i].progress = 100;
-          next[i].imageId = imageId;
-          return next;
-        });
-
-        // 3. AI 분석 트리거
-        const aiResult = await generateMetadata(imageId);
-
-        if (!aiResult.success) {
-          throw new Error(aiResult.error || 'AI processing failed');
-        }
-
-        setFiles((prev) => {
-          const next = [...prev];
-          next[i].status = 'completed';
-          return next;
-        });
-      } catch (error) {
-        console.error('Upload process error:', error);
-        setFiles((prev) => {
-          const next = [...prev];
-          next[i].status = 'error';
-          next[i].error = error instanceof Error ? error.message : 'Unknown error';
-          return next;
-        });
-      }
+    // 하나가 완료될 때마다 다음 작업 시작
+    while (inProgress.size > 0) {
+      await Promise.race(inProgress);
+      startNext();
     }
 
     setIsUploading(false);
@@ -164,6 +211,17 @@ export function UploadWorkflow({ disabled, userPlan = 'free' }: UploadWorkflowPr
             disabled={disabled || isUploading}
           />
         </label>
+      )}
+
+      {/* 업로드 중 경고 */}
+      {isUploading && (
+        <Alert variant="destructive" className="border-amber-500 bg-amber-500/10">
+          <AlertTriangle className="h-4 w-4 text-amber-500" />
+          <AlertDescription className="text-amber-600 dark:text-amber-400">
+            Processing in progress. Please do not close or refresh this page until all uploads are
+            complete.
+          </AlertDescription>
+        </Alert>
       )}
 
       {/* 파일 리스트 */}
