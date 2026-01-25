@@ -5,7 +5,9 @@ import { cookies } from 'next/headers';
 
 import sharp from 'sharp';
 
+import { getStoragePath, PLAN_LIMITS } from '@/lib/plan-limits';
 import { createClient } from '@/lib/supabase/server';
+import type { StorageType, UserPlan } from '@/types/database';
 
 interface UploadResult {
   success: boolean;
@@ -81,10 +83,14 @@ export async function uploadImage(formData: FormData): Promise<UploadResult> {
       console.error('Error reading image metadata:', error);
     }
 
+    // 플랜에 따른 스토리지 타입 결정
+    const userPlan = profile.plan as UserPlan;
+    const storageType: StorageType = PLAN_LIMITS[userPlan].storageType;
+
     // 고유한 파일 이름을 생성합니다.
     const fileExt = file.name.split('.').pop();
     const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
-    const filePath = `${user.id}/${fileName}`;
+    const filePath = getStoragePath(user.id, fileName, storageType);
 
     // Supabase Storage에 업로드합니다.
     const { error: uploadError } = await supabase.storage
@@ -111,6 +117,7 @@ export async function uploadImage(formData: FormData): Promise<UploadResult> {
         width,
         height,
         status: 'uploading',
+        storage_type: storageType,
       })
       .select()
       .single();
