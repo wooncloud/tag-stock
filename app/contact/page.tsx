@@ -1,10 +1,9 @@
 import { Metadata } from 'next';
-import { BackButton } from '@/components/back-button';
-
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Toaster } from '@/components/ui/sonner';
 
+import { BackButton } from '@/components/back-button';
 import { ContactForm } from '@/components/contact-form';
 
 export const metadata: Metadata = {
@@ -88,7 +87,8 @@ export default function ContactPage() {
                       </h4>
                       <p className="text-muted-foreground text-sm">
                         Yes, all payments are processed through Lemon Squeezy, a world-class secure
-                        payment provider. We do not store your credit card information on our servers.
+                        payment provider. We do not store your credit card information on our
+                        servers.
                       </p>
                     </div>
                     <div>
@@ -115,4 +115,3 @@ export default function ContactPage() {
     </>
   );
 }
-

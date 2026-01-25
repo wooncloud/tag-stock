@@ -7,14 +7,13 @@ import { useRouter } from 'next/navigation';
 
 import { AlertTriangle, Crown, RefreshCw, Upload } from 'lucide-react';
 
-import { Alert, AlertDescription } from '@/components/ui/alert';
-
 import type { UserPlan } from '@/types/database';
 import { FileWithProgress } from '@/types/upload';
 
-import { isPaidPlan, PLAN_LIMITS } from '@/lib/plan-limits';
+import { PLAN_LIMITS, isPaidPlan } from '@/lib/plan-limits';
 import { processAndCompressImage } from '@/lib/utils/image-processing';
 
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 

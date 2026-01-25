@@ -96,7 +96,10 @@ Deno.serve(async (req) => {
         });
 
         // credit_transactions 테이블이 없어도 에러 무시 (선택적 기능)
-        if (transactionResult.error && !transactionResult.error.message.includes('does not exist')) {
+        if (
+          transactionResult.error &&
+          !transactionResult.error.message.includes('does not exist')
+        ) {
           console.warn(`Transaction log failed for user ${profile.id}:`, transactionResult.error);
         }
 
@@ -113,7 +116,9 @@ Deno.serve(async (req) => {
       }
     }
 
-    console.log(`Monthly credit reset completed. Processed: ${processed} users, Errors: ${errors.length}`);
+    console.log(
+      `Monthly credit reset completed. Processed: ${processed} users, Errors: ${errors.length}`
+    );
 
     // Discord 알림 (실패가 있는 경우)
     if (errors.length > 0) {
@@ -140,10 +145,10 @@ Deno.serve(async (req) => {
     // 심각한 오류 시 Discord 알림
     await sendDiscordAlert(`🚨 Monthly Credit Reset FAILED: ${errorMessage}`);
 
-    return new Response(
-      JSON.stringify({ error: errorMessage }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
-    );
+    return new Response(JSON.stringify({ error: errorMessage }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 });
 

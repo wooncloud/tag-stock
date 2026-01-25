@@ -5,7 +5,7 @@ import { AlertCircle, Crown, Sparkles } from 'lucide-react';
 
 import type { UserPlan } from '@/types/database';
 
-import { isPaidPlan, PLAN_LIMITS } from '@/lib/plan-limits';
+import { PLAN_LIMITS, isPaidPlan } from '@/lib/plan-limits';
 import { ensureAuthenticated } from '@/lib/supabase/auth';
 
 import { Alert, AlertDescription } from '@/components/ui/alert';

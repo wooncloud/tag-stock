@@ -1,4 +1,3 @@
-import crypto from 'crypto';
 import { NextRequest, NextResponse } from 'next/server';
 
 import {
@@ -6,6 +5,7 @@ import {
   getLemonSqueezyPlan,
   updateSubscriptionStatus,
 } from '@/services/billing';
+import crypto from 'crypto';
 
 export async function POST(request: NextRequest) {
   const webhookSecret = process.env.LEMON_SQUEEZY_WEBHOOK_SECRET || '';

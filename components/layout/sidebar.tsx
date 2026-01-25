@@ -3,7 +3,14 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-import { CreditCard, Image as ImageIcon, LayoutDashboard, Mail, Settings, Upload } from 'lucide-react';
+import {
+  CreditCard,
+  Image as ImageIcon,
+  LayoutDashboard,
+  Mail,
+  Settings,
+  Upload,
+} from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 

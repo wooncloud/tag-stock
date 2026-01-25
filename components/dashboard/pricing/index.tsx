@@ -50,8 +50,10 @@ export function PricingCards({ currentPlan }: PricingCardsProps) {
     }
   };
 
-  const currentVariantId = billingCycle === 'monthly' ? VARIANT_IDS.pro_monthly : VARIANT_IDS.pro_yearly;
-  const maxVariantId = billingCycle === 'monthly' ? VARIANT_IDS.max_monthly : VARIANT_IDS.max_yearly;
+  const currentVariantId =
+    billingCycle === 'monthly' ? VARIANT_IDS.pro_monthly : VARIANT_IDS.pro_yearly;
+  const maxVariantId =
+    billingCycle === 'monthly' ? VARIANT_IDS.max_monthly : VARIANT_IDS.max_yearly;
 
   return (
     <div className="space-y-6">
@@ -93,7 +95,7 @@ export function PricingCards({ currentPlan }: PricingCardsProps) {
           isLoading={isLoading}
           buttonText={currentPlan === 'free' ? 'Current Plan' : 'Select Free'}
           buttonVariant="outline"
-          onAction={() => { }}
+          onAction={() => {}}
         />
 
         <PricingCard

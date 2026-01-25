@@ -37,9 +37,9 @@ export function PricingPreviewSection() {
           </Card>
 
           {/* Pro Plan */}
-          <Card className="relative flex flex-col border-2 border-primary shadow-lg scale-105">
+          <Card className="border-primary relative flex scale-105 flex-col border-2 shadow-lg">
             <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-              <span className="rounded-full bg-primary px-3 py-1 text-sm font-semibold text-primary-foreground">
+              <span className="bg-primary text-primary-foreground rounded-full px-3 py-1 text-sm font-semibold">
                 Popular
               </span>
             </div>
@@ -65,7 +65,7 @@ export function PricingPreviewSection() {
           {/* Max Plan */}
           <Card className="flex flex-col">
             <CardHeader>
-              <CardTitle className="text-2xl text-muted-foreground">Max</CardTitle>
+              <CardTitle className="text-muted-foreground text-2xl">Max</CardTitle>
               <CardDescription>For high-volume creators</CardDescription>
               <div className="mt-4">
                 <span className="text-4xl font-bold">$19</span>
@@ -81,7 +81,7 @@ export function PricingPreviewSection() {
                 <PricingFeature text="All Pro features" />
               </ul>
               <div className="mt-6 text-center">
-                <span className="rounded bg-muted px-2 py-1 text-xs font-medium text-muted-foreground">
+                <span className="bg-muted text-muted-foreground rounded px-2 py-1 text-xs font-medium">
                   COMING SOON
                 </span>
               </div>

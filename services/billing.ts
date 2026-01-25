@@ -90,9 +90,7 @@ export async function cancelSubscription(userId: string): Promise<void> {
 /**
  * Finds a user ID by their subscription ID
  */
-export async function findUserBySubscriptionId(
-  subscriptionId: string
-): Promise<string | null> {
+export async function findUserBySubscriptionId(subscriptionId: string): Promise<string | null> {
   const { data: profile } = await getSupabaseAdmin()
     .from('profiles')
     .select('id')
