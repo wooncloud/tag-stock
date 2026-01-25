@@ -2,7 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 
 import type { UserPlan } from '@/types/database';
 
-import { STRIPE_CONFIG } from '@/lib/stripe';
+import { PLAN_LIMITS } from '@/lib/plan-limits';
 
 // Lazy initialization to avoid build-time errors
 function getSupabaseAdmin() {
@@ -21,7 +21,7 @@ function getSupabaseAdmin() {
   });
 }
 
-export type SubscriptionProvider = 'stripe' | 'lemonsqueezy';
+export type SubscriptionProvider = 'lemonsqueezy';
 
 interface UpdateSubscriptionParams {
   userId: string;
@@ -34,10 +34,10 @@ interface UpdateSubscriptionParams {
 
 /**
  * Updates user profile with subscription status
- * Used by both Stripe and Lemon Squeezy webhooks
+ * Used by Lemon Squeezy webhooks
  */
 export async function updateSubscriptionStatus(params: UpdateSubscriptionParams): Promise<void> {
-  const { userId, plan, status, subscriptionId, managementUrl, provider } = params;
+  const { userId, plan, status, subscriptionId, managementUrl } = params;
 
   const updateData: Record<string, unknown> = {
     plan,
@@ -46,25 +46,24 @@ export async function updateSubscriptionStatus(params: UpdateSubscriptionParams)
 
   // Provider-specific subscription ID field
   if (subscriptionId) {
-    if (provider === 'stripe') {
-      updateData.stripe_subscription_id = subscriptionId;
-    } else {
-      updateData.lemon_squeezy_subscription_id = subscriptionId;
-    }
+    updateData.lemon_squeezy_subscription_id = subscriptionId;
   }
 
   // Lemon Squeezy specific: management URL
-  if (managementUrl && provider === 'lemonsqueezy') {
+  if (managementUrl) {
     updateData.subscription_management_url = managementUrl;
   }
 
-  // Update credits based on plan (only for Stripe, as it manages credits differently)
-  if (provider === 'stripe') {
-    updateData.credits_remaining =
-      status === 'active'
-        ? STRIPE_CONFIG.credits[plan as keyof typeof STRIPE_CONFIG.credits] ||
-          STRIPE_CONFIG.credits.free
-        : STRIPE_CONFIG.credits.free;
+  // Update credits based on plan for paid plans
+  if (status === 'active' || status === 'on_trial') {
+    const limits = PLAN_LIMITS[plan];
+    if (limits) {
+      // If unlimited (-1), we still set it. Otherwise set the monthly amount.
+      updateData.credits_remaining = limits.monthlyCredits;
+    }
+  } else {
+    // Revert to free plan credits if subscription is not active
+    updateData.credits_remaining = PLAN_LIMITS.free.monthlyCredits;
   }
 
   await getSupabaseAdmin().from('profiles').update(updateData).eq('id', userId);
@@ -81,7 +80,7 @@ export async function cancelSubscription(userId: string): Promise<void> {
     .update({
       plan: 'free',
       subscription_status: 'cancelled',
-      credits_remaining: STRIPE_CONFIG.credits.free,
+      credits_remaining: PLAN_LIMITS.free.monthlyCredits,
     })
     .eq('id', userId);
 
@@ -90,19 +89,14 @@ export async function cancelSubscription(userId: string): Promise<void> {
 
 /**
  * Finds a user ID by their subscription ID
- * Useful when webhook doesn't include user_id in metadata
  */
 export async function findUserBySubscriptionId(
-  subscriptionId: string,
-  provider: SubscriptionProvider
+  subscriptionId: string
 ): Promise<string | null> {
-  const field =
-    provider === 'stripe' ? 'stripe_subscription_id' : 'lemon_squeezy_subscription_id';
-
   const { data: profile } = await getSupabaseAdmin()
     .from('profiles')
     .select('id')
-    .eq(field, subscriptionId)
+    .eq('lemon_squeezy_subscription_id', subscriptionId)
     .single();
 
   return profile?.id || null;

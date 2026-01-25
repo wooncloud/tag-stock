@@ -87,8 +87,8 @@ export default function ContactPage() {
                         Q. Is my payment information secure?
                       </h4>
                       <p className="text-muted-foreground text-sm">
-                        Yes, all payments are processed through Stripe, a world-class secure payment
-                        provider. We do not store your credit card information on our servers.
+                        Yes, all payments are processed through Lemon Squeezy, a world-class secure
+                        payment provider. We do not store your credit card information on our servers.
                       </p>
                     </div>
                     <div>
