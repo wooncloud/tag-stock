@@ -16,17 +16,17 @@ export function Footer() {
             <h4 className="mb-4 font-semibold">Product</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="#features" className="text-muted-foreground hover:underline">
+                <Link href="/#features" className="text-muted-foreground hover:underline">
                   Features
                 </Link>
               </li>
               <li>
-                <Link href="#extension" className="text-muted-foreground hover:underline">
+                <Link href="/#extension" className="text-muted-foreground hover:underline">
                   Chrome Extension
                 </Link>
               </li>
               <li>
-                <Link href="#pricing" className="text-muted-foreground hover:underline">
+                <Link href="/#pricing" className="text-muted-foreground hover:underline">
                   Pricing
                 </Link>
               </li>
