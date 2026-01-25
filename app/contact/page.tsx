@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
-import Link from 'next/link';
+import { BackButton } from '@/components/back-button';
 
-import { Button } from '@/components/ui/button';
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Toaster } from '@/components/ui/sonner';
 
@@ -108,14 +108,11 @@ export default function ContactPage() {
 
           {/* Back to Home */}
           <div className="mt-12 text-center">
-            <Link href="/">
-              <Button variant="ghost" className="cursor-pointer">
-                Back to Home
-              </Button>
-            </Link>
+            <BackButton />
           </div>
         </div>
       </div>
     </>
   );
 }
+
