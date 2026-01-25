@@ -36,7 +36,7 @@ export default async function PricingPage() {
         </Alert>
       )}
 
-      <PricingCards currentPlan={profile.plan} hasCustomerId={!!profile.stripe_customer_id} />
+      <PricingCards currentPlan={profile.plan} />
 
       {/* Feature Comparison */}
       <Card>

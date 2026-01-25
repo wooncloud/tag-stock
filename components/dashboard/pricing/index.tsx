@@ -5,28 +5,33 @@ import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
-import { createSubscriptionCheckout, manageBilling } from '@/app/actions/stripe';
+import { createSubscriptionCheckout, manageBilling } from '@/app/actions/lemonsqueezy';
 
 import { PricingCard } from './pricing-card';
 
 interface PricingCardsProps {
-  currentPlan: 'free' | 'pro';
-  hasCustomerId: boolean;
+  currentPlan: 'free' | 'pro' | 'max';
 }
 
-const PRICE_IDS = {
-  pro_monthly: process.env.NEXT_PUBLIC_STRIPE_PRO_MONTHLY_PRICE_ID || 'price_monthly',
-  pro_yearly: process.env.NEXT_PUBLIC_STRIPE_PRO_YEARLY_PRICE_ID || 'price_yearly',
+const VARIANT_IDS = {
+  pro_monthly: process.env.NEXT_PUBLIC_LEMON_SQUEEZY_PRO_MONTHLY_VARIANT_ID || '',
+  pro_yearly: process.env.NEXT_PUBLIC_LEMON_SQUEEZY_PRO_YEARLY_VARIANT_ID || '',
+  max_monthly: process.env.NEXT_PUBLIC_LEMON_SQUEEZY_MAX_MONTHLY_VARIANT_ID || '',
+  max_yearly: process.env.NEXT_PUBLIC_LEMON_SQUEEZY_MAX_YEARLY_VARIANT_ID || '',
 };
 
-export function PricingCards({ currentPlan, hasCustomerId }: PricingCardsProps) {
+export function PricingCards({ currentPlan }: PricingCardsProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
 
-  const handleSubscribe = async (priceId: string) => {
+  const handleSubscribe = async (variantId: string) => {
+    if (!variantId) {
+      alert('Variant ID not configured for Lemon Squeezy');
+      return;
+    }
     setIsLoading(true);
     try {
-      await createSubscriptionCheckout(priceId);
+      await createSubscriptionCheckout(variantId);
     } catch (error) {
       console.error('Subscription error:', error);
       alert('Failed to start checkout. Please try again.');
@@ -45,7 +50,8 @@ export function PricingCards({ currentPlan, hasCustomerId }: PricingCardsProps) 
     }
   };
 
-  const currentPriceId = billingCycle === 'monthly' ? PRICE_IDS.pro_monthly : PRICE_IDS.pro_yearly;
+  const currentVariantId = billingCycle === 'monthly' ? VARIANT_IDS.pro_monthly : VARIANT_IDS.pro_yearly;
+  const maxVariantId = billingCycle === 'monthly' ? VARIANT_IDS.max_monthly : VARIANT_IDS.max_yearly;
 
   return (
     <div className="space-y-6">
@@ -87,7 +93,7 @@ export function PricingCards({ currentPlan, hasCustomerId }: PricingCardsProps) 
           isLoading={isLoading}
           buttonText={currentPlan === 'free' ? 'Current Plan' : 'Select Free'}
           buttonVariant="outline"
-          onAction={() => {}}
+          onAction={() => { }}
         />
 
         <PricingCard
@@ -107,7 +113,7 @@ export function PricingCards({ currentPlan, hasCustomerId }: PricingCardsProps) 
           isLoading={isLoading}
           buttonText={currentPlan === 'pro' ? 'Manage Subscription' : 'Upgrade to Pro'}
           onAction={() =>
-            currentPlan === 'pro' ? handleManageBilling() : handleSubscribe(currentPriceId)
+            currentPlan === 'pro' ? handleManageBilling() : handleSubscribe(currentVariantId)
           }
         />
 
@@ -123,13 +129,12 @@ export function PricingCards({ currentPlan, hasCustomerId }: PricingCardsProps) 
             'Early access to new features',
             'All Pro features',
           ]}
-          isCurrentPlan={false}
+          isCurrentPlan={currentPlan === 'max'}
           isLoading={isLoading}
-          buttonText="Coming Soon"
-          buttonVariant="outline"
-          onAction={() => {}}
-          disabled={true}
-          comingSoon={true}
+          buttonText={currentPlan === 'max' ? 'Manage Subscription' : 'Upgrade to Max'}
+          onAction={() =>
+            currentPlan === 'max' ? handleManageBilling() : handleSubscribe(maxVariantId)
+          }
         />
       </div>
     </div>
