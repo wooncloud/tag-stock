@@ -15,52 +15,76 @@ export function PricingPreviewSection() {
           </p>
         </div>
 
-        <div className="mx-auto grid max-w-4xl gap-8 md:grid-cols-2">
+        <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-3">
           {/* Free Plan */}
-          <Card>
+          <Card className="flex flex-col">
             <CardHeader>
               <CardTitle className="text-2xl">Free</CardTitle>
-              <CardDescription>Perfect for getting started</CardDescription>
+              <CardDescription>Perfect for trying out TagStock</CardDescription>
               <div className="mt-4">
                 <span className="text-4xl font-bold">$0</span>
                 <span className="text-muted-foreground">/month</span>
               </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex-1">
               <ul className="space-y-3">
-                <PricingFeature text="10 credits/month" />
-                <PricingFeature text="AI Auto-Tagging" />
-                <PricingFeature text="Title & Description generation" />
-                <PricingFeature text="CSV Export" />
+                <PricingFeature text="10 credits per month" />
+                <PricingFeature text="AI-powered tagging" />
+                <PricingFeature text="Compressed image storage" />
+                <PricingFeature text="Export metadata" />
               </ul>
             </CardContent>
           </Card>
 
           {/* Pro Plan */}
-          <Card className="relative border-2 border-purple-600">
+          <Card className="relative flex flex-col border-2 border-primary shadow-lg scale-105">
             <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-              <span className="rounded-full bg-purple-600 px-3 py-1 text-sm font-semibold text-white">
+              <span className="rounded-full bg-primary px-3 py-1 text-sm font-semibold text-primary-foreground">
                 Popular
               </span>
             </div>
             <CardHeader>
               <CardTitle className="text-2xl">Pro</CardTitle>
-              <CardDescription>For professionals</CardDescription>
+              <CardDescription>For professional photographers</CardDescription>
+              <div className="mt-4">
+                <span className="text-4xl font-bold">$5</span>
+                <span className="text-muted-foreground">/month</span>
+              </div>
+            </CardHeader>
+            <CardContent className="flex-1">
+              <ul className="space-y-3">
+                <PricingFeature text="500 credits per month" bold />
+                <PricingFeature text="Original quality preserved" />
+                <PricingFeature text="IPTC/XMP metadata embedding" bold />
+                <PricingFeature text="Up to 10 images at once" />
+                <PricingFeature text="All Free features" />
+              </ul>
+            </CardContent>
+          </Card>
+
+          {/* Max Plan */}
+          <Card className="flex flex-col">
+            <CardHeader>
+              <CardTitle className="text-2xl text-muted-foreground">Max</CardTitle>
+              <CardDescription>For high-volume creators</CardDescription>
               <div className="mt-4">
                 <span className="text-4xl font-bold">$19</span>
                 <span className="text-muted-foreground">/month</span>
               </div>
             </CardHeader>
-            <CardContent>
-              <ul className="space-y-3">
-                <PricingFeature text="Unlimited Credits" bold />
-                <PricingFeature text="AI Auto-Tagging" />
-                <PricingFeature text="Title & Description generation" />
-                <PricingFeature text="CSV Export" />
-                <PricingFeature text="IPTC Metadata Embedding" bold />
-                <PricingFeature text="Chrome Extension Access" bold />
-                <PricingFeature text="Priority Support" bold />
+            <CardContent className="flex-1">
+              <ul className="space-y-3 opacity-80">
+                <PricingFeature text="2,000 credits per month" />
+                <PricingFeature text="Credit rollover (up to 1,000)" />
+                <PricingFeature text="Priority support" />
+                <PricingFeature text="Early access to new features" />
+                <PricingFeature text="All Pro features" />
               </ul>
+              <div className="mt-6 text-center">
+                <span className="rounded bg-muted px-2 py-1 text-xs font-medium text-muted-foreground">
+                  COMING SOON
+                </span>
+              </div>
             </CardContent>
           </Card>
         </div>
