@@ -1,177 +1,126 @@
 # TagStock
 
-AI 기반 스톡 사진 메타데이터 자동 생성 도구
+AI 기반 스톡 사진 메타데이터 자동 생성 및 관리 도구
 
-## 기능
+---
 
-- 🤖 **AI 자동 태깅**: Google Gemini 3.0 Flash를 사용한 정확한 키워드 생성
-- 📝 **메타데이터 생성**: SEO 최적화된 제목과 설명 자동 생성
-- 🖼️ **IPTC 임베딩**: Pro 플랜으로 메타데이터를 이미지에 직접 임베딩 (Phase 2)
-- 📤 **멀티 업로드**: 여러 이미지 일괄 처리 (Phase 2)
-- 💳 **Stripe 결제**: Free/Pro 플랜 (Phase 3)
+## 📽️ 프로젝트 소개
+TagStock은 스톡 사진작가들을 위한 AI 기반 메타데이터 생성 도구입니다. **Google Gemini 3 Flash**를 사용하여 업로드된 이미지를 인식하고, Adobe Stock 및 Shutterstock 등 주요 스톡 사이트에 최적화된 **제목, 설명, 키워드**를 자동으로 생성합니다.
 
-## Phase 1 완료 항목
+---
 
-✅ Next.js 15 프로젝트 초기화 (App Router, TypeScript, Tailwind CSS)
-✅ Supabase 인증 설정 (OAuth: Google, Apple, X)
-✅ 데이터베이스 스키마 및 RLS 정책
-✅ 인증 미들웨어 및 보호된 라우트
-✅ Shadcn/UI 컴포넌트 통합
-✅ 랜딩 페이지 (Hero, Features, Pricing)
-✅ 대시보드 레이아웃 및 쉘
-✅ Vercel 배포 설정
+## ✨ 핵심 기능
 
-## 시작하기
+### 1. 🤖 AI 자동 태깅 시스템
+- **Gemini 3 Flash 연동**: 최신 비전 AI 모델을 통한 정확한 이미지 분석
+- **SEO 최적화**: 스톡 사진 시장의 트렌드를 반영한 가독성 높은 메타데이터 생성
+- **다국어 지원**: 글로벌 시장을 겨냥한 영어 기반 메타데이터 생성
 
-### 1. 의존성 설치
+### 2. 🖼️ 이미지 관리 및 편집
+- **드래그 & 드롭 업로드**: 브라우저 기반의 간편한 멀티 이미지 업로드
+- **메타데이터 실시간 편집**: AI가 생성한 내용을 사용자가 즉시 수정 및 보완
+- **이미지 미리보기**: 업로드된 이미지와 세부 메타데이터를 한눈에 확인
 
+### 3. 💳 구독 및 크레딧 시스템
+- **플랜별 차등 혜택**: Free (10개), Pro (500개), Max (무제한) 플랜 지원
+- **Lemon Squeezy 결제**: 안전하고 간편한 글로벌 결제 솔루션 도입
+- **월간 자동 리셋**: Supabase Edge Functions를 이용한 매월 1일 크레딧 자동 갱신
+
+### 4. 🛠️ 기술적 특징
+- **IPTC 메타데이터 임베딩**: 이미지 파일 자체에 정보를 직접 주입 (Phase 2/3)
+- **실시간 데이터 동기화**: Supabase를 이용한 빠르고 안정적인 DB 관리
+- **반응형 디자인**: Shadcn/UI 기반의 모던하고 직관적인 대시보드
+
+---
+
+## 🚀 시작하기
+
+### 1. 로컬 환경 설정
+의존성 패키지를 설치합니다:
 ```bash
 npm install
 ```
 
-### 2. 환경 변수 설정
-
-`.env.local` 파일을 생성하고 다음 변수를 설정하세요:
-
-```bash
-# Supabase 설정
-NEXT_PUBLIC_SUPABASE_URL=your-project-url.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
-
-# 앱 설정
-NEXT_PUBLIC_APP_URL=http://localhost:3000
-```
-
-### 3. Supabase 프로젝트 설정
-
-#### 3.1 프로젝트 생성
-1. https://supabase.com 접속
-2. "New project" 생성
-3. Project settings → API에서 URL과 anon key 복사
-
-#### 3.2 데이터베이스 스키마 적용
-Supabase SQL Editor에서 `supabase/migrations/20240113_initial_schema.sql` 파일의 SQL을 실행하세요.
-
-#### 3.3 OAuth 제공자 설정
-
-**Google OAuth:**
-1. [Google Cloud Console](https://console.cloud.google.com) → 새 프로젝트 생성
-2. OAuth consent screen 설정
-3. Credentials → OAuth 2.0 Client ID 생성
-4. Authorized redirect URIs:
-   - `https://<project-ref>.supabase.co/auth/v1/callback`
-   - `http://localhost:3000/auth/callback`
-5. Supabase Dashboard → Authentication → Providers → Google 활성화
-
-**Apple OAuth:**
-1. [Apple Developer](https://developer.apple.com/account) → Services IDs 생성
-2. Sign in with Apple 구성
-3. Return URLs 설정
-4. Supabase Dashboard → Authentication → Providers → Apple 활성화
-
-**X (Twitter) OAuth:**
-1. [Twitter Developer Portal](https://developer.twitter.com/en/portal/dashboard) → 앱 생성
-2. OAuth 2.0 활성화
-3. Callback URLs 설정
-4. Supabase Dashboard → Authentication → Providers → Twitter 활성화
-
-#### 3.4 Storage 버킷 생성
-1. Supabase Dashboard → Storage → "New bucket"
-2. Bucket name: `images`
-3. Public: `false`
-4. File size limit: `50 MB`
-
-### 4. 개발 서버 실행
+### 2. 환경 변수 설정 (`.env.local`)
+`.env.example`을 참고하여 프로젝트 루트에 `.env.local` 파일을 생성합니다:
 
 ```bash
-npm run dev
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=your_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+
+# Google Gemini AI
+GOOGLE_GEMINI_API_KEY=your_gemini_api_key
+
+# Lemon Squeezy
+LEMON_SQUEEZY_API_KEY=your_api_key
+LEMON_SQUEEZY_STORE_ID=your_store_id
+LEMON_SQUEEZY_WEBHOOK_SECRET=your_webhook_secret
+
+# Edge Function Cron Auth
+CRON_SECRET=your_random_string
+
+# Discord Webhook (Alerts)
+DISCORD_WEBHOOK_URL=your_webhook_url
 ```
 
-http://localhost:3000 에서 앱을 확인하세요.
+### 3. Supabase 설정
+1. **Migrations**: `supabase/migrations` 폴더의 SQL 파일들을 Supabase SQL Editor에서 순서대로 실행합니다.
+2. **Extensions**: `pg_cron`, `pg_net` 확장을 활성화합니다.
+3. **Storage**: `user-images` 버킷을 생성합니다.
 
-### 5. 프로덕션 빌드
+---
 
-```bash
-npm run build
-npm run start
-```
-
-## Vercel 배포
-
-### 1. Vercel에 프로젝트 연결
-```bash
-npm install -g vercel
-vercel
-```
-
-### 2. 환경 변수 설정
-Vercel Dashboard → Project Settings → Environment Variables에서 다음 변수를 추가:
-
-- `NEXT_PUBLIC_SUPABASE_URL`
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-- `NEXT_PUBLIC_APP_URL` (Vercel 도메인)
-
-### 3. OAuth Redirect URIs 업데이트
-각 OAuth 제공자의 설정에 Vercel 도메인 추가:
-- `https://your-app.vercel.app/auth/callback`
-
-### 4. Supabase Site URL 설정
-Supabase Dashboard → Authentication → URL Configuration:
-- Site URL: `https://your-app.vercel.app`
-
-## 프로젝트 구조
+## 📂 프로젝트 구조
 
 ```
 tag-stock/
-├── app/                      # Next.js App Router
-│   ├── page.tsx             # 랜딩 페이지
-│   ├── layout.tsx           # 루트 레이아웃
-│   ├── auth/
-│   │   └── callback/        # OAuth 콜백
-│   ├── dashboard/           # 대시보드 (보호된 라우트)
-│   │   ├── layout.tsx
-│   │   └── page.tsx
-│   └── api/
-│       └── auth/signout/    # 로그아웃 API
-├── components/
-│   ├── ui/                  # Shadcn/UI 컴포넌트
-│   ├── auth/                # 인증 컴포넌트
-│   ├── layout/              # 레이아웃 컴포넌트
-│   └── dashboard/           # 대시보드 컴포넌트
-├── lib/
-│   ├── supabase/            # Supabase 클라이언트
-│   └── utils.ts             # 유틸리티 함수
-├── types/                   # TypeScript 타입 정의
-├── supabase/
-│   └── migrations/          # 데이터베이스 마이그레이션
-└── middleware.ts            # Next.js 미들웨어
+├── app/                  # Next.js App Router (Pages, Actions, APIs)
+├── components/           # UI 및 비즈니스 컴포넌트
+│   ├── dashboard/        # 대시보드 전용 컴포넌트 (Gallery, Upload, Pricing)
+│   ├── landing/          # 랜딩 페이지 섹션
+│   └── ui/               # Shadcn/UI 기초 컴포넌트
+├── lib/                  # 핵심 로직 (Supabase, Gemini, Lemon Squeezy, IPTC)
+├── supabase/             
+│   ├── functions/        # Edge Functions (Credit Reset 등)
+│   └── migrations/       # DB 스키마 및 RLS 정책
+├── types/                # TypeScript 타입 정의
+└── docs/                 # 프로젝트 문서 및 가이드
 ```
 
-## 기술 스택
+---
 
-- **프레임워크**: Next.js 15 (App Router)
-- **언어**: TypeScript
-- **스타일링**: Tailwind CSS, Shadcn/UI
-- **인증**: Supabase Auth (OAuth)
-- **데이터베이스**: Supabase (PostgreSQL)
-- **스토리지**: Supabase Storage
-- **배포**: Vercel
+## 🛠 기술 스택
 
-## 다음 단계 (Phase 2)
+- **Frontend**: Next.js 15 (App Router), TypeScript, Tailwind CSS, Shadcn/UI
+- **Backend**: Supabase (Auth, DB, Storage, Edge Functions)
+- **AI**: Google Gemini 3 Flash API
+- **Payments**: Lemon Squeezy
+- **Deployment**: Vercel
 
-- [ ] 이미지 업로드 기능 (드래그 & 드롭)
-- [ ] Google Gemini 3.0 Flash API 연동
-- [ ] AI 자동 태깅 구현
-- [ ] 메타데이터 표시 및 편집
-- [ ] CSV 내보내기
+---
 
-## 다음 단계 (Phase 3)
+## 📈 로드맵
 
-- [ ] Stripe 결제 연동
-- [ ] Pro 플랜 업그레이드
-- [ ] IPTC 메타데이터 임베딩
-- [ ] 크레딧 시스템 완성
+### ✅ Phase 1: 기반 구축 (완료)
+- Next.js 및 Supabase 초기화
+- OAuth 소셜 로그인 (Google, Apple) 연동
+- 기본 랜딩 페이지 및 대시보드 레이아웃 구축
 
-## 라이선스
+### ✅ Phase 2: AI 핵심 기능 (완료)
+- Gemini AI 기반 자동 태그 생성 엔진 개발
+- 이미지 업로드 및 메타데이터 관리 대시보드 구현
+- 실시간 메타데이터 편집 기능 추가
 
-MIT
+### 🔄 Phase 3: 상용화 및 고도화 (진행 중)
+- Lemon Squeezy 기반 구독 모델 구축
+- 매월 크레딧 자동 리셋 자동화 (Edge Function)
+- 이미지 IPTC 메타데이터 임베딩 기능 안정화
+- CSV/Excel 내보내기 및 스톡 사이트 연동 최적화
+
+---
+
+## 📄 라이선스
+
+이 프로젝트는 MIT 라이선스를 따릅니다.
