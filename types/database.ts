@@ -1,4 +1,4 @@
-export type UserPlan = 'free' | 'pro';
+export type UserPlan = 'free' | 'pro' | 'max';
 
 export type ImageStatus = 'uploading' | 'processing' | 'completed' | 'failed';
 

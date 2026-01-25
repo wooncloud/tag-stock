@@ -5,7 +5,7 @@ import { AlertCircle, Crown, Sparkles } from 'lucide-react';
 
 import type { UserPlan } from '@/types/database';
 
-import { PLAN_LIMITS } from '@/lib/plan-limits';
+import { isPaidPlan, PLAN_LIMITS } from '@/lib/plan-limits';
 import { ensureAuthenticated } from '@/lib/supabase/auth';
 
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -26,7 +26,7 @@ export default async function UploadPage() {
   const { profile } = session;
   const userPlan = (profile.plan as UserPlan) || 'free';
   const planLimit = PLAN_LIMITS[userPlan];
-  const isPro = userPlan === 'pro';
+  const isPro = isPaidPlan(userPlan);
 
   const isOutOfCredits = profile.credits_remaining <= 0 && profile.plan === 'free';
 

@@ -10,7 +10,7 @@ import { Crown, RefreshCw, Upload } from 'lucide-react';
 import type { UserPlan } from '@/types/database';
 import { FileWithProgress } from '@/types/upload';
 
-import { PLAN_LIMITS } from '@/lib/plan-limits';
+import { isPaidPlan, PLAN_LIMITS } from '@/lib/plan-limits';
 import { processAndCompressImage } from '@/lib/utils/image-processing';
 
 import { Badge } from '@/components/ui/badge';
@@ -32,7 +32,7 @@ export function UploadWorkflow({ disabled, userPlan = 'free' }: UploadWorkflowPr
   const [isUploading, setIsUploading] = useState(false);
 
   const planLimit = PLAN_LIMITS[userPlan];
-  const isPro = userPlan === 'pro';
+  const canMultipleUpload = isPaidPlan(userPlan);
 
   const onFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
@@ -130,11 +130,11 @@ export function UploadWorkflow({ disabled, userPlan = 'free' }: UploadWorkflowPr
             </p>
 
             {/* 플랜별 안내 문구 */}
-            {isPro ? (
+            {canMultipleUpload ? (
               <div className="flex flex-col items-center gap-1">
                 <Badge variant="default" className="bg-gradient-to-r from-amber-500 to-orange-500">
                   <Crown className="mr-1 h-3 w-3" />
-                  Pro
+                  {userPlan.charAt(0).toUpperCase() + userPlan.slice(1)}
                 </Badge>
                 <p className="text-muted-foreground text-xs">
                   Original quality preserved (max {planLimit.maxFileSizeMB}MB per file)
@@ -158,7 +158,7 @@ export function UploadWorkflow({ disabled, userPlan = 'free' }: UploadWorkflowPr
           <input
             type="file"
             className="hidden"
-            multiple
+            multiple={canMultipleUpload}
             accept="image/*"
             onChange={onFileSelect}
             disabled={disabled || isUploading}

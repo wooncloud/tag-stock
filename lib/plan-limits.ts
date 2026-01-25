@@ -40,6 +40,14 @@ export const PLAN_LIMITS: Record<UserPlan, PlanLimit> = {
     monthlyCredits: 500,
     storageType: 'original',
   },
+  max: {
+    maxUploadCount: 50,
+    maxFileSizeMB: 50,
+    compressionEnabled: false,
+    iptcEnabled: true,
+    monthlyCredits: -1, // unlimited
+    storageType: 'original',
+  },
 } as const;
 
 export function getPlanLimit(plan: UserPlan): PlanLimit {
@@ -52,4 +60,8 @@ export function getStoragePath(userId: string, fileName: string, storageType: St
 
 export function isPro(plan: UserPlan): boolean {
   return plan === 'pro';
+}
+
+export function isPaidPlan(plan: UserPlan): boolean {
+  return plan === 'pro' || plan === 'max';
 }
