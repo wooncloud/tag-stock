@@ -1,4 +1,3 @@
-import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
@@ -7,8 +6,7 @@ import { AlertCircle, Crown, Sparkles } from 'lucide-react';
 import type { UserPlan } from '@/types/database';
 
 import { PLAN_LIMITS } from '@/lib/plan-limits';
-import { getProfile } from '@/lib/supabase/profile';
-import { createClient } from '@/lib/supabase/server';
+import { ensureAuthenticated } from '@/lib/supabase/auth';
 
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
@@ -18,18 +16,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { UploadWorkflow } from '@/components/dashboard/upload';
 
 export default async function UploadPage() {
-  const cookieStore = await cookies();
-  const supabase = createClient(cookieStore);
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
+  let session;
+  try {
+    session = await ensureAuthenticated();
+  } catch {
     redirect('/');
   }
 
-  const profile = await getProfile(supabase, user.id, user.email!);
+  const { profile } = session;
   const userPlan = (profile.plan as UserPlan) || 'free';
   const planLimit = PLAN_LIMITS[userPlan];
   const isPro = userPlan === 'pro';
@@ -45,8 +39,8 @@ export default async function UploadPage() {
         </p>
       </div>
 
-      {/* 크레딧 경고 */}
-      {isOutOfCredits && (
+      {/* Credit Alerts */}
+      {isOutOfCredits ? (
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription className="flex items-center justify-between">
@@ -59,10 +53,7 @@ export default async function UploadPage() {
             </Button>
           </AlertDescription>
         </Alert>
-      )}
-
-      {/* 크레딧 정보 */}
-      {!isOutOfCredits && (
+      ) : (
         <Alert>
           <Sparkles className="h-4 w-4" />
           <AlertDescription>
@@ -78,18 +69,23 @@ export default async function UploadPage() {
         </Alert>
       )}
 
-      {/* 업로드 컴포넌트 */}
+      {/* Upload Workflow */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            Upload Your Images
-            {isPro && (
-              <Badge variant="default" className="bg-gradient-to-r from-amber-500 to-orange-500">
-                <Crown className="mr-1 h-3 w-3" />
-                Pro
-              </Badge>
-            )}
-          </CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle className="flex items-center gap-2">
+              Upload Your Images
+              {isPro && (
+                <Badge
+                  variant="default"
+                  className="border-none bg-gradient-to-r from-amber-500 to-orange-500"
+                >
+                  <Crown className="mr-1 h-3 w-3" />
+                  Pro
+                </Badge>
+              )}
+            </CardTitle>
+          </div>
           <CardDescription>
             Supported formats: JPEG, PNG, WebP, TIFF.
             <br />
@@ -101,7 +97,10 @@ export default async function UploadPage() {
               <span className="font-medium text-amber-500">
                 Images are compressed to {planLimit.compressionOptions?.maxWidthOrHeight}px for
                 storage.{' '}
-                <Link href="/dashboard/pricing" className="text-primary underline">
+                <Link
+                  href="/dashboard/pricing"
+                  className="text-primary underline hover:no-underline"
+                >
                   Upgrade to Pro
                 </Link>{' '}
                 for original quality.

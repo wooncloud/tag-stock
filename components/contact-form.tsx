@@ -2,15 +2,17 @@
 
 import { useState, useTransition } from 'react';
 
-import { Loader2, MessageSquare, CheckCircle } from 'lucide-react';
+import { CheckCircle, Loader2, MessageSquare } from 'lucide-react';
 import { toast } from 'sonner';
 
-import { submitContact } from '@/app/actions/contact';
+import { type ContactType, contactTypeLabels, contactTypes } from '@/lib/validations/contact';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { contactTypes, contactTypeLabels, type ContactType } from '@/lib/validations/contact';
+
+import { submitContact } from '@/app/actions/contact';
 
 interface FieldErrors {
   email?: string[];

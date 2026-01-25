@@ -11,9 +11,9 @@ export interface MetadataInput {
 }
 
 export interface IPTCData {
-  'Headline': string;
+  Headline: string;
   'Caption-Abstract': string;
-  'Keywords': string[];
+  Keywords: string[];
 }
 
 /**
@@ -30,9 +30,9 @@ export function mapToIPTC(metadata: MetadataInput): IPTCData {
   const combinedKeywords = [...keywords, ...tags].slice(0, 50);
 
   return {
-    'Headline': metadata.title || '',
+    Headline: metadata.title || '',
     'Caption-Abstract': metadata.description || '',
-    'Keywords': combinedKeywords,
+    Keywords: combinedKeywords,
   };
 }
 

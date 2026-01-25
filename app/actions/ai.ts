@@ -1,11 +1,10 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { cookies } from 'next/headers';
 
 import { generateImageMetadata } from '@/services/gemini';
 
-import { createClient } from '@/lib/supabase/server';
+import { ensureAuthenticated } from '@/lib/supabase/auth';
 
 interface GenerateMetadataResult {
   success: boolean;
@@ -17,18 +16,7 @@ export async function generateMetadata(
   options?: { force?: boolean }
 ): Promise<GenerateMetadataResult> {
   try {
-    const cookieStore = await cookies();
-    const supabase = createClient(cookieStore);
-
-    // 인증된 사용자를 가져옵니다.
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
-
-    if (authError || !user) {
-      return { success: false, error: 'Unauthorized' };
-    }
+    const { user, supabase } = await ensureAuthenticated();
 
     // 이미지 레코드를 가져옵니다.
     const { data: image, error: imageError } = await supabase
@@ -130,28 +118,7 @@ export async function generateMetadata(
 
 export async function regenerateMetadata(imageId: string): Promise<GenerateMetadataResult> {
   try {
-    const cookieStore = await cookies();
-    const supabase = createClient(cookieStore);
-
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
-
-    if (authError || !user) {
-      return { success: false, error: 'Unauthorized' };
-    }
-
-    // 사용자의 크레딧을 확인합니다.
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('credits_remaining, plan')
-      .eq('id', user.id)
-      .single();
-
-    if (profileError || !profile) {
-      return { success: false, error: 'Profile not found' };
-    }
+    const { user, profile, supabase } = await ensureAuthenticated();
 
     if (profile.credits_remaining <= 0 && profile.plan === 'free') {
       return { success: false, error: 'Insufficient credits. Please upgrade to Pro.' };

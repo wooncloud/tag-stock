@@ -1,8 +1,7 @@
+import { ExifTool } from 'exiftool-vendored';
 import * as fs from 'fs/promises';
 import * as os from 'os';
 import * as path from 'path';
-
-import { ExifTool } from 'exiftool-vendored';
 
 import { Metadata } from '@/types/database';
 

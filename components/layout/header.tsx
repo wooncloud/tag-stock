@@ -8,7 +8,7 @@ import { ThemeToggle } from '@/components/theme-toggle';
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
+    <header className="bg-background/95 supports-backdrop-filter:bg-background/60 sticky top-0 z-50 w-full border-b backdrop-blur">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Link href="/" className="flex items-center space-x-2">
           <div className="text-xl font-bold">TagStock</div>
@@ -28,7 +28,7 @@ export function Header() {
 
         <div className="flex items-center space-x-2">
           <ThemeToggle />
-          <Button className="bg-purple-600 hover:bg-purple-700 text-white" asChild>
+          <Button className="bg-purple-600 text-white hover:bg-purple-700" asChild>
             <Link href="/login">Login</Link>
           </Button>
         </div>

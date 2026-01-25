@@ -1,11 +1,10 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { cookies } from 'next/headers';
 
 import { embedMetadata } from '@/services/metadata-embedder';
 
-import { createClient } from '@/lib/supabase/server';
+import { ensureAuthenticated } from '@/lib/supabase/auth';
 
 interface EmbedMetadataResult {
   success: boolean;
@@ -15,29 +14,7 @@ interface EmbedMetadataResult {
 
 export async function embedMetadataIntoImage(imageId: string): Promise<EmbedMetadataResult> {
   try {
-    const cookieStore = await cookies();
-    const supabase = createClient(cookieStore);
-
-    // 인증된 사용자를 가져옵니다.
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
-
-    if (authError || !user) {
-      return { success: false, error: 'Unauthorized' };
-    }
-
-    // 사용자가 Pro 플랜인지 확인합니다.
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('plan')
-      .eq('id', user.id)
-      .single();
-
-    if (profileError || !profile) {
-      return { success: false, error: 'Profile not found' };
-    }
+    const { user, profile, supabase } = await ensureAuthenticated();
 
     if (profile.plan !== 'pro') {
       return { success: false, error: 'This feature is only available for Pro users' };
@@ -120,17 +97,7 @@ export async function downloadImage(
   embedded: boolean = false
 ): Promise<{ success: boolean; url?: string; error?: string }> {
   try {
-    const cookieStore = await cookies();
-    const supabase = createClient(cookieStore);
-
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
-
-    if (authError || !user) {
-      return { success: false, error: 'Unauthorized' };
-    }
+    const { user, supabase } = await ensureAuthenticated();
 
     // 이미지를 가져옵니다.
     const { data: image, error: imageError } = await supabase

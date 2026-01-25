@@ -1,12 +1,6 @@
 import { z } from 'zod';
 
-export const contactTypes = [
-  'general',
-  'support',
-  'billing',
-  'feature',
-  'other',
-] as const;
+export const contactTypes = ['general', 'support', 'billing', 'feature', 'other'] as const;
 
 export type ContactType = (typeof contactTypes)[number];
 

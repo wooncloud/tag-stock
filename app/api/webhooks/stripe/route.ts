@@ -62,9 +62,7 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
         subscription_status: subscription.status,
         plan: subscription.status === 'active' ? 'pro' : 'free',
         credits_remaining:
-          subscription.status === 'active'
-            ? STRIPE_CONFIG.credits.pro
-            : STRIPE_CONFIG.credits.free,
+          subscription.status === 'active' ? STRIPE_CONFIG.credits.pro : STRIPE_CONFIG.credits.free,
       })
       .eq('id', profile.id);
   } else {
@@ -74,9 +72,7 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
         subscription_status: subscription.status,
         plan: subscription.status === 'active' ? 'pro' : 'free',
         credits_remaining:
-          subscription.status === 'active'
-            ? STRIPE_CONFIG.credits.pro
-            : STRIPE_CONFIG.credits.free,
+          subscription.status === 'active' ? STRIPE_CONFIG.credits.pro : STRIPE_CONFIG.credits.free,
       })
       .eq('id', userId);
   }

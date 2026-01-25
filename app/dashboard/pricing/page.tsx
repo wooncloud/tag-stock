@@ -1,10 +1,8 @@
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 import { CheckCircle2 } from 'lucide-react';
 
-import { getProfile } from '@/lib/supabase/profile';
-import { createClient } from '@/lib/supabase/server';
+import { ensureAuthenticated } from '@/lib/supabase/auth';
 
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,18 +10,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { PricingCards } from '@/components/dashboard/pricing';
 
 export default async function PricingPage() {
-  const cookieStore = await cookies();
-  const supabase = createClient(cookieStore);
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
+  let session;
+  try {
+    session = await ensureAuthenticated();
+  } catch {
     redirect('/');
   }
 
-  const profile = await getProfile(supabase, user.id, user.email!);
+  const { profile } = session;
 
   return (
     <div className="space-y-6">
@@ -34,7 +28,7 @@ export default async function PricingPage() {
 
       {profile.plan === 'pro' && (
         <Alert>
-          <CheckCircle2 className="h-4 w-4" />
+          <CheckCircle2 className="h-4 w-4 text-emerald-500" />
           <AlertDescription>
             You&apos;re currently on the <strong>Pro</strong> plan. You have unlimited credits and
             access to all premium features.
@@ -44,7 +38,7 @@ export default async function PricingPage() {
 
       <PricingCards currentPlan={profile.plan} hasCustomerId={!!profile.stripe_customer_id} />
 
-      {/* 요금제별 기능 비교 */}
+      {/* Feature Comparison */}
       <Card>
         <CardHeader>
           <CardTitle>Feature Comparison</CardTitle>

@@ -1,7 +1,8 @@
 'use server';
 
-import { contactSchema } from '@/lib/validations/contact';
 import { sendContactToDiscord } from '@/services/discord';
+
+import { contactSchema } from '@/lib/validations/contact';
 
 export interface ContactActionResult {
   success: boolean;
