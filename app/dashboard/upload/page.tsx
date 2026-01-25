@@ -2,12 +2,16 @@ import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
-import { AlertCircle, Sparkles } from 'lucide-react';
+import { AlertCircle, Crown, Sparkles } from 'lucide-react';
 
+import type { UserPlan } from '@/types/database';
+
+import { PLAN_LIMITS } from '@/lib/plan-limits';
 import { getProfile } from '@/lib/supabase/profile';
 import { createClient } from '@/lib/supabase/server';
 
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
@@ -26,6 +30,9 @@ export default async function UploadPage() {
   }
 
   const profile = await getProfile(supabase, user.id, user.email!);
+  const userPlan = (profile.plan as UserPlan) || 'free';
+  const planLimit = PLAN_LIMITS[userPlan];
+  const isPro = userPlan === 'pro';
 
   const isOutOfCredits = profile.credits_remaining <= 0 && profile.plan === 'free';
 
@@ -74,18 +81,36 @@ export default async function UploadPage() {
       {/* 업로드 컴포넌트 */}
       <Card>
         <CardHeader>
-          <CardTitle>Upload Your Images</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            Upload Your Images
+            {isPro && (
+              <Badge variant="default" className="bg-gradient-to-r from-amber-500 to-orange-500">
+                <Crown className="mr-1 h-3 w-3" />
+                Pro
+              </Badge>
+            )}
+          </CardTitle>
           <CardDescription>
-            Supported formats: JPEG, PNG, WebP, TIFF (max 50MB per file).
+            Supported formats: JPEG, PNG, WebP, TIFF.
             <br />
-            <span className="font-medium text-amber-500">
-              ※ Images are compressed to under 1MB for AI analysis. Original high-resolution files
-              are not stored.
-            </span>
+            {isPro ? (
+              <span className="font-medium text-emerald-500">
+                Original quality preserved (max {planLimit.maxFileSizeMB}MB per file)
+              </span>
+            ) : (
+              <span className="font-medium text-amber-500">
+                Images are compressed to {planLimit.compressionOptions?.maxWidthOrHeight}px for
+                storage.{' '}
+                <Link href="/dashboard/pricing" className="text-primary underline">
+                  Upgrade to Pro
+                </Link>{' '}
+                for original quality.
+              </span>
+            )}
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <UploadWorkflow disabled={isOutOfCredits} />
+          <UploadWorkflow disabled={isOutOfCredits} userPlan={userPlan} />
         </CardContent>
       </Card>
     </div>

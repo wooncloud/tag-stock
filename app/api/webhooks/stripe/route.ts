@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import Stripe from 'stripe';
 
-import { stripe } from '@/lib/stripe';
+import { STRIPE_CONFIG, stripe } from '@/lib/stripe';
 
 // 웹훅 핸들러에는 서비스 역할 키(Service Role Key)를 사용합니다.
 const supabaseAdmin = createClient(
@@ -33,7 +33,7 @@ async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
       stripe_subscription_id: subscription.id,
       subscription_status: subscription.status,
       plan: 'pro',
-      credits_remaining: 999999, // Pro 플랜은 무제한 전용 수치
+      credits_remaining: STRIPE_CONFIG.credits.pro, // Pro 플랜은 무제한 전용 수치
     })
     .eq('id', userId);
 
@@ -61,7 +61,10 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
       .update({
         subscription_status: subscription.status,
         plan: subscription.status === 'active' ? 'pro' : 'free',
-        credits_remaining: subscription.status === 'active' ? 999999 : 10,
+        credits_remaining:
+          subscription.status === 'active'
+            ? STRIPE_CONFIG.credits.pro
+            : STRIPE_CONFIG.credits.free,
       })
       .eq('id', profile.id);
   } else {
@@ -70,7 +73,10 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
       .update({
         subscription_status: subscription.status,
         plan: subscription.status === 'active' ? 'pro' : 'free',
-        credits_remaining: subscription.status === 'active' ? 999999 : 10,
+        credits_remaining:
+          subscription.status === 'active'
+            ? STRIPE_CONFIG.credits.pro
+            : STRIPE_CONFIG.credits.free,
       })
       .eq('id', userId);
   }
@@ -96,7 +102,7 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
     .update({
       subscription_status: 'canceled',
       plan: 'free',
-      credits_remaining: 10,
+      credits_remaining: STRIPE_CONFIG.credits.free,
     })
     .eq('id', profile.id);
 
@@ -120,7 +126,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
         stripe_subscription_id: subscription.id,
         subscription_status: subscription.status,
         plan: 'pro',
-        credits_remaining: 999999,
+        credits_remaining: STRIPE_CONFIG.credits.pro,
       })
       .eq('id', userId);
 

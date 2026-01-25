@@ -1,13 +1,31 @@
 import imageCompression from 'browser-image-compression';
 
-export async function processAndCompressImage(file: File): Promise<File> {
+import { PLAN_LIMITS, type StorageType } from '@/lib/plan-limits';
+import type { UserPlan } from '@/types/database';
+
+interface ProcessImageOptions {
+  userPlan?: UserPlan;
+}
+
+export async function processAndCompressImage(
+  file: File,
+  options: ProcessImageOptions = {}
+): Promise<File> {
   if (!file.type.startsWith('image/')) return file;
 
-  const options = {
-    maxSizeMB: 0.9,
-    maxWidthOrHeight: 2048,
+  const { userPlan = 'free' } = options;
+  const planLimit = PLAN_LIMITS[userPlan];
+
+  // Pro 플랜은 압축하지 않음
+  if (!planLimit.compressionEnabled) {
+    return file;
+  }
+
+  const compressionOptions = {
+    maxSizeMB: planLimit.compressionOptions?.maxSizeMB ?? 0.9,
+    maxWidthOrHeight: planLimit.compressionOptions?.maxWidthOrHeight ?? 2048,
     useWebWorker: true,
-    initialQuality: 0.7,
+    initialQuality: planLimit.compressionOptions?.quality ?? 0.7,
     preserveExif: true,
   };
 
@@ -29,7 +47,7 @@ export async function processAndCompressImage(file: File): Promise<File> {
       }
     }
 
-    const compressedBlob = await imageCompression(file, options);
+    const compressedBlob = await imageCompression(file, compressionOptions);
     let finalFile = new File([compressedBlob], file.name, { type: compressedBlob.type });
 
     // EXIF 다시 주입 (JPG인 경우)

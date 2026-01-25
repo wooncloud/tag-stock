@@ -2,6 +2,8 @@ export type UserPlan = 'free' | 'pro';
 
 export type ImageStatus = 'uploading' | 'processing' | 'completed' | 'failed';
 
+export type StorageType = 'compressed' | 'original';
+
 export interface Profile {
   id: string;
   email: string;
@@ -24,6 +26,7 @@ export interface Image {
   width?: number;
   height?: number;
   status: ImageStatus;
+  storage_type: StorageType;
   error_message?: string;
   created_at: string;
   updated_at: string;

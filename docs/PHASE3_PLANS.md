@@ -125,26 +125,29 @@ user-images/
 
 ## 구현 태스크
 
-### Phase 3.1: 업로드 정책 구현
-- [ ] 플랜별 압축 로직 분기 (`components/image-upload.tsx` 수정)
-- [ ] Free: 클라이언트 압축 강제 적용
-- [ ] Pro: 원본 업로드 허용
-- [ ] 스토리지 경로 분리 (compressed/ vs original/)
+### Phase 3.1: 업로드 정책 구현 ✅
+- [x] 플랜별 압축 로직 분기 (`lib/utils/image-processing.ts` 수정)
+- [x] Free: 클라이언트 압축 강제 적용
+- [x] Pro: 원본 업로드 허용
+- [x] 스토리지 경로 분리 (compressed/ vs original/)
 
-### Phase 3.2: 다중 업로드 구현
+### Phase 3.2: 다중 업로드 구현 (보류)
+> **참고**: 다중 업로드는 배치 처리 아키텍처가 필요하여 추후 구현 예정
+> 아래 "다중 업로드 구현 가이드" 섹션 참조
+
 - [ ] Free: 파일 선택 1개 제한
 - [ ] Pro: 최대 10개 파일 선택 허용
 - [ ] 다중 파일 병렬 업로드 처리
 - [ ] 배치 AI 처리 로직
 
-### Phase 3.3: UI 분기 처리
-- [ ] Free 사용자 다중 업로드 시 Pro 유도 모달
-- [ ] 업로드 영역에 플랜별 제한 안내 문구
-- [ ] Pro 뱃지/마크 표시
+### Phase 3.3: UI 분기 처리 ✅
+- [x] 업로드 영역에 플랜별 제한 안내 문구
+- [x] Pro 뱃지/마크 표시
+- [ ] Free 사용자 다중 업로드 시 Pro 유도 모달 (Phase 3.2와 함께 구현)
 
-### Phase 3.4: DB 스키마 업데이트
-- [ ] images 테이블에 `storage_type` 필드 추가 (compressed/original)
-- [ ] 마이그레이션 스크립트 작성
+### Phase 3.4: DB 스키마 업데이트 ✅
+- [x] images 테이블에 `storage_type` 필드 추가 (compressed/original)
+- [ ] 마이그레이션 스크립트 작성 (Supabase 대시보드에서 직접 추가 가능)
 
 ---
 
@@ -266,8 +269,96 @@ Drag & drop your images here
 
 ---
 
+## 다중 업로드 구현 가이드 (Phase 3.2)
+
+### 추천 아키텍처: DB 큐 + Supabase Edge Function
+
+```
+[사용자가 10장 선택]
+        ↓
+[각 이미지를 Storage에 업로드]
+        ↓
+[images 테이블에 status='pending' 으로 레코드 생성]
+        ↓
+[Supabase Edge Function (Cron 또는 DB Trigger)]
+        ↓
+[pending 상태 이미지 조회 → AI 처리 → status='completed']
+        ↓
+[사용자에게 완료 알림 (Realtime 또는 Polling)]
+```
+
+### 구현 단계
+
+1. **images 테이블 상태 확장**
+   ```sql
+   -- status에 'pending' 상태 추가
+   ALTER TABLE images
+   ALTER COLUMN status TYPE text;
+   -- 'pending' | 'processing' | 'completed' | 'failed'
+   ```
+
+2. **Edge Function 생성** (`supabase/functions/process-pending-images`)
+   ```typescript
+   // Cron: */5 * * * * (5분마다 실행)
+   const { data: pendingImages } = await supabase
+     .from('images')
+     .select('*')
+     .eq('status', 'pending')
+     .limit(10);
+
+   for (const image of pendingImages) {
+     await supabase.from('images')
+       .update({ status: 'processing' })
+       .eq('id', image.id);
+
+     // AI 처리
+     await generateMetadataForImage(image);
+
+     await supabase.from('images')
+       .update({ status: 'completed' })
+       .eq('id', image.id);
+   }
+   ```
+
+3. **Realtime 구독으로 완료 알림**
+   ```typescript
+   supabase
+     .channel('images')
+     .on('postgres_changes', {
+       event: 'UPDATE',
+       schema: 'public',
+       table: 'images',
+       filter: `user_id=eq.${userId}`,
+     }, (payload) => {
+       if (payload.new.status === 'completed') {
+         toast.success(`${payload.new.original_filename} 처리 완료!`);
+       }
+     })
+     .subscribe();
+   ```
+
+### 대안: 클라이언트 큐 방식 (간단)
+
+배치 서버 없이 클라이언트에서 순차 처리:
+
+```typescript
+// 10장 선택 → 2-3개씩 동시 처리
+const CONCURRENT_LIMIT = 3;
+
+for (let i = 0; i < files.length; i += CONCURRENT_LIMIT) {
+  const batch = files.slice(i, i + CONCURRENT_LIMIT);
+  await Promise.all(batch.map(file => processFile(file)));
+}
+```
+
+**장점**: 별도 서버 불필요, 즉시 구현 가능
+**단점**: 브라우저를 열어둬야 함
+
+---
+
 ## 변경 이력
 
 | 날짜 | 버전 | 변경 내용 |
 |------|------|----------|
 | 2026-01-25 | 0.1 | 초기 기획 문서 작성 |
+| 2026-01-25 | 0.2 | Phase 3.1, 3.3, 3.4 구현 완료. 다중 업로드 가이드 추가 |

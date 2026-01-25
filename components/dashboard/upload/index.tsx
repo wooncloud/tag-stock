@@ -2,14 +2,18 @@
 
 import { useState } from 'react';
 
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-import { RefreshCw, Upload } from 'lucide-react';
+import { Crown, RefreshCw, Upload } from 'lucide-react';
 
+import type { UserPlan } from '@/types/database';
 import { FileWithProgress } from '@/types/upload';
 
+import { PLAN_LIMITS } from '@/lib/plan-limits';
 import { processAndCompressImage } from '@/lib/utils/image-processing';
 
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
 import { generateMetadata } from '@/app/actions/ai';
@@ -19,12 +23,16 @@ import { UploadItem } from './upload-item';
 
 interface UploadWorkflowProps {
   disabled?: boolean;
+  userPlan?: UserPlan;
 }
 
-export function UploadWorkflow({ disabled }: UploadWorkflowProps) {
+export function UploadWorkflow({ disabled, userPlan = 'free' }: UploadWorkflowProps) {
   const router = useRouter();
   const [files, setFiles] = useState<FileWithProgress[]>([]);
   const [isUploading, setIsUploading] = useState(false);
+
+  const planLimit = PLAN_LIMITS[userPlan];
+  const isPro = userPlan === 'pro';
 
   const onFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
@@ -55,8 +63,8 @@ export function UploadWorkflow({ disabled }: UploadWorkflowProps) {
           return next;
         });
 
-        // 1. 이미지 처리 및 압축
-        const processedFile = await processAndCompressImage(files[i].file);
+        // 1. 이미지 처리 및 압축 (Free: 압축, Pro: 원본 유지)
+        const processedFile = await processAndCompressImage(files[i].file, { userPlan });
 
         // 2. 파일 업로드
         const formData = new FormData();
@@ -120,7 +128,32 @@ export function UploadWorkflow({ disabled }: UploadWorkflowProps) {
             <p className="mb-2 text-sm font-semibold">
               <span className="text-primary">Click to upload</span> or drag and drop
             </p>
-            <p className="text-muted-foreground text-xs">Images only (max 50MB per file)</p>
+
+            {/* 플랜별 안내 문구 */}
+            {isPro ? (
+              <div className="flex flex-col items-center gap-1">
+                <Badge variant="default" className="bg-gradient-to-r from-amber-500 to-orange-500">
+                  <Crown className="mr-1 h-3 w-3" />
+                  Pro
+                </Badge>
+                <p className="text-muted-foreground text-xs">
+                  Original quality preserved (max {planLimit.maxFileSizeMB}MB per file)
+                </p>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center gap-1">
+                <p className="text-muted-foreground text-xs">
+                  Images will be compressed (max {planLimit.compressionOptions?.maxWidthOrHeight}px)
+                </p>
+                <Link
+                  href="/dashboard/pricing"
+                  className="text-primary text-xs underline hover:no-underline"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  Upgrade to Pro for original quality
+                </Link>
+              </div>
+            )}
           </div>
           <input
             type="file"
