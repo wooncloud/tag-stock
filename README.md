@@ -22,8 +22,8 @@ All project documentation has been moved to the [`/docs`](./docs) directory:
 
 ## TODO
 
-- [ ] 문의 보내기 구현 (디스코드 웹훅)
-- [ ] IPTC 구현
+- [x] 문의 보내기 구현 (디스코드 웹훅)
+- [x] IPTC 구현
 - [ ] 플랜 (IPTC, 다중업로드, 원본 이미지 업로드)
 - [ ] 결제 구현
 - [ ] stripe 구현
