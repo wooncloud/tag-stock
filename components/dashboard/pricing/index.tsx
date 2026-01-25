@@ -71,7 +71,7 @@ export function PricingCards({ currentPlan, hasCustomerId }: PricingCardsProps) 
         </Button>
       </div>
 
-      <div className="mx-auto grid max-w-4xl gap-6 md:grid-cols-2">
+      <div className="mx-auto grid max-w-5xl gap-6 md:grid-cols-3">
         <PricingCard
           title="Free"
           description="Perfect for trying out TagStock"
@@ -80,7 +80,7 @@ export function PricingCards({ currentPlan, hasCustomerId }: PricingCardsProps) 
           features={[
             '10 credits per month',
             'AI-powered tagging',
-            'Adobe Stock/Shutterstock optimization',
+            'Compressed image storage',
             'Export metadata',
           ]}
           isCurrentPlan={currentPlan === 'free'}
@@ -92,15 +92,14 @@ export function PricingCards({ currentPlan, hasCustomerId }: PricingCardsProps) 
 
         <PricingCard
           title="Pro"
-          description="For professional stock photographers"
-          price={billingCycle === 'monthly' ? '$19' : '$190'}
+          description="For professional photographers"
+          price={billingCycle === 'monthly' ? '$5' : '$50'}
           period={`per ${billingCycle === 'monthly' ? 'month' : 'year'}`}
           features={[
-            'Unlimited credits',
+            '500 credits per month',
+            'Original quality preserved',
             'IPTC/XMP metadata embedding',
-            'Batch processing',
-            'Priority processing',
-            'Email support',
+            'Up to 10 images at once',
             'All Free features',
           ]}
           isCurrentPlan={currentPlan === 'pro'}
@@ -110,6 +109,27 @@ export function PricingCards({ currentPlan, hasCustomerId }: PricingCardsProps) 
           onAction={() =>
             currentPlan === 'pro' ? handleManageBilling() : handleSubscribe(currentPriceId)
           }
+        />
+
+        <PricingCard
+          title="Max"
+          description="For high-volume creators"
+          price={billingCycle === 'monthly' ? '$19' : '$190'}
+          period={`per ${billingCycle === 'monthly' ? 'month' : 'year'}`}
+          features={[
+            '2,000 credits per month',
+            'Credit rollover (up to 1,000)',
+            'Priority support',
+            'Early access to new features',
+            'All Pro features',
+          ]}
+          isCurrentPlan={false}
+          isLoading={isLoading}
+          buttonText="Coming Soon"
+          buttonVariant="outline"
+          onAction={() => {}}
+          disabled={true}
+          comingSoon={true}
         />
       </div>
     </div>

@@ -30,7 +30,7 @@ export default async function PricingPage() {
         <Alert>
           <CheckCircle2 className="h-4 w-4 text-emerald-500" />
           <AlertDescription>
-            You&apos;re currently on the <strong>Pro</strong> plan. You have unlimited credits and
+            You&apos;re currently on the <strong>Pro</strong> plan with 500 monthly credits and
             access to all premium features.
           </AlertDescription>
         </Alert>
@@ -51,44 +51,58 @@ export default async function PricingPage() {
                 <tr className="border-b">
                   <th className="px-4 py-3 text-left">Feature</th>
                   <th className="px-4 py-3 text-center">Free</th>
-                  <th className="px-4 py-3 text-center">Pro</th>
+                  <th className="bg-primary/5 px-4 py-3 text-center font-bold">Pro</th>
+                  <th className="text-muted-foreground px-4 py-3 text-center">Max</th>
                 </tr>
               </thead>
               <tbody>
                 <tr className="border-b">
-                  <td className="px-4 py-3">AI-powered tagging</td>
-                  <td className="px-4 py-3 text-center">✓</td>
-                  <td className="px-4 py-3 text-center">✓</td>
+                  <td className="px-4 py-3">Price</td>
+                  <td className="px-4 py-3 text-center">$0</td>
+                  <td className="bg-primary/5 px-4 py-3 text-center font-medium">$5/mo</td>
+                  <td className="text-muted-foreground px-4 py-3 text-center">$19/mo</td>
                 </tr>
                 <tr className="border-b">
                   <td className="px-4 py-3">Credits per month</td>
                   <td className="px-4 py-3 text-center">10</td>
-                  <td className="px-4 py-3 text-center">Unlimited</td>
+                  <td className="bg-primary/5 px-4 py-3 text-center font-medium">500</td>
+                  <td className="text-muted-foreground px-4 py-3 text-center">2,000</td>
                 </tr>
                 <tr className="border-b">
-                  <td className="px-4 py-3">Adobe Stock/Shutterstock optimization</td>
+                  <td className="px-4 py-3">AI-powered tagging</td>
                   <td className="px-4 py-3 text-center">✓</td>
-                  <td className="px-4 py-3 text-center">✓</td>
+                  <td className="bg-primary/5 px-4 py-3 text-center">✓</td>
+                  <td className="text-muted-foreground px-4 py-3 text-center">✓</td>
+                </tr>
+                <tr className="border-b">
+                  <td className="px-4 py-3">Image quality</td>
+                  <td className="px-4 py-3 text-center">Compressed</td>
+                  <td className="bg-primary/5 px-4 py-3 text-center font-medium">Original</td>
+                  <td className="text-muted-foreground px-4 py-3 text-center">Original</td>
                 </tr>
                 <tr className="border-b">
                   <td className="px-4 py-3">IPTC/XMP metadata embedding</td>
                   <td className="px-4 py-3 text-center">-</td>
-                  <td className="px-4 py-3 text-center">✓</td>
+                  <td className="bg-primary/5 px-4 py-3 text-center">✓</td>
+                  <td className="text-muted-foreground px-4 py-3 text-center">✓</td>
                 </tr>
                 <tr className="border-b">
-                  <td className="px-4 py-3">Batch processing</td>
+                  <td className="px-4 py-3">Multi-upload (up to 10)</td>
                   <td className="px-4 py-3 text-center">-</td>
-                  <td className="px-4 py-3 text-center">✓</td>
+                  <td className="bg-primary/5 px-4 py-3 text-center">✓</td>
+                  <td className="text-muted-foreground px-4 py-3 text-center">✓</td>
                 </tr>
                 <tr className="border-b">
-                  <td className="px-4 py-3">Priority processing</td>
+                  <td className="px-4 py-3">Credit rollover</td>
                   <td className="px-4 py-3 text-center">-</td>
-                  <td className="px-4 py-3 text-center">✓</td>
+                  <td className="bg-primary/5 px-4 py-3 text-center">-</td>
+                  <td className="text-muted-foreground px-4 py-3 text-center">Up to 1,000</td>
                 </tr>
                 <tr className="border-b">
-                  <td className="px-4 py-3">Email support</td>
+                  <td className="px-4 py-3">Priority support</td>
                   <td className="px-4 py-3 text-center">-</td>
-                  <td className="px-4 py-3 text-center">✓</td>
+                  <td className="bg-primary/5 px-4 py-3 text-center">-</td>
+                  <td className="text-muted-foreground px-4 py-3 text-center">✓</td>
                 </tr>
               </tbody>
             </table>
