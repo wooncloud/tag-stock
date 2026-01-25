@@ -37,7 +37,7 @@ export const PLAN_LIMITS: Record<UserPlan, PlanLimit> = {
     maxFileSizeMB: 50,
     compressionEnabled: false,
     iptcEnabled: true,
-    monthlyCredits: Infinity,
+    monthlyCredits: 500,
     storageType: 'original',
   },
 } as const;

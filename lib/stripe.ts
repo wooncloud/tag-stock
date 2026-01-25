@@ -12,20 +12,39 @@ export const STRIPE_CONFIG = {
   products: {
     pro: {
       name: 'TagStock Pro',
-      description: 'Unlimited AI-powered image tagging with IPTC metadata embedding',
+      description: '500 AI credits/month with IPTC metadata embedding',
+    },
+    max: {
+      name: 'TagStock Max',
+      description: '2000 AI credits/month with priority support',
     },
   },
   prices: {
     pro_monthly: {
-      amount: 1900, // $19.00
+      amount: 500, // $5.00
       currency: 'usd',
       interval: 'month' as const,
     },
     pro_yearly: {
+      amount: 5000, // $50.00 (save $10)
+      currency: 'usd',
+      interval: 'year' as const,
+    },
+    max_monthly: {
+      amount: 1900, // $19.00
+      currency: 'usd',
+      interval: 'month' as const,
+    },
+    max_yearly: {
       amount: 19000, // $190.00 (save $38)
       currency: 'usd',
       interval: 'year' as const,
     },
+  },
+  credits: {
+    free: 10,
+    pro: 500,
+    max: 2000,
   },
 };
 
