@@ -24,10 +24,8 @@ All project documentation has been moved to the [`/docs`](./docs) directory:
 
 - [x] 문의 보내기 구현 (디스코드 웹훅)
 - [x] IPTC 구현
-- [ ] 플랜 (IPTC, 다중업로드, 원본 이미지 업로드)
-- [ ] 결제 구현
-- [ ] stripe 구현
+- [x] 플랜 시스템 구현 (원본 이미지 업로드, 플랜별 압축 정책)
+- [x] Stripe 결제 구현
+- [ ] 다중업로드 (배치 처리 필요 - [가이드](./docs/PHASE3_PLANS.md#다중-업로드-구현-가이드-phase-32))
 - [ ] 랜딩 페이지 좀 더 꾸미기
-
-
 - [ ] 크롬 익스텐션 개발
