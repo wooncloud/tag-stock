@@ -1,6 +1,6 @@
 'use client';
 
-import { Check, Loader2, Sparkles } from 'lucide-react';
+import { Check, Clock, Loader2, Sparkles } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -19,6 +19,8 @@ interface PricingCardProps {
   buttonVariant?: 'default' | 'outline';
   onAction: () => void;
   showBadge?: boolean;
+  disabled?: boolean;
+  comingSoon?: boolean;
 }
 
 export function PricingCard({
@@ -33,16 +35,25 @@ export function PricingCard({
   buttonText,
   buttonVariant = 'default',
   onAction,
+  disabled,
+  comingSoon,
 }: PricingCardProps) {
   return (
-    <Card className={isCurrentPlan ? 'border-primary' : isPopular ? 'border-primary border-2' : ''}>
+    <Card
+      className={`${isCurrentPlan ? 'border-primary' : isPopular ? 'border-primary border-2' : ''} ${disabled ? 'opacity-60' : ''}`}
+    >
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2">
             {isPopular && <Sparkles className="text-primary h-5 w-5" />}
             {title}
           </CardTitle>
-          {isCurrentPlan ? (
+          {comingSoon ? (
+            <Badge variant="outline" className="text-muted-foreground">
+              <Clock className="mr-1 h-3 w-3" />
+              Coming Soon
+            </Badge>
+          ) : isCurrentPlan ? (
             <Badge>Current Plan</Badge>
           ) : isPopular ? (
             <Badge variant="secondary">Most Popular</Badge>
@@ -69,7 +80,7 @@ export function PricingCard({
           className="w-full cursor-pointer"
           variant={buttonVariant}
           onClick={onAction}
-          disabled={isLoading || (isCurrentPlan && buttonText === 'Current Plan')}
+          disabled={disabled || isLoading || (isCurrentPlan && buttonText === 'Current Plan')}
         >
           {isLoading ? (
             <>
@@ -78,7 +89,7 @@ export function PricingCard({
             </>
           ) : (
             <>
-              {isPopular && !isCurrentPlan && <Sparkles className="mr-2 h-4 w-4" />}
+              {isPopular && !isCurrentPlan && !disabled && <Sparkles className="mr-2 h-4 w-4" />}
               {buttonText}
             </>
           )}
