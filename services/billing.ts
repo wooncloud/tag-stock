@@ -59,11 +59,11 @@ export async function updateSubscriptionStatus(params: UpdateSubscriptionParams)
     const limits = PLAN_LIMITS[plan];
     if (limits) {
       // If unlimited (-1), we still set it. Otherwise set the monthly amount.
-      updateData.credits_remaining = limits.monthlyCredits;
+      updateData.credits_subscription = limits.monthlyCredits;
     }
   } else {
     // Revert to free plan credits if subscription is not active
-    updateData.credits_remaining = PLAN_LIMITS.free.monthlyCredits;
+    updateData.credits_subscription = PLAN_LIMITS.free.monthlyCredits;
   }
 
   await getSupabaseAdmin().from('profiles').update(updateData).eq('id', userId);
@@ -80,7 +80,7 @@ export async function cancelSubscription(userId: string): Promise<void> {
     .update({
       plan: 'free',
       subscription_status: 'cancelled',
-      credits_remaining: PLAN_LIMITS.free.monthlyCredits,
+      credits_subscription: PLAN_LIMITS.free.monthlyCredits,
     })
     .eq('id', userId);
 

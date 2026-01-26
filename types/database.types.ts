@@ -7,23 +7,38 @@ export interface Database {
         Row: {
           id: string;
           email: string;
-          plan: 'free' | 'pro';
-          credits_remaining: number;
+          plan: 'free' | 'pro' | 'max';
+          credits_subscription: number;
+          credits_purchased: number;
+          lemon_squeezy_subscription_id: string | null;
+          subscription_management_url: string | null;
+          subscription_status: string | null;
           created_at: string;
+          updated_at: string;
         };
         Insert: {
           id: string;
           email: string;
-          plan?: 'free' | 'pro';
-          credits_remaining?: number;
+          plan?: 'free' | 'pro' | 'max';
+          credits_subscription?: number;
+          credits_purchased?: number;
+          lemon_squeezy_subscription_id?: string | null;
+          subscription_management_url?: string | null;
+          subscription_status?: string | null;
           created_at?: string;
+          updated_at?: string;
         };
         Update: {
           id?: string;
           email?: string;
-          plan?: 'free' | 'pro';
-          credits_remaining?: number;
+          plan?: 'free' | 'pro' | 'max';
+          credits_subscription?: number;
+          credits_purchased?: number;
+          lemon_squeezy_subscription_id?: string | null;
+          subscription_management_url?: string | null;
+          subscription_status?: string | null;
           created_at?: string;
+          updated_at?: string;
         };
       };
       images: {

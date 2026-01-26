@@ -28,7 +28,8 @@ export default async function UploadPage() {
   const planLimit = PLAN_LIMITS[userPlan];
   const isPro = isPaidPlan(userPlan);
 
-  const isOutOfCredits = profile.credits_remaining <= 0 && profile.plan === 'free';
+  const totalCredits = (profile.credits_subscription || 0) + (profile.credits_purchased || 0);
+  const isOutOfCredits = totalCredits <= 0;
 
   return (
     <div className="space-y-6">
@@ -44,11 +45,11 @@ export default async function UploadPage() {
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription className="flex items-center justify-between">
-            <span>You&apos;re out of credits. Upgrade to Pro for unlimited AI tagging.</span>
+            <span>You&apos;re out of credits. Upgrade or purchase more to continue.</span>
             <Button asChild size="sm" variant="outline">
               <Link href="/dashboard/pricing">
                 <Sparkles className="mr-2 h-4 w-4" />
-                Upgrade to Pro
+                Upgrade Plan
               </Link>
             </Button>
           </AlertDescription>
@@ -57,14 +58,11 @@ export default async function UploadPage() {
         <Alert>
           <Sparkles className="h-4 w-4" />
           <AlertDescription>
-            {profile.plan === 'pro' ? (
-              <span>You have unlimited credits as a Pro user.</span>
-            ) : (
-              <span>
-                You have <strong>{profile.credits_remaining}</strong> credits remaining. Each image
-                upload uses 1 credit.
-              </span>
-            )}
+            <span>
+              You have <strong>{totalCredits}</strong> credits remaining (Subscription:{' '}
+              {profile.credits_subscription} + Purchased: {profile.credits_purchased}). Each image
+              upload uses 1 credit.
+            </span>
           </AlertDescription>
         </Alert>
       )}

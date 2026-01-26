@@ -29,7 +29,7 @@ Detailed project documentation is available in the [`/docs`](./docs) directory:
 - [x] **AI Tagging Engine**: Google Gemini 3 Flash integration
 - [x] **Auth System**: Multi-provider OAuth (Google, Apple)
 - [x] **Dashboard**: Image management and metadata editing
-- [ ] **Credit System**: Monthly credit grant via Edge Functions
+- [x] **Credit System**: Monthly credit grant via Edge Functions
 - [ ] **Payment Integration**: Lemon Squeezy subscription model
 - [x] **Contact Logic**: Discord webhook integration
 - [x] **IPTC Embedding**: Direct metadata injection into image files
