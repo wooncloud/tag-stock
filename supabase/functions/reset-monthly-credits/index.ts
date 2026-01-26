@@ -18,7 +18,7 @@ const MAX_CARRYOVER = 1000;
 interface Profile {
   id: string;
   plan: string;
-  credits_remaining: number;
+  credits_subscription: number;
   subscription_status: string | null;
 }
 
@@ -44,7 +44,7 @@ Deno.serve(async (req) => {
     // 모든 사용자 프로필 조회
     const { data: profiles, error } = await supabase
       .from('profiles')
-      .select('id, plan, credits_remaining, subscription_status');
+      .select('id, plan, credits_subscription, subscription_status');
 
     if (error) {
       throw error;
@@ -57,12 +57,12 @@ Deno.serve(async (req) => {
     for (const profile of (profiles as Profile[]) || []) {
       try {
         let newCredits: number;
-        const oldCredits = profile.credits_remaining;
+        const oldCredits = profile.credits_subscription;
         const planCredits = PLAN_CREDITS[profile.plan] || PLAN_CREDITS.free;
 
         if (profile.plan === 'max' && profile.subscription_status === 'active') {
           // Max 플랜: 이월 가능 (최대 1,000)
-          const carryover = Math.min(profile.credits_remaining, MAX_CARRYOVER);
+          const carryover = Math.min(profile.credits_subscription, MAX_CARRYOVER);
           newCredits = carryover + planCredits;
         } else if (profile.plan === 'pro' && profile.subscription_status === 'active') {
           // Pro 플랜: 이월 없음
@@ -76,7 +76,7 @@ Deno.serve(async (req) => {
         const { error: updateError } = await supabase
           .from('profiles')
           .update({
-            credits_remaining: newCredits,
+            credits_subscription: newCredits,
             updated_at: new Date().toISOString(),
           })
           .eq('id', profile.id);
