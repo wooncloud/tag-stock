@@ -14,7 +14,7 @@ export function BackButton() {
 
   return (
     <Button variant="ghost" className="cursor-pointer" onClick={handleBack}>
-      이전 페이지로 돌아가기
+      Back to previous page
     </Button>
   );
 }
