@@ -96,8 +96,10 @@ export async function regenerateMetadata(imageId: string): Promise<GenerateMetad
   try {
     const { user, profile, supabase } = await ensureAuthenticated();
 
-    if (profile.credits_remaining <= 0 && profile.plan === 'free') {
-      return { success: false, error: 'Insufficient credits. Please upgrade to Pro.' };
+    const totalCredits = (profile.credits_subscription || 0) + (profile.credits_purchased || 0);
+
+    if (totalCredits <= 0) {
+      return { success: false, error: 'Insufficient credits. Please upgrade or purchase more.' };
     }
 
     // 기존 메타데이터를 삭제합니다.
@@ -109,8 +111,8 @@ export async function regenerateMetadata(imageId: string): Promise<GenerateMetad
     // 새로운 메타데이터를 생성합니다.
     const result = await generateMetadata(imageId, { force: true });
 
-    if (result.success && profile.plan === 'free') {
-      // 무료 사용자의 경우 크레딧을 차감합니다.
+    if (result.success) {
+      // 모든 사용자에 대해 크레딧을 차감합니다.
       await supabase.rpc('decrement_user_credits', {
         user_uuid: user.id,
         amount: 1,

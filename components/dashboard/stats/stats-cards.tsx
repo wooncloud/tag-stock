@@ -18,9 +18,11 @@ export function StatsCards({ profile, imageCount }: StatsCardsProps) {
           <Sparkles className="text-muted-foreground h-4 w-4" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{profile?.credits_remaining || 0}</div>
+          <div className="text-2xl font-bold">
+            {(profile?.credits_subscription || 0) + (profile?.credits_purchased || 0)}
+          </div>
           <p className="text-muted-foreground text-xs">
-            {profile?.plan === 'pro' ? 'Unlimited' : 'This Month'}
+            Sub: {profile?.credits_subscription || 0} / Add: {profile?.credits_purchased || 0}
           </p>
         </CardContent>
       </Card>

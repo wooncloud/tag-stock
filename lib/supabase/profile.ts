@@ -17,7 +17,8 @@ export const getProfile = cache(async (supabase: SupabaseClient, userId: string,
         id: userId,
         email: email,
         plan: 'free',
-        credits_remaining: 10,
+        credits_subscription: 10,
+        credits_purchased: 0,
       })
       .select()
       .single();
@@ -31,7 +32,8 @@ export const getProfile = cache(async (supabase: SupabaseClient, userId: string,
       id: userId,
       email: email,
       plan: 'free' as const,
-      credits_remaining: 0,
+      credits_subscription: 0,
+      credits_purchased: 0,
     };
   }
 

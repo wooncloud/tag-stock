@@ -8,9 +8,10 @@ export interface Profile {
   id: string;
   email: string;
   plan: UserPlan;
-  credits_remaining: number;
-  stripe_customer_id?: string;
-  stripe_subscription_id?: string;
+  credits_subscription: number;
+  credits_purchased: number;
+  lemon_squeezy_subscription_id?: string;
+  subscription_management_url?: string;
   subscription_status?: string;
   created_at: string;
   updated_at: string;
