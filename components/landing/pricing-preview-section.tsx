@@ -67,7 +67,7 @@ export function PricingPreviewSection() {
             <CardHeader>
               <CardTitle className="text-muted-foreground text-2xl">Max</CardTitle>
               <CardDescription>For high-volume creators</CardDescription>
-              <div className="mt-4">
+              <div className="mt-4 opacity-50">
                 <span className="text-4xl font-bold">$19</span>
                 <span className="text-muted-foreground">/month</span>
               </div>
@@ -75,7 +75,6 @@ export function PricingPreviewSection() {
             <CardContent className="flex-1">
               <ul className="space-y-3 opacity-80">
                 <PricingFeature text="2,000 credits per month" />
-                <PricingFeature text="Credit rollover (up to 1,000)" />
                 <PricingFeature text="Priority support" />
                 <PricingFeature text="Early access to new features" />
                 <PricingFeature text="All Pro features" />
@@ -87,6 +86,60 @@ export function PricingPreviewSection() {
               </div>
             </CardContent>
           </Card>
+        </div>
+
+        {/* Credit Packs - Coming Soon */}
+        <div className="mt-16 text-center">
+          <h3 className="mb-6 text-2xl font-bold">Need more credits?</h3>
+          <div className="mx-auto grid max-w-4xl gap-6 md:grid-cols-2">
+            <Card className="bg-muted/30 border-dashed opacity-75">
+              <CardHeader>
+                <CardTitle className="text-xl">Credit Pack S</CardTitle>
+                <CardDescription>100 credits for one-time use</CardDescription>
+                <div className="mt-2 text-2xl font-bold">$2</div>
+              </CardHeader>
+              <CardContent>
+                <div className="bg-muted text-muted-foreground inline-block rounded-full px-4 py-1 text-sm font-semibold">
+                  COMING SOON
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="bg-muted/30 border-dashed opacity-75">
+              <CardHeader>
+                <CardTitle className="text-xl">Credit Pack L</CardTitle>
+                <CardDescription>1,000 credits for one-time use</CardDescription>
+                <div className="mt-2 text-2xl font-bold">$15</div>
+              </CardHeader>
+              <CardContent>
+                <div className="bg-muted text-muted-foreground inline-block rounded-full px-4 py-1 text-sm font-semibold">
+                  COMING SOON
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        {/* Credit Policy */}
+        <div className="bg-muted/50 mt-16 rounded-2xl p-8">
+          <h3 className="mb-6 text-center text-2xl font-bold">Credit Policy</h3>
+          <div className="grid gap-8 md:grid-cols-2">
+            <div>
+              <h4 className="mb-3 font-semibold text-primary">Monthly Grants & Resets</h4>
+              <p className="text-muted-foreground text-sm leading-relaxed text-pretty">
+                Every month, your subscription credits are refreshed. Unused subscription credits
+                reset to zero at the end of the billing cycle. This helps us maintain high-speed
+                processing for all active users.
+              </p>
+            </div>
+            <div>
+              <h4 className="mb-3 font-semibold text-primary">Priority Consumption</h4>
+              <p className="text-muted-foreground text-sm leading-relaxed text-pretty">
+                When you generate tags, we always consume your <strong>Subscription Credits</strong>{' '}
+                first. <strong>Purchased Credits</strong> (from Credit Packs) are only used once
+                your monthly subscription credits are fully exhausted.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </section>

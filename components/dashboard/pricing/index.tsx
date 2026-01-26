@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 
 import { createSubscriptionCheckout, manageBilling } from '@/app/actions/lemonsqueezy';
 
@@ -95,7 +96,7 @@ export function PricingCards({ currentPlan }: PricingCardsProps) {
           isLoading={isLoading}
           buttonText={currentPlan === 'free' ? 'Current Plan' : 'Select Free'}
           buttonVariant="outline"
-          onAction={() => {}}
+          onAction={() => { }}
         />
 
         <PricingCard
@@ -126,18 +127,70 @@ export function PricingCards({ currentPlan }: PricingCardsProps) {
           period={`per ${billingCycle === 'monthly' ? 'month' : 'year'}`}
           features={[
             '2,000 credits per month',
-            'Credit rollover (up to 1,000)',
             'Priority support',
             'Early access to new features',
             'All Pro features',
           ]}
           isCurrentPlan={currentPlan === 'max'}
-          isLoading={isLoading}
-          buttonText={currentPlan === 'max' ? 'Manage Subscription' : 'Upgrade to Max'}
-          onAction={() =>
-            currentPlan === 'max' ? handleManageBilling() : handleSubscribe(maxVariantId)
-          }
+          disabled={true}
+          comingSoon={true}
+          isLoading={false}
+          buttonText="COMING SOON"
+          onAction={() => { }}
         />
+      </div>
+
+      {/* Credit Packs - Coming Soon */}
+      <div className="pt-8">
+        <h3 className="mb-6 text-center text-xl font-bold">Additional Credit Packs</h3>
+        <div className="grid gap-6 md:grid-cols-2">
+          <Card className="bg-muted/30 border-dashed opacity-75">
+            <div className="p-6">
+              <div className="mb-2 flex items-center justify-between">
+                <h4 className="font-bold">Credit Pack S (100)</h4>
+                <div className="text-xl font-bold">$2</div>
+              </div>
+              <p className="text-muted-foreground mb-4 text-sm">One-time purchase credits</p>
+              <Button disabled className="w-full">
+                COMING SOON
+              </Button>
+            </div>
+          </Card>
+          <Card className="bg-muted/30 border-dashed opacity-75">
+            <div className="p-6">
+              <div className="mb-2 flex items-center justify-between">
+                <h4 className="font-bold">Credit Pack L (1,000)</h4>
+                <div className="text-xl font-bold">$15</div>
+              </div>
+              <p className="text-muted-foreground mb-4 text-sm">One-time purchase credits</p>
+              <Button disabled className="w-full">
+                COMING SOON
+              </Button>
+            </div>
+          </Card>
+        </div>
+      </div>
+
+      {/* Credit Policy */}
+      <div className="bg-muted/50 rounded-xl p-6">
+        <h3 className="mb-4 text-lg font-bold">Credit Consumption Policy</h3>
+        <div className="grid gap-6 md:grid-cols-2 text-sm">
+          <div>
+            <h4 className="mb-2 font-semibold text-primary">Monthly Refresh</h4>
+            <p className="text-muted-foreground">
+              Subscription credits refresh every month. Unused subscription credits reset at the end
+              of the cycle (except for explicit rollover plans).
+            </p>
+          </div>
+          <div>
+            <h4 className="mb-2 font-semibold text-primary">Priority Handling</h4>
+            <p className="text-muted-foreground">
+              We always use your <strong>Subscription Credits</strong> first. Additional{' '}
+              <strong>Purchased Credits</strong> are only consumed after your monthly quota is
+              fully used.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );
