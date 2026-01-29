@@ -65,56 +65,41 @@ export function PricingPreviewSection() {
           {/* Max Plan */}
           <Card className="flex flex-col">
             <CardHeader>
-              <CardTitle className="text-muted-foreground text-2xl">Max</CardTitle>
+              <CardTitle className="text-2xl">Max</CardTitle>
               <CardDescription>For high-volume creators</CardDescription>
-              <div className="mt-4 opacity-50">
+              <div className="mt-4">
                 <span className="text-4xl font-bold">$19</span>
                 <span className="text-muted-foreground">/month</span>
               </div>
             </CardHeader>
             <CardContent className="flex-1">
-              <ul className="space-y-3 opacity-80">
+              <ul className="space-y-3">
                 <PricingFeature text="2,000 credits per month" />
                 <PricingFeature text="Priority support" />
                 <PricingFeature text="Early access to new features" />
                 <PricingFeature text="All Pro features" />
               </ul>
-              <div className="mt-6 text-center">
-                <span className="bg-muted text-muted-foreground rounded px-2 py-1 text-xs font-medium">
-                  COMING SOON
-                </span>
-              </div>
             </CardContent>
           </Card>
         </div>
 
-        {/* Credit Packs - Coming Soon */}
+        {/* Credit Packs */}
         <div className="mt-16 text-center">
           <h3 className="mb-6 text-2xl font-bold">Need more credits?</h3>
           <div className="mx-auto grid max-w-4xl gap-6 md:grid-cols-2">
-            <Card className="bg-muted/30 border-dashed opacity-75">
+            <Card>
               <CardHeader>
                 <CardTitle className="text-xl">Credit Pack S</CardTitle>
                 <CardDescription>100 credits for one-time use</CardDescription>
                 <div className="mt-2 text-2xl font-bold">$2</div>
               </CardHeader>
-              <CardContent>
-                <div className="bg-muted text-muted-foreground inline-block rounded-full px-4 py-1 text-sm font-semibold">
-                  COMING SOON
-                </div>
-              </CardContent>
             </Card>
-            <Card className="bg-muted/30 border-dashed opacity-75">
+            <Card>
               <CardHeader>
                 <CardTitle className="text-xl">Credit Pack L</CardTitle>
                 <CardDescription>1,000 credits for one-time use</CardDescription>
                 <div className="mt-2 text-2xl font-bold">$15</div>
               </CardHeader>
-              <CardContent>
-                <div className="bg-muted text-muted-foreground inline-block rounded-full px-4 py-1 text-sm font-semibold">
-                  COMING SOON
-                </div>
-              </CardContent>
             </Card>
           </div>
         </div>
