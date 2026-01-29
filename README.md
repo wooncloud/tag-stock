@@ -39,6 +39,10 @@ Detailed project documentation is available in the [`/docs`](./docs) directory:
 - [ ] **Landing Page**: Enhanced design and social proofs
 - [ ] **Chrome Extension**: Direct metadata capture from browser
 
+- 레몬스퀴지 실제 결제 해봐야함.
+- 레몬스퀴지 설정 디테일하게 해야함.
+
+
 ---
 
 ## 📄 License
