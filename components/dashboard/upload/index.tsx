@@ -178,7 +178,7 @@ export function UploadWorkflow({ disabled, userPlan = 'free' }: UploadWorkflowPr
             {/* 플랜별 안내 문구 */}
             {canMultipleUpload ? (
               <div className="flex flex-col items-center gap-1">
-                <Badge variant="default" className="bg-gradient-to-r from-amber-500 to-orange-500">
+                <Badge variant="default" className="bg-linear-to-r from-amber-500 to-orange-500">
                   <Crown className="mr-1 h-3 w-3" />
                   {userPlan.charAt(0).toUpperCase() + userPlan.slice(1)}
                 </Badge>

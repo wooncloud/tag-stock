@@ -1,25 +1,27 @@
-"use client";
+'use client';
 
-import React, { useState, useRef, useCallback } from "react";
-import { motion, AnimatePresence } from "motion/react";
-import { cn } from "@/lib/utils";
-import { IconDotsVertical } from "@tabler/icons-react";
+import React, { useCallback, useRef, useState } from 'react';
 
-const DEMO_IMAGE =
-  "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80";
+import { IconDotsVertical } from '@tabler/icons-react';
+import { AnimatePresence, motion } from 'motion/react';
+import Image from 'next/image';
+
+import { cn } from '@/lib/utils';
+
+const DEMO_IMAGE = 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80';
 
 const DEMO_TAGS = [
-  { label: "mountain", x: 15, y: 20 },
-  { label: "landscape", x: 60, y: 15 },
-  { label: "nature", x: 25, y: 75 },
-  { label: "sunrise", x: 70, y: 65 },
-  { label: "scenic", x: 45, y: 45 },
+  { label: 'mountain', x: 15, y: 20 },
+  { label: 'landscape', x: 60, y: 15 },
+  { label: 'nature', x: 25, y: 75 },
+  { label: 'sunrise', x: 70, y: 65 },
+  { label: 'scenic', x: 45, y: 45 },
 ];
 
 const DEMO_METADATA = {
-  title: "Majestic Mountain Sunrise Over Alpine Valley",
+  title: 'Majestic Mountain Sunrise Over Alpine Valley',
   description:
-    "Breathtaking aerial view of snow-capped mountains at golden hour with misty valleys below",
+    'Breathtaking aerial view of snow-capped mountains at golden hour with misty valleys below',
 };
 
 export function HeroCompareDemo() {
@@ -43,10 +45,7 @@ export function HeroCompareDemo() {
     [isHovering, isDragging]
   );
 
-  const handleMouseMove = useCallback(
-    (e: React.MouseEvent) => handleMove(e.clientX),
-    [handleMove]
-  );
+  const handleMouseMove = useCallback((e: React.MouseEvent) => handleMove(e.clientX), [handleMove]);
 
   const handleTouchMove = useCallback(
     (e: React.TouchEvent) => handleMove(e.touches[0].clientX),
@@ -57,8 +56,8 @@ export function HeroCompareDemo() {
     <div
       ref={sliderRef}
       className={cn(
-        "relative aspect-[4/3] w-full max-w-[600px] cursor-col-resize overflow-hidden rounded-2xl border border-white/10 bg-black/20 shadow-2xl backdrop-blur-sm",
-        "ring-1 ring-purple-500/20"
+        'relative aspect-4/3 w-full max-w-[600px] cursor-col-resize overflow-hidden rounded-2xl border border-white/10 bg-black/20 shadow-2xl backdrop-blur-sm',
+        'ring-1 ring-purple-500/20'
       )}
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovering(true)}
@@ -74,11 +73,13 @@ export function HeroCompareDemo() {
     >
       {/* Background: After (with tags) - Always visible */}
       <div className="absolute inset-0">
-        <img
+        <Image
           src={DEMO_IMAGE}
           alt="After: With AI metadata"
-          className="h-full w-full object-cover"
+          fill
+          className="object-cover"
           draggable={false}
+          priority
         />
         {/* Floating Tags */}
         <AnimatePresence>
@@ -98,7 +99,7 @@ export function HeroCompareDemo() {
           ))}
         </AnimatePresence>
         {/* Metadata Overlay */}
-        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent p-4 pt-16">
+        <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/80 via-black/50 to-transparent p-4 pt-16">
           <motion.h3
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -126,14 +127,16 @@ export function HeroCompareDemo() {
         }}
         transition={{ duration: 0 }}
       >
-        <img
+        <Image
           src={DEMO_IMAGE}
           alt="Before: Original"
-          className="h-full w-full object-cover"
+          fill
+          className="object-cover"
           draggable={false}
+          priority
         />
         {/* "Before" Label */}
-        <div className="absolute left-4 top-4">
+        <div className="absolute top-4 left-4">
           <span className="rounded-md bg-black/60 px-2 py-1 text-xs font-medium text-white/80 backdrop-blur-sm">
             Original
           </span>
@@ -141,7 +144,7 @@ export function HeroCompareDemo() {
       </motion.div>
 
       {/* "After" Label */}
-      <div className="absolute right-4 top-4 z-10">
+      <div className="absolute top-4 right-4 z-10">
         <span className="rounded-md bg-purple-600/80 px-2 py-1 text-xs font-medium text-white backdrop-blur-sm">
           AI Tagged
         </span>
@@ -149,17 +152,17 @@ export function HeroCompareDemo() {
 
       {/* Slider Line */}
       <motion.div
-        className="absolute top-0 z-30 m-auto h-full w-px bg-gradient-to-b from-transparent via-white to-transparent"
+        className="absolute top-0 z-30 m-auto h-full w-px bg-linear-to-b from-transparent via-white to-transparent"
         style={{
           left: `${sliderXPercent}%`,
         }}
         transition={{ duration: 0 }}
       >
         {/* Glow Effect */}
-        <div className="absolute left-0 top-1/2 h-full w-20 -translate-y-1/2 bg-gradient-to-r from-purple-500/30 via-transparent to-transparent opacity-50 [mask-image:radial-gradient(60px_at_left,white,transparent)]" />
+        <div className="absolute top-1/2 left-0 h-full w-20 -translate-y-1/2 bg-linear-to-r from-purple-500/30 via-transparent to-transparent mask-[radial-gradient(60px_at_left,white,transparent)] opacity-50" />
 
         {/* Handle */}
-        <div className="absolute -right-2.5 top-1/2 z-30 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-md bg-white shadow-lg">
+        <div className="absolute top-1/2 -right-2.5 z-30 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-md bg-white shadow-lg">
           <IconDotsVertical className="h-4 w-4 text-gray-600" />
         </div>
       </motion.div>

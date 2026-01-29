@@ -10,10 +10,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 
 export function ExtensionSection() {
   return (
-    <section id="extension" className="relative bg-background border-t py-24 overflow-hidden">
+    <section id="extension" className="bg-background relative overflow-hidden border-t py-24">
       {/* Chrome 3D Background */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-full h-full opacity-30">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute top-1/2 right-0 h-full w-full -translate-y-1/2 opacity-30">
           <Image
             src="/images/chrome.webp"
             alt="Chrome 3D Background"
@@ -25,9 +25,9 @@ export function ExtensionSection() {
       </div>
 
       {/* Gradient overlay */}
-      <div className="absolute inset-0 bg-linear-to-r from-background via-background/95 to-transparent pointer-events-none" />
+      <div className="from-background via-background/95 pointer-events-none absolute inset-0 bg-linear-to-r to-transparent" />
 
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="relative z-10 container mx-auto px-4">
         <div className="grid items-center gap-12 lg:grid-cols-2">
           <div className="space-y-6">
             <div className="inline-flex items-center rounded-full border border-purple-200 bg-transparent px-3 py-1 text-sm font-medium text-purple-600 dark:border-purple-800">
@@ -48,7 +48,7 @@ export function ExtensionSection() {
             </div>
           </div>
           <div className="relative">
-            <Card className="border-purple-100 bg-purple-50/50 dark:border-purple-900/20 dark:bg-purple-900/10 backdrop-blur-sm">
+            <Card className="border-purple-100 bg-purple-50/50 backdrop-blur-sm dark:border-purple-900/20 dark:bg-purple-900/10">
               <CardHeader>
                 <CardTitle>Exclusive for Pro Plan</CardTitle>
                 <CardDescription>

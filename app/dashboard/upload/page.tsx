@@ -76,7 +76,7 @@ export default async function UploadPage() {
               {isPro && (
                 <Badge
                   variant="default"
-                  className="border-none bg-gradient-to-r from-amber-500 to-orange-500"
+                  className="border-none bg-linear-to-r from-amber-500 to-orange-500"
                 >
                   <Crown className="mr-1 h-3 w-3" />
                   Pro
