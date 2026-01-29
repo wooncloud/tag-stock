@@ -1,11 +1,28 @@
 import Link from 'next/link';
 
+import { HeroCompareDemo } from '@/components/landing/hero-compare-demo';
 import { Button } from '@/components/ui/button';
+import { Vortex } from '@/components/ui/vortex';
 
 export function HeroSection() {
   return (
-    <section className="flex-1">
-      <div className="container mx-auto px-4 py-24 lg:py-32">
+    <section className="relative overflow-hidden">
+      {/* Vortex background effect */}
+      <div className="absolute inset-0 pointer-events-none">
+        <Vortex
+          backgroundColor="transparent"
+          rangeY={800}
+          particleCount={100}
+          baseHue={270}
+          className="w-full h-full"
+          containerClassName="w-full h-full"
+          rangeRadius={3}
+          baseRadius={1.5}
+        />
+      </div>
+
+      {/* Content */}
+      <div className="container mx-auto px-4 py-24 lg:py-32 relative z-10">
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-8">
           <div className="flex flex-col justify-center space-y-8">
             <div className="space-y-4">
@@ -25,6 +42,9 @@ export function HeroSection() {
                 </Button>
               </div>
             </div>
+          </div>
+          <div className="flex items-center justify-center lg:justify-end">
+            <HeroCompareDemo />
           </div>
         </div>
       </div>
