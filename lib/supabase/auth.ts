@@ -13,6 +13,30 @@ export interface AuthenticatedSession {
   supabase: SupabaseClient;
 }
 
+/**
+ * Lightweight auth check for checkout operations (no profile fetch)
+ */
+export interface LightAuthSession {
+  user: User;
+  supabase: SupabaseClient;
+}
+
+export async function ensureAuthenticatedLight(): Promise<LightAuthSession> {
+  const cookieStore = await cookies();
+  const supabase = createClient(cookieStore);
+
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (authError || !user) {
+    throw new Error('Unauthorized');
+  }
+
+  return { user, supabase };
+}
+
 export async function ensureAuthenticated(): Promise<AuthenticatedSession> {
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);

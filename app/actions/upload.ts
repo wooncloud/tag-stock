@@ -8,6 +8,7 @@ import type { StorageType, UserPlan } from '@/types/database';
 
 import { PLAN_LIMITS, getStoragePath } from '@/lib/plan-limits';
 import { ensureAuthenticated } from '@/lib/supabase/auth';
+import { decrementCredits, getTotalCredits } from '@/lib/supabase/credits';
 import { verifyImageOwnership } from '@/lib/supabase/image';
 import { deleteFromStorage } from '@/lib/supabase/storage';
 
@@ -21,7 +22,7 @@ export async function uploadImage(formData: FormData): Promise<UploadResult> {
   try {
     const { user, profile, supabase } = await ensureAuthenticated();
 
-    const totalCredits = (profile.credits_subscription || 0) + (profile.credits_purchased || 0);
+    const totalCredits = getTotalCredits(profile.credits_subscription, profile.credits_purchased);
 
     if (totalCredits <= 0) {
       return { success: false, error: 'Insufficient credits. Please upgrade or purchase more.' };
@@ -110,15 +111,7 @@ export async function uploadImage(formData: FormData): Promise<UploadResult> {
     }
 
     // 모든 사용자에 대해 크레딧 차감을 수행합니다.
-    const { error: creditError } = await supabase.rpc('decrement_user_credits', {
-      user_uuid: user.id,
-      amount: 1,
-    });
-
-    if (creditError) {
-      console.error('Failed to decrement credits:', creditError);
-      // 크레딧 부족 시 업로드 후처리를 중단하고 스토리지를 비울 수도 있습니다.
-    }
+    await decrementCredits(supabase, user.id, 1);
 
     revalidatePath('/dashboard');
     return { success: true, imageId: imageData.id };

@@ -31,7 +31,9 @@ export default async function DashboardLayout({ children }: { children: React.Re
         <DashboardHeader
           userEmail={user.email || ''}
           userInitial={userInitial}
-          creditsRemaining={(profile?.credits_subscription || 0) + (profile?.credits_purchased || 0)}
+          creditsRemaining={
+            (profile?.credits_subscription || 0) + (profile?.credits_purchased || 0)
+          }
           plan={profile?.plan || 'free'}
         />
 

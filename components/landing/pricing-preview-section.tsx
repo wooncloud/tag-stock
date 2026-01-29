@@ -124,7 +124,7 @@ export function PricingPreviewSection() {
           <h3 className="mb-6 text-center text-2xl font-bold">Credit Policy</h3>
           <div className="grid gap-8 md:grid-cols-2">
             <div>
-              <h4 className="mb-3 font-semibold text-primary">Monthly Grants & Resets</h4>
+              <h4 className="text-primary mb-3 font-semibold">Monthly Grants & Resets</h4>
               <p className="text-muted-foreground text-sm leading-relaxed text-pretty">
                 Every month, your subscription credits are refreshed. Unused subscription credits
                 reset to zero at the end of the billing cycle. This helps us maintain high-speed
@@ -132,7 +132,7 @@ export function PricingPreviewSection() {
               </p>
             </div>
             <div>
-              <h4 className="mb-3 font-semibold text-primary">Priority Consumption</h4>
+              <h4 className="text-primary mb-3 font-semibold">Priority Consumption</h4>
               <p className="text-muted-foreground text-sm leading-relaxed text-pretty">
                 When you generate tags, we always consume your <strong>Subscription Credits</strong>{' '}
                 first. <strong>Purchased Credits</strong> (from Credit Packs) are only used once

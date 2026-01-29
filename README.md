@@ -1,5 +1,7 @@
 # TagStock
 
+🌐 **https://tagstock.app**
+
 AI-powered automatic tagging and metadata (IPTC) embedding for stock photographers.
 
 ---
@@ -30,7 +32,7 @@ Detailed project documentation is available in the [`/docs`](./docs) directory:
 - [x] **Auth System**: Multi-provider OAuth (Google, Apple)
 - [x] **Dashboard**: Image management and metadata editing
 - [x] **Credit System**: Monthly credit grant via Edge Functions
-- [ ] **Payment Integration**: Lemon Squeezy subscription model
+- [x] **Payment Integration**: Lemon Squeezy subscription model
 - [x] **Contact Logic**: Discord webhook integration
 - [x] **IPTC Embedding**: Direct metadata injection into image files
 - [ ] **Batch Processing**: Multiple image upload optimization

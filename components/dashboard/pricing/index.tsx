@@ -4,10 +4,14 @@ import { useState } from 'react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 
-import { createSubscriptionCheckout, manageBilling } from '@/app/actions/lemonsqueezy';
+import {
+  createCreditPackCheckout,
+  createSubscriptionCheckout,
+  manageBilling,
+} from '@/app/actions/lemonsqueezy';
 
+import { CreditPackCard } from './credit-pack-card';
 import { PricingCard } from './pricing-card';
 
 interface PricingCardsProps {
@@ -19,6 +23,8 @@ const VARIANT_IDS = {
   pro_yearly: process.env.NEXT_PUBLIC_LEMON_SQUEEZY_PRO_YEARLY_VARIANT_ID || '',
   max_monthly: process.env.NEXT_PUBLIC_LEMON_SQUEEZY_MAX_MONTHLY_VARIANT_ID || '',
   max_yearly: process.env.NEXT_PUBLIC_LEMON_SQUEEZY_MAX_YEARLY_VARIANT_ID || '',
+  credit_pack_s: process.env.NEXT_PUBLIC_LEMON_SQUEEZY_CREDIT_PACK_S_VARIANT_ID || '',
+  credit_pack_l: process.env.NEXT_PUBLIC_LEMON_SQUEEZY_CREDIT_PACK_L_VARIANT_ID || '',
 };
 
 export function PricingCards({ currentPlan }: PricingCardsProps) {
@@ -47,6 +53,21 @@ export function PricingCards({ currentPlan }: PricingCardsProps) {
     } catch (error) {
       console.error('Billing management error:', error);
       alert('Failed to open billing portal. Please try again.');
+      setIsLoading(false);
+    }
+  };
+
+  const handleCreditPackPurchase = async (variantId: string) => {
+    if (!variantId) {
+      alert('Credit pack not configured yet');
+      return;
+    }
+    setIsLoading(true);
+    try {
+      await createCreditPackCheckout(variantId);
+    } catch (error) {
+      console.error('Credit pack purchase error:', error);
+      alert('Failed to start checkout. Please try again.');
       setIsLoading(false);
     }
   };
@@ -96,7 +117,7 @@ export function PricingCards({ currentPlan }: PricingCardsProps) {
           isLoading={isLoading}
           buttonText={currentPlan === 'free' ? 'Current Plan' : 'Select Free'}
           buttonVariant="outline"
-          onAction={() => { }}
+          onAction={() => {}}
         />
 
         <PricingCard
@@ -132,62 +153,54 @@ export function PricingCards({ currentPlan }: PricingCardsProps) {
             'All Pro features',
           ]}
           isCurrentPlan={currentPlan === 'max'}
-          disabled={true}
-          comingSoon={true}
-          isLoading={false}
-          buttonText="COMING SOON"
-          onAction={() => { }}
+          isLoading={isLoading}
+          buttonText={currentPlan === 'max' ? 'Manage Subscription' : 'Upgrade to Max'}
+          onAction={() =>
+            currentPlan === 'max' ? handleManageBilling() : handleSubscribe(maxVariantId)
+          }
         />
       </div>
 
-      {/* Credit Packs - Coming Soon */}
+      {/* Credit Packs */}
       <div className="pt-8">
         <h3 className="mb-6 text-center text-xl font-bold">Additional Credit Packs</h3>
         <div className="grid gap-6 md:grid-cols-2">
-          <Card className="bg-muted/30 border-dashed opacity-75">
-            <div className="p-6">
-              <div className="mb-2 flex items-center justify-between">
-                <h4 className="font-bold">Credit Pack S (100)</h4>
-                <div className="text-xl font-bold">$2</div>
-              </div>
-              <p className="text-muted-foreground mb-4 text-sm">One-time purchase credits</p>
-              <Button disabled className="w-full">
-                COMING SOON
-              </Button>
-            </div>
-          </Card>
-          <Card className="bg-muted/30 border-dashed opacity-75">
-            <div className="p-6">
-              <div className="mb-2 flex items-center justify-between">
-                <h4 className="font-bold">Credit Pack L (1,000)</h4>
-                <div className="text-xl font-bold">$15</div>
-              </div>
-              <p className="text-muted-foreground mb-4 text-sm">One-time purchase credits</p>
-              <Button disabled className="w-full">
-                COMING SOON
-              </Button>
-            </div>
-          </Card>
+          <CreditPackCard
+            name="Credit Pack S"
+            credits={100}
+            price="$2"
+            variantId={VARIANT_IDS.credit_pack_s}
+            isLoading={isLoading}
+            onPurchase={handleCreditPackPurchase}
+          />
+          <CreditPackCard
+            name="Credit Pack L"
+            credits={1000}
+            price="$15"
+            variantId={VARIANT_IDS.credit_pack_l}
+            isLoading={isLoading}
+            onPurchase={handleCreditPackPurchase}
+          />
         </div>
       </div>
 
       {/* Credit Policy */}
       <div className="bg-muted/50 rounded-xl p-6">
         <h3 className="mb-4 text-lg font-bold">Credit Consumption Policy</h3>
-        <div className="grid gap-6 md:grid-cols-2 text-sm">
+        <div className="grid gap-6 text-sm md:grid-cols-2">
           <div>
-            <h4 className="mb-2 font-semibold text-primary">Monthly Refresh</h4>
+            <h4 className="text-primary mb-2 font-semibold">Monthly Refresh</h4>
             <p className="text-muted-foreground">
               Subscription credits refresh every month. Unused subscription credits reset at the end
               of the cycle (except for explicit rollover plans).
             </p>
           </div>
           <div>
-            <h4 className="mb-2 font-semibold text-primary">Priority Handling</h4>
+            <h4 className="text-primary mb-2 font-semibold">Priority Handling</h4>
             <p className="text-muted-foreground">
               We always use your <strong>Subscription Credits</strong> first. Additional{' '}
-              <strong>Purchased Credits</strong> are only consumed after your monthly quota is
-              fully used.
+              <strong>Purchased Credits</strong> are only consumed after your monthly quota is fully
+              used.
             </p>
           </div>
         </div>

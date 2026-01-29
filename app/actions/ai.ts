@@ -5,6 +5,7 @@ import { revalidatePath } from 'next/cache';
 import { generateImageMetadata } from '@/services/gemini';
 
 import { ensureAuthenticated } from '@/lib/supabase/auth';
+import { decrementCredits, getTotalCredits } from '@/lib/supabase/credits';
 import { deleteImageMetadata, getImageById, updateImageStatus } from '@/lib/supabase/image';
 import { downloadImageFromStorage } from '@/lib/supabase/storage';
 
@@ -96,7 +97,7 @@ export async function regenerateMetadata(imageId: string): Promise<GenerateMetad
   try {
     const { user, profile, supabase } = await ensureAuthenticated();
 
-    const totalCredits = (profile.credits_subscription || 0) + (profile.credits_purchased || 0);
+    const totalCredits = getTotalCredits(profile.credits_subscription, profile.credits_purchased);
 
     if (totalCredits <= 0) {
       return { success: false, error: 'Insufficient credits. Please upgrade or purchase more.' };
@@ -113,10 +114,7 @@ export async function regenerateMetadata(imageId: string): Promise<GenerateMetad
 
     if (result.success) {
       // 모든 사용자에 대해 크레딧을 차감합니다.
-      await supabase.rpc('decrement_user_credits', {
-        user_uuid: user.id,
-        amount: 1,
-      });
+      await decrementCredits(supabase, user.id, 1);
     }
 
     return result;

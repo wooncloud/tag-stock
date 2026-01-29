@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import {
+  addPurchasedCredits,
   cancelSubscription,
+  getCreditPackAmount,
   getLemonSqueezyPlan,
   updateSubscriptionStatus,
 } from '@/services/billing';
@@ -67,6 +69,28 @@ export async function POST(request: NextRequest) {
         const userId = payload.meta.custom_data?.user_id;
         if (userId) {
           await cancelSubscription(userId);
+        }
+        break;
+      }
+
+      case 'order_created': {
+        const userId = payload.meta.custom_data?.user_id;
+        const purchaseType = payload.meta.custom_data?.purchase_type;
+        const attributes = body.attributes;
+        const variantId = attributes.first_order_item?.variant_id?.toString();
+
+        if (!userId) {
+          console.error('No user_id in order custom_data');
+          break;
+        }
+
+        // Only process credit pack purchases
+        if (purchaseType === 'credit_pack' && variantId) {
+          const creditAmount = getCreditPackAmount(variantId);
+          if (creditAmount > 0) {
+            await addPurchasedCredits(userId, creditAmount);
+            console.log(`Added ${creditAmount} credits for user ${userId}`);
+          }
         }
         break;
       }

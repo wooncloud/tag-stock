@@ -124,3 +124,44 @@ export function getLemonSqueezyPlan(variantId: string): UserPlan {
 
   return 'free';
 }
+
+/**
+ * Gets the credit amount for a credit pack variant
+ */
+export function getCreditPackAmount(variantId: string): number {
+  const creditPackS = process.env.NEXT_PUBLIC_LEMON_SQUEEZY_CREDIT_PACK_S_VARIANT_ID;
+  const creditPackL = process.env.NEXT_PUBLIC_LEMON_SQUEEZY_CREDIT_PACK_L_VARIANT_ID;
+
+  if (variantId === creditPackS) {
+    return 100; // Credit Pack S
+  }
+
+  if (variantId === creditPackL) {
+    return 1000; // Credit Pack L
+  }
+
+  return 0;
+}
+
+/**
+ * Adds purchased credits to user profile
+ */
+export async function addPurchasedCredits(userId: string, amount: number): Promise<void> {
+  // First get current credits
+  const { data: profile } = await getSupabaseAdmin()
+    .from('profiles')
+    .select('credits_purchased')
+    .eq('id', userId)
+    .single();
+
+  const currentCredits = profile?.credits_purchased || 0;
+
+  await getSupabaseAdmin()
+    .from('profiles')
+    .update({
+      credits_purchased: currentCredits + amount,
+    })
+    .eq('id', userId);
+
+  console.log(`Added ${amount} purchased credits for user ${userId}`);
+}
