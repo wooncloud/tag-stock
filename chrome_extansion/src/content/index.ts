@@ -1,36 +1,38 @@
 import { detectStockSite, getSiteConfig, isUploadPage } from '../core/sites/detector';
 import { sendStatus } from '../shared/messenger';
-import { setupMessageHandler } from './message-handler';
 import { setupKeyboardHandler } from './keyboard-handler';
+import { setupMessageHandler } from './message-handler';
 
 /**
- * Initialize content script
+ * 콘텐츠 스크립트 초기화
  */
 function init(): void {
-    const siteType = detectStockSite();
+  // 메시지 및 키보드 핸들러를 먼저 설정하여 통신 수단 확보
+  setupMessageHandler();
+  setupKeyboardHandler();
 
-    if (siteType === 'unknown') {
-        return;
-    }
+  const siteType = detectStockSite();
 
-    if (!isUploadPage(siteType)) {
-        return;
-    }
+  if (siteType === 'unknown') {
+    console.log('TagStock: Content script loaded on non-stock site.');
+    return;
+  }
 
-    console.log(`TagStock content script initialized on ${siteType}`);
+  if (!isUploadPage(siteType)) {
+    console.log('TagStock: On supported site, but not on upload page.');
+    return;
+  }
 
-    // Setup message and keyboard handlers
-    setupMessageHandler();
-    setupKeyboardHandler();
+  console.log(`TagStock content script initialized on ${siteType}`);
 
-    // Send status to sidepanel
-    const config = getSiteConfig(siteType);
-    sendStatus(true, config?.name || siteType, 'Upload page ready');
+  // 사이드패널에 상태 전송
+  const config = getSiteConfig(siteType);
+  sendStatus(true, config?.name || siteType, 'Upload page ready');
 }
 
-// Initialize when DOM is ready
+// DOM이 준비되었을 때 초기화 실행
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
+  document.addEventListener('DOMContentLoaded', init);
 } else {
-    init();
+  init();
 }

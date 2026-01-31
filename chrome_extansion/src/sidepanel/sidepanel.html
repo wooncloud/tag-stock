@@ -1,197 +1,286 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TagStock</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>TagStock</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
-
-<body class="bg-background text-foreground min-h-screen">
-  <div class="flex flex-col h-screen">
-    <!-- Header -->
-    <header class="px-4 py-2 bg-primary text-primary-foreground">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-2">
-          <div>
-            <h1 class="font-semibold text-base">TagStock</h1>
-            <p class="text-[10px] opacity-70">AI Metadata Generator</p>
-          </div>
-        </div>
-        <div class="flex items-center gap-1">
-          <button id="homeBtn" class="p-2 rounded-lg hover:bg-white/10 transition-colors" title="TagStock Homepage">
-            <img src="../../assets/icons/home.svg" alt="Home" class="w-5 h-5 opacity-90" />
-          </button>
-          <button id="contactBtn" class="p-2 rounded-lg hover:bg-white/10 transition-colors" title="Contact Us">
-            <img src="../../assets/icons/contact.svg" alt="Contact" class="w-5 h-5 opacity-90" />
-          </button>
-          <button id="signOutBtn" class="p-2 rounded-lg hover:bg-white/10 transition-colors hidden" title="Sign Out">
-            <img src="../../assets/icons/logout.svg" alt="Sign Out" class="w-5 h-5 opacity-90" />
-          </button>
-        </div>
-      </div>
-    </header>
-
-    <!-- Loading Screen (shown while checking auth) -->
-    <section id="loadingContainer" class="flex-1 flex items-center justify-center p-4">
-      <div class="text-center space-y-4">
-        <div class="flex justify-center">
-          <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center animate-pulse">
-            <img src="../../assets/icons/list-checks.svg" alt="Checking" class="w-10 h-10" />
-          </div>
-        </div>
-        <div class="space-y-1">
-          <h2 class="text-lg font-semibold">Checking Account...</h2>
-          <p class="text-sm text-muted-foreground">Please wait a moment</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Authentication Screen (shown when not logged in) -->
-    <section id="authContainer" class="hidden flex-1 flex items-center justify-center p-4">
-      <div class="w-full max-w-sm space-y-4">
-        <div class="text-center space-y-2">
-          <h2 class="text-xl font-semibold">Welcome to TagStock</h2>
-          <p class="text-sm text-muted-foreground">Sign in to generate AI-powered metadata for your stock photos</p>
-        </div>
-
-        <div class="space-y-4">
-          <button id="loginBtn"
-            class="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-primary text-primary-foreground h-10 p-4 text-sm font-medium shadow transition-colors hover:bg-primary/90">
-            <img src="../../assets/icons/google.svg" alt="Google" class="w-5 h-5" />
-            Continue with Google
-          </button>
-
-          <button disabled
-            class="hidden w-full inline-flex items-center justify-center gap-2 rounded-lg text-primary-foreground h-10 p-4 text-sm font-medium shadow transition-colors cursor-not-allowed">
-            <img src="../../assets/icons/apple.svg" alt="Apple" class="w-5 h-5" />
-            Continue with Apple (Coming Soon)
-          </button>
-
-          <button disabled
-            class="hidden w-full inline-flex items-center justify-center gap-2 rounded-lg text-primary-foreground h-10 p-4 text-sm font-medium shadow transition-colors cursor-not-allowed">
-            <img src="../../assets/icons/x.svg" alt="X" class="w-5 h-5" />
-            Continue with X (Coming Soon)
-          </button>
-
-          <div id="loginLoading" class="hidden text-center space-y-2">
-            <div class="flex justify-center">
-              <img src="../../assets/icons/loading.svg" alt="Loading" class="w-6 h-6 animate-spin" />
-            </div>
-            <p class="text-sm font-medium">Signing in...</p>
-          </div>
-          <p id="authError" class="text-sm text-red-500 text-center min-h-[20px]"></p>
-        </div>
-      </div>
-    </section>
-
-    <!-- App Container (shown when logged in) -->
-    <div id="appContainer" class="hidden flex flex-col flex-1">
-      <!-- User Info & Credits -->
-      <section
-        class="px-4 py-2 rounded-xl bg-gradient-to-br from-primary/5 to-primary/10 border border-primary/10 shadow-sm relative overflow-hidden">
-        <div class="relative z-10 flex flex-col gap-3">
-          <div class="flex items-center justify-between">
-            <div class="space-y-0.5">
-              <div id="userEmail" class="text-sm font-semibold truncate max-w-[150px]">Loading...</div>
-              <div id="userPlan"
-                class="text-[10px] font-bold uppercase tracking-wider text-primary rounded-full bg-primary/10 inline-block w-fit">
-                Free Plan</div>
-            </div>
-            <div class="text-right">
-              <div class="text-[10px] text-muted-foreground uppercase tracking-tight">Credits</div>
-              <div class="font-black text-xl leading-none text-primary" id="creditDisplay">--</div>
+  <body class="bg-background text-foreground min-h-screen">
+    <div class="flex h-screen flex-col">
+      <!-- Header -->
+      <header class="bg-primary text-primary-foreground px-4 py-2">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <div>
+              <h1 class="text-base font-semibold">TagStock</h1>
+              <p class="text-[10px] opacity-70">AI Metadata Generator</p>
             </div>
           </div>
+          <div class="flex items-center gap-1">
+            <button
+              id="homeBtn"
+              class="rounded-lg p-2 transition-colors hover:bg-white/10"
+              title="TagStock Homepage"
+            >
+              <img src="../../assets/icons/home.svg" alt="Home" class="h-5 w-5 opacity-90" />
+            </button>
+            <button
+              id="contactBtn"
+              class="rounded-lg p-2 transition-colors hover:bg-white/10"
+              title="Contact Us"
+            >
+              <img src="../../assets/icons/contact.svg" alt="Contact" class="h-5 w-5 opacity-90" />
+            </button>
+            <button
+              id="signOutBtn"
+              class="hidden rounded-lg p-2 transition-colors hover:bg-white/10"
+              title="Sign Out"
+            >
+              <img src="../../assets/icons/logout.svg" alt="Sign Out" class="h-5 w-5 opacity-90" />
+            </button>
+          </div>
+        </div>
+      </header>
 
-          <div id="lowCreditWarning"
-            class="hidden text-[10px] font-medium text-yellow-700 bg-yellow-500/10 border border-yellow-500/20 rounded-lg px-2 py-1.5 animate-pulse">
+      <!-- Loading Screen (shown while checking auth) -->
+      <section id="loadingContainer" class="flex flex-1 items-center justify-center p-4">
+        <div class="space-y-4 text-center">
+          <div class="flex justify-center">
+            <div
+              class="bg-primary/10 flex h-16 w-16 animate-pulse items-center justify-center rounded-full"
+            >
+              <img src="../../assets/icons/list-checks.svg" alt="Checking" class="h-10 w-10" />
+            </div>
+          </div>
+          <div class="space-y-1">
+            <h2 class="text-lg font-semibold">Checking Account...</h2>
+            <p class="text-muted-foreground text-sm">Please wait a moment</p>
           </div>
         </div>
       </section>
 
-      <!-- Main Content -->
-      <main class="flex-1 overflow-y-auto p-4 space-y-4">
-        <!-- Status Card -->
-        <section class="rounded-lg border bg-card p-4">
-          <div class="flex items-center justify-between mb-2">
-            <span class="text-sm font-medium">Current Page</span>
-            <span id="statusBadge"
-              class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium bg-muted text-muted-foreground">
-              Checking...
-            </span>
+      <!-- Authentication Screen (shown when not logged in) -->
+      <section id="authContainer" class="flex hidden flex-1 items-center justify-center p-4">
+        <div class="w-full max-w-sm space-y-4">
+          <div class="space-y-2 text-center">
+            <h2 class="text-xl font-semibold">Welcome to TagStock</h2>
+            <p class="text-muted-foreground text-sm">
+              Sign in to generate AI-powered metadata for your stock photos
+            </p>
           </div>
-          <p id="statusText" class="text-sm text-muted-foreground">Detecting page type...</p>
-        </section>
 
-        <!-- Main Action -->
-        <section class="space-y-2">
-          <button id="fillBtn" disabled
-            class="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-primary text-primary-foreground h-11 px-4 text-sm font-medium shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50">
-            <img src="../../assets/icons/sparkles.svg" alt="Sparkles" class="w-4 h-4 brightness-0 invert" />
-            <span id="btnText">Fill Metadata</span>
-            <svg id="btnSpinner" class="w-4 h-4 animate-spin hidden" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
-            </svg>
-          </button>
-          <p class="text-xs text-center text-muted-foreground">
-            Shortcut: <kbd class="px-1.5 py-0.5 rounded bg-muted text-muted-foreground font-mono text-xs">⌘E</kbd> /
-            <kbd class="px-1.5 py-0.5 rounded bg-muted text-muted-foreground font-mono text-xs">Ctrl+E</kbd>
-          </p>
-        </section>
-
-        <!-- Quick Links -->
-        <section class="space-y-2">
-          <h2 class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Quick Links</h2>
-          <div class="grid gap-2">
-            <button id="adobeBtn"
-              class="flex items-center gap-3 rounded-lg border bg-card p-3 text-left transition-colors hover:bg-accent">
-              <div class="w-10 h-10 rounded-lg bg-red-500/10 flex items-center justify-center">
-                <img src="../../assets/icons/adobe.svg" alt="Adobe" class="w-8 h-8 text-red-600" />
-              </div>
-              <div class="flex-1 min-w-0">
-                <p class="text-sm font-medium">Adobe Stock</p>
-                <p class="text-xs text-muted-foreground truncate">contributor.stock.adobe.com</p>
-              </div>
+          <div class="space-y-4">
+            <button
+              id="loginBtn"
+              class="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg p-4 text-sm font-medium shadow transition-colors"
+            >
+              <img src="../../assets/icons/google.svg" alt="Google" class="h-5 w-5" />
+              Continue with Google
             </button>
-            <button id="shutterstockBtn"
-              class="flex items-center gap-3 rounded-lg border bg-card p-3 text-left transition-colors hover:bg-accent">
-              <div class="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
-                <img src="../../assets/icons/shutterstock.svg" alt="Shutterstock" class="w-6 h-6 text-blue-600" />
-              </div>
-              <div class="flex-1 min-w-0">
-                <p class="text-sm font-medium">Shutterstock</p>
-                <p class="text-xs text-muted-foreground truncate">submit.shutterstock.com</p>
-              </div>
-            </button>
-          </div>
-        </section>
 
-        <!-- Activity Log -->
-        <section class="space-y-2">
-          <div class="flex items-center justify-between">
-            <h2 class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Activity Log</h2>
-            <button id="clearLogBtn"
-              class="text-xs text-muted-foreground hover:text-foreground transition-colors">Clear</button>
-          </div>
-          <div id="activityLog" class="rounded-lg border bg-card divide-y overflow-y-auto" style="height: 200px;">
-            <div class="p-3 text-sm text-muted-foreground">
-              No activity yet
+            <button
+              disabled
+              class="text-primary-foreground hidden inline-flex h-10 w-full cursor-not-allowed items-center justify-center gap-2 rounded-lg p-4 text-sm font-medium shadow transition-colors"
+            >
+              <img src="../../assets/icons/apple.svg" alt="Apple" class="h-5 w-5" />
+              Continue with Apple (Coming Soon)
+            </button>
+
+            <button
+              disabled
+              class="text-primary-foreground hidden inline-flex h-10 w-full cursor-not-allowed items-center justify-center gap-2 rounded-lg p-4 text-sm font-medium shadow transition-colors"
+            >
+              <img src="../../assets/icons/x.svg" alt="X" class="h-5 w-5" />
+              Continue with X (Coming Soon)
+            </button>
+
+            <div id="loginLoading" class="hidden space-y-2 text-center">
+              <div class="flex justify-center">
+                <img
+                  src="../../assets/icons/loading.svg"
+                  alt="Loading"
+                  class="h-6 w-6 animate-spin"
+                />
+              </div>
+              <p class="text-sm font-medium">Signing in...</p>
             </div>
+            <p id="authError" class="min-h-[20px] text-center text-sm text-red-500"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- App Container (shown when logged in) -->
+      <div id="appContainer" class="flex hidden flex-1 flex-col">
+        <!-- User Info & Credits -->
+        <section
+          class="from-primary/5 to-primary/10 border-primary/10 relative overflow-hidden rounded-xl border bg-gradient-to-br px-4 py-2 shadow-sm"
+        >
+          <div class="relative z-10 flex flex-col gap-3">
+            <div class="flex items-center justify-between">
+              <div class="space-y-0.5">
+                <div id="userEmail" class="max-w-[150px] truncate text-sm font-semibold">
+                  Loading...
+                </div>
+                <div
+                  id="userPlan"
+                  class="text-primary bg-primary/10 inline-block w-fit rounded-full text-[10px] font-bold tracking-wider uppercase"
+                >
+                  Free Plan
+                </div>
+              </div>
+              <div class="text-right">
+                <div class="text-muted-foreground text-[10px] tracking-tight uppercase">
+                  Credits
+                </div>
+                <div class="text-primary text-xl leading-none font-black" id="creditDisplay">
+                  --
+                </div>
+              </div>
+            </div>
+
+            <div
+              id="lowCreditWarning"
+              class="hidden animate-pulse rounded-lg border border-yellow-500/20 bg-yellow-500/10 px-2 py-1.5 text-[10px] font-medium text-yellow-700"
+            ></div>
           </div>
         </section>
-      </main>
+
+        <!-- Main Content -->
+        <main class="flex-1 space-y-4 overflow-y-auto p-4">
+          <!-- Status Card -->
+          <section class="bg-card rounded-lg border p-4">
+            <div class="mb-2 flex items-center justify-between">
+              <span class="text-sm font-medium">Current Page</span>
+              <span
+                id="statusBadge"
+                class="bg-muted text-muted-foreground inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium"
+              >
+                Checking...
+              </span>
+            </div>
+            <p id="statusText" class="text-muted-foreground text-sm">Detecting page type...</p>
+          </section>
+
+          <!-- Main Action -->
+          <section class="space-y-2">
+            <button
+              id="fillBtn"
+              disabled
+              class="bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-ring inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg px-4 text-sm font-medium shadow transition-colors focus-visible:ring-1 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
+            >
+              <img
+                id="btnIcon"
+                src="../../assets/icons/sparkles.svg"
+                alt="Sparkles"
+                class="h-4 w-4 brightness-0 invert"
+              />
+              <span id="btnText">Fill Metadata</span>
+              <svg
+                id="btnSpinner"
+                class="hidden h-4 w-4 animate-spin"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                ></path>
+              </svg>
+            </button>
+            <p class="text-muted-foreground text-center text-xs">
+              Shortcut:
+              <kbd class="bg-muted text-muted-foreground rounded px-1.5 py-0.5 font-mono text-xs"
+                >⌘E</kbd
+              >
+              /
+              <kbd class="bg-muted text-muted-foreground rounded px-1.5 py-0.5 font-mono text-xs"
+                >Ctrl+E</kbd
+              >
+            </p>
+          </section>
+
+          <!-- Quick Links -->
+          <section class="space-y-2">
+            <h2 class="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+              Quick Links
+            </h2>
+            <div class="grid gap-2">
+              <button
+                id="adobeBtn"
+                class="bg-card hover:bg-accent flex items-center gap-3 rounded-lg border p-3 text-left transition-colors"
+              >
+                <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-red-500/10">
+                  <img
+                    src="../../assets/icons/adobe.svg"
+                    alt="Adobe"
+                    class="h-8 w-8 text-red-600"
+                  />
+                </div>
+                <div class="min-w-0 flex-1">
+                  <p class="text-sm font-medium">Adobe Stock</p>
+                  <p class="text-muted-foreground truncate text-xs">contributor.stock.adobe.com</p>
+                </div>
+              </button>
+              <button
+                id="shutterstockBtn"
+                class="bg-card hover:bg-accent flex items-center gap-3 rounded-lg border p-3 text-left transition-colors"
+              >
+                <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500/10">
+                  <img
+                    src="../../assets/icons/shutterstock.svg"
+                    alt="Shutterstock"
+                    class="h-6 w-6 text-blue-600"
+                  />
+                </div>
+                <div class="min-w-0 flex-1">
+                  <p class="text-sm font-medium">Shutterstock</p>
+                  <p class="text-muted-foreground truncate text-xs">submit.shutterstock.com</p>
+                </div>
+              </button>
+            </div>
+          </section>
+
+          <!-- Activity Log -->
+          <section class="space-y-2">
+            <div class="flex items-center justify-between">
+              <h2 class="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+                Activity Log
+              </h2>
+              <button
+                id="clearLogBtn"
+                class="text-muted-foreground hover:text-foreground text-xs transition-colors"
+              >
+                Clear
+              </button>
+            </div>
+            <div
+              id="activityLog"
+              class="bg-card divide-y overflow-y-auto rounded-lg border"
+              style="height: 200px"
+            >
+              <div class="text-muted-foreground p-3 text-sm">No activity yet</div>
+            </div>
+          </section>
+        </main>
+      </div>
+
+      <!-- Footer -->
+      <footer class="bg-primary text-primary-foreground px-4 py-2 text-center">
+        <p class="text-[10px] opacity-70">TagStock v1.1.0</p>
+      </footer>
     </div>
 
-    <!-- Footer -->
-    <footer class="px-4 py-2 text-center bg-primary text-primary-foreground">
-      <p class="text-[10px] opacity-70">TagStock v1.1.0</p>
-    </footer>
-  </div>
-
-  <script type="module" src="./index.js"></script>
-</body>
-
+    <script type="module" src="./index.js"></script>
+  </body>
 </html>
