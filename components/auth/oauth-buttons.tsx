@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+
 import { createClient } from '@/lib/supabase/client';
 
 import { Button } from '@/components/ui/button';
@@ -65,7 +66,7 @@ export function OAuthButtons() {
           alt="Apple"
           width={20}
           height={20}
-          className="mr-2 dark:invert opacity-50"
+          className="mr-2 opacity-50 dark:invert"
         />
         Continue with Apple (Coming Soon)
       </Button>
@@ -82,7 +83,7 @@ export function OAuthButtons() {
           alt="X"
           width={20}
           height={20}
-          className="mr-2 dark:invert opacity-50"
+          className="mr-2 opacity-50 dark:invert"
         />
         Continue with X (Coming Soon)
       </Button>

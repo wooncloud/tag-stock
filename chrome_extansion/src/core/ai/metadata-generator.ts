@@ -1,100 +1,101 @@
-import type { SiteType, SiteConfig, AIMetadataResult } from '../../shared/types';
-import { generateMetadata } from './gemini-client';
-import { getImageAsBase64, getThumbnailImage } from '../utils/image';
+import type { AIMetadataResult, SiteConfig, SiteType } from '../../shared/types';
 import { detectStockSite, getSiteConfig } from '../sites/detector';
+import { getImageAsBase64, getThumbnailImage } from '../utils/image';
+import { generateMetadata } from './gemini-client';
 import { ADOBE_STOCK_PROMPT } from './prompts/adobe';
 import { SHUTTERSTOCK_PROMPT } from './prompts/shutterstock';
 
 /**
- * Get the appropriate prompt for the given site type
+ * 해당 사이트 유형에 적합한 프롬프트를 가져옵니다.
  */
 function getPromptForSite(siteType: SiteType): string {
-    switch (siteType) {
-        case 'adobe':
-            return ADOBE_STOCK_PROMPT;
-        case 'shutterstock':
-            return SHUTTERSTOCK_PROMPT;
-        default:
-            console.warn(`Unknown site type: ${siteType}, using default prompt.`);
-            return ADOBE_STOCK_PROMPT;
-    }
+  switch (siteType) {
+    case 'adobe':
+      return ADOBE_STOCK_PROMPT;
+    case 'shutterstock':
+      return SHUTTERSTOCK_PROMPT;
+    default:
+      console.warn(`Unknown site type: ${siteType}, using default prompt.`);
+      return ADOBE_STOCK_PROMPT;
+  }
 }
 
 /**
- * Filter English-only keywords from a keyword string
+ * 키워드 문자열에서 영문 키워드만 필터링합니다.
  */
 function filterEnglishKeywords(keywords: string): string {
-    return keywords
-        .split(',')
-        .map(keyword => keyword.trim())
-        .filter(keyword => /^[a-zA-Z\s\-']+$/.test(keyword))
-        .join(', ');
+  return keywords
+    .split(',')
+    .map((keyword) => keyword.trim())
+    .filter((keyword) => /^[a-zA-Z\s\-']+$/.test(keyword))
+    .join(', ');
 }
 
 /**
- * Post-process metadata based on site-specific requirements
+ * 사이트별 요구 사항에 따라 메타데이터 후처리를 수행합니다.
  */
 function postProcessMetadata(
-    metadata: AIMetadataResult,
-    siteType: SiteType,
-    siteConfig: SiteConfig
+  metadata: AIMetadataResult,
+  siteType: SiteType,
+  siteConfig: SiteConfig
 ): AIMetadataResult {
-    // Check title length limit
-    if (metadata.title && metadata.title.length > siteConfig.maxTitleLength) {
-        console.warn(`Title exceeds ${siteConfig.maxTitleLength} characters. Truncating automatically.`);
-        metadata.title = metadata.title.substring(0, siteConfig.maxTitleLength);
-    }
+  // 제목 길이 제한 확인
+  if (metadata.title && metadata.title.length > siteConfig.maxTitleLength) {
+    console.warn(
+      `Title exceeds ${siteConfig.maxTitleLength} characters. Truncating automatically.`
+    );
+    metadata.title = metadata.title.substring(0, siteConfig.maxTitleLength);
+  }
 
-    // Site-specific processing
-    switch (siteType) {
-        case 'shutterstock':
-            // Shutterstock only supports English, remove Korean keywords
-            if (metadata.keywords) {
-                metadata.keywords = filterEnglishKeywords(metadata.keywords);
-            }
-            break;
-        case 'adobe':
-            // Adobe Stock doesn't require special post-processing
-            break;
-    }
+  // 사이트별 처리
+  switch (siteType) {
+    case 'shutterstock':
+      // 셔터스톡은 영어만 지원하므로 한글 키워드 제거
+      if (metadata.keywords) {
+        metadata.keywords = filterEnglishKeywords(metadata.keywords);
+      }
+      break;
+    case 'adobe':
+      // Adobe Stock은 특별한 후처리가 필요하지 않음
+      break;
+  }
 
-    return metadata;
+  return metadata;
 }
 
 /**
- * Generate AI metadata for the current site
+ * 현재 사이트에 대한 AI 메타데이터를 생성합니다.
  */
 export async function generateAIMetadata(): Promise<AIMetadataResult> {
-    try {
-        // Detect current site
-        const siteType = detectStockSite();
-        const siteConfig = getSiteConfig(siteType);
+  try {
+    // 현재 사이트 감지
+    const siteType = detectStockSite();
+    const siteConfig = getSiteConfig(siteType);
 
-        if (!siteConfig) {
-            throw new Error(`Unsupported site: ${siteType}`);
-        }
-
-        console.debug(`Detected site: ${siteType} (${siteConfig.name})`);
-
-        // Select prompt for the site
-        const systemPrompt = getPromptForSite(siteType);
-
-        console.debug('Searching for thumbnail image...');
-        const thumbnail = getThumbnailImage();
-
-        console.debug('Converting image...', thumbnail.src);
-        const imageBase64 = await getImageAsBase64(thumbnail.src);
-
-        console.debug(`${siteConfig.name} AI metadata generation in progress...`);
-        const result = await generateMetadata(systemPrompt, imageBase64);
-
-        console.debug('Generated metadata:', result);
-
-        // Post-process metadata if needed
-        return postProcessMetadata(result, siteType, siteConfig);
-
-    } catch (error) {
-        console.error('AI metadata generation failed:', error);
-        throw error;
+    if (!siteConfig) {
+      throw new Error(`Unsupported site: ${siteType}`);
     }
+
+    console.debug(`Detected site: ${siteType} (${siteConfig.name})`);
+
+    // 사이트에 적합한 프롬프트 선택
+    const systemPrompt = getPromptForSite(siteType);
+
+    console.debug('Searching for thumbnail image...');
+    const thumbnail = getThumbnailImage();
+
+    console.debug('Converting image...', thumbnail.src);
+    const imageBase64 = await getImageAsBase64(thumbnail.src);
+
+    console.debug(`${siteConfig.name} AI metadata generation in progress...`);
+    const result = await generateMetadata(systemPrompt, imageBase64);
+
+    console.debug('Generated metadata:', result);
+
+    // 필요한 경우 메타데이터 후처리
+    return postProcessMetadata(result, siteType, siteConfig);
+  } catch (error) {
+    console.error('AI metadata generation failed:', error);
+    throw error;
+  }
 }

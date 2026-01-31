@@ -62,7 +62,10 @@ export const Vortex = (props: VortexProps) => {
     return Math.abs(((t + hm) % m) - hm) / hm;
   }, []);
 
-  const lerp = useCallback((n1: number, n2: number, speed: number): number => (1 - speed) * n1 + speed * n2, []);
+  const lerp = useCallback(
+    (n1: number, n2: number, speed: number): number => (1 - speed) * n1 + speed * n2,
+    []
+  );
 
   const checkBounds = useCallback((x: number, y: number, canvas: HTMLCanvasElement) => {
     return x > canvas.width || x < 0 || y > canvas.height || y < 0;
@@ -206,18 +209,7 @@ export const Vortex = (props: VortexProps) => {
         initParticle(i);
       }
     },
-    [
-      TAU,
-      checkBounds,
-      drawParticle,
-      initParticle,
-      lerp,
-      noise3D,
-      noiseSteps,
-      xOff,
-      yOff,
-      zOff,
-    ]
+    [TAU, checkBounds, drawParticle, initParticle, lerp, noise3D, noiseSteps, xOff, yOff, zOff]
   );
 
   const drawParticles = useCallback(

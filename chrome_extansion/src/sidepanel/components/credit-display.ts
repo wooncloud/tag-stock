@@ -1,47 +1,45 @@
-import type { UserProfile } from '../../shared/types';
 import { getTotalCredits } from '../../lib/supabase/auth';
+import type { UserProfile } from '../../shared/types';
 
 /**
- * Initialize and render the credit display
+ * 크레딧 표시를 초기화하고 렌더링합니다.
  */
 export function initCreditDisplay(profile: UserProfile): void {
-    const totalCredits = getTotalCredits(profile);
+  const totalCredits = getTotalCredits(profile);
 
-    // Update total credits display
-    const creditDisplay = document.getElementById('creditDisplay');
-    if (creditDisplay) {
-        creditDisplay.textContent = totalCredits.toString();
-    }
-
+  // 총 크레딧 표시 업데이트
+  const creditDisplay = document.getElementById('creditDisplay');
+  if (creditDisplay) {
+    creditDisplay.textContent = totalCredits.toString();
+  }
 }
 
 /**
- * Update credit display with new values
+ * 새로운 값으로 크레딧 표시를 업데이트합니다.
  */
 export function updateCreditDisplay(profile: UserProfile): void {
-    initCreditDisplay(profile);
+  initCreditDisplay(profile);
 }
 
-
 /**
- * Show low credit warning
+ * 부족한 크레딧 경고를 표시합니다.
  */
 export function showLowCreditWarning(credits: number): void {
-    if (credits <= 5 && credits > 0) {
-        const warning = document.getElementById('lowCreditWarning');
-        if (warning) {
-            warning.classList.remove('hidden');
-            warning.textContent = `⚠️ Only ${credits} credits remaining`;
-        }
+  if (credits <= 5 && credits > 0) {
+    const warning = document.getElementById('lowCreditWarning');
+    if (warning) {
+      warning.classList.remove('hidden');
+      warning.textContent = `⚠️ Only ${credits} credits remaining`;
     }
+  }
 }
 
 /**
- * Hide low credit warning
+ * 부족한 크레딧 경고를 숨깁니다.
  */
 export function hideLowCreditWarning(): void {
-    const warning = document.getElementById('lowCreditWarning');
-    if (warning) {
-        warning.classList.add('hidden');
-    }
+  const warning = document.getElementById('lowCreditWarning');
+  if (warning) {
+    warning.classList.add('hidden');
+  }
 }

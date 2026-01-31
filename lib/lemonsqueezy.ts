@@ -7,7 +7,7 @@ lemonSqueezySetup({
 });
 
 /**
- * Lemon Squeezy configuration
+ * Lemon Squeezy 설정
  */
 export const LS_CONFIG = {
   storeId: process.env.LEMON_SQUEEZY_STORE_ID,

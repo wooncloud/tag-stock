@@ -1,112 +1,106 @@
 /**
- * Supported stock photography sites
+ * 지원되는 스톡 사진 사이트
  */
 export type SiteType = 'adobe' | 'shutterstock' | 'unknown';
 
 /**
- * Log levels for activity logging
+ * 활동 로깅을 위한 로그 레벨
  */
 export type LogLevel = 'info' | 'success' | 'error';
 
 /**
- * Site-specific configuration
+ * 사이트별 설정
  */
 export interface SiteConfig {
-    name: string;
-    supportsBilingual: boolean;
-    maxTitleLength: number;
-    keywordSeparator: string;
-    urlPatterns: string[];
-    selectors: {
-        titleField: string;
-        keywordField: string;
-        saveButton: string;
-        [key: string]: string;
-    };
+  name: string;
+  supportsBilingual: boolean;
+  maxTitleLength: number;
+  keywordSeparator: string;
+  urlPatterns: string[];
+  selectors: {
+    titleField: string;
+    keywordField: string;
+    saveButton: string;
+    [key: string]: string;
+  };
 }
 
 /**
- * AI-generated metadata result
+ * AI가 생성한 메타데이터 결과
  */
 export interface AIMetadataResult {
-    title: string;
-    keyword?: string[];
-    keywords?: string;
+  title: string;
+  keyword?: string[];
+  keywords?: string;
 }
 
 /**
- * Processed metadata ready for form filling
+ * 폼 채우기에 준비된 처리된 메타데이터
  */
 export interface ProcessedMetadata {
-    title: string;
-    keywords: string;
+  title: string;
+  keywords: string;
 }
 
 /**
- * Chrome message types
+ * 크롬 메시지 유형
  */
-export type MessageAction =
-    | 'generateMetadata'
-    | 'checkStatus'
-    | 'openSidePanel';
+export type MessageAction = 'generateMetadata' | 'checkStatus' | 'openSidePanel';
 
-export type MessageType =
-    | 'log'
-    | 'status';
+export type MessageType = 'log' | 'status';
 
 /**
- * Message from content script to sidepanel
+ * 콘텐츠 스크립트에서 사이드패널로 보내는 메시지
  */
 export interface ContentToSidepanelMessage {
-    type: MessageType;
-    text?: string;
-    level?: LogLevel;
-    connected?: boolean;
-    site?: string;
-    info?: string;
+  type: MessageType;
+  text?: string;
+  level?: LogLevel;
+  connected?: boolean;
+  site?: string;
+  info?: string;
 }
 
 /**
- * Message from sidepanel to content script
+ * 사이드패널에서 콘텐츠 스크립트로 보내는 메시지
  */
 export interface SidepanelToContentMessage {
-    action: MessageAction;
-    siteType?: SiteType;
+  action: MessageAction;
+  siteType?: SiteType;
 }
 
 /**
- * Response from content script
+ * 콘텐츠 스크립트의 응답
  */
 export interface ContentScriptResponse {
-    success: boolean;
-    title?: string;
-    keywords?: string;
-    error?: string;
-    connected?: boolean;
-    siteType?: SiteType;
-    siteName?: string;
+  success: boolean;
+  title?: string;
+  keywords?: string;
+  error?: string;
+  connected?: boolean;
+  siteType?: SiteType;
+  siteName?: string;
 }
 
 /**
- * User profile from database
+ * 데이터베이스의 사용자 프로필
  */
 export interface UserProfile {
-    id: string;
-    email: string;
-    plan: string;
-    credits_subscription: number;
-    credits_purchased: number;
-    created_at?: string;
-    updated_at?: string;
+  id: string;
+  email: string;
+  plan: string;
+  credits_subscription: number;
+  credits_purchased: number;
+  created_at?: string;
+  updated_at?: string;
 }
 
 /**
- * Authentication state
+ * 인증 상태
  */
 export interface AuthState {
-    user: import('@supabase/supabase-js').User | null;
-    profile: UserProfile | null;
-    isLoading: boolean;
-    error: string | null;
+  user: import('@supabase/supabase-js').User | null;
+  profile: UserProfile | null;
+  isLoading: boolean;
+  error: string | null;
 }
-

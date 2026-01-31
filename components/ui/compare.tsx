@@ -1,9 +1,10 @@
 'use client';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
+import Image from 'next/image';
+
 import { IconDotsVertical } from '@tabler/icons-react';
 import { AnimatePresence, motion } from 'motion/react';
-import Image from 'next/image';
 
 import { cn } from '@/lib/utils';
 
@@ -198,7 +199,7 @@ export const Compare = ({
                 src={firstImage}
                 fill
                 className={cn(
-                  'absolute inset-0 z-20 h-full w-full shrink-0 rounded-2xl select-none object-cover',
+                  'absolute inset-0 z-20 h-full w-full shrink-0 rounded-2xl object-cover select-none',
                   firstImageClassName
                 )}
                 draggable={false}
@@ -213,7 +214,7 @@ export const Compare = ({
         {secondImage ? (
           <MotionImage
             className={cn(
-              'absolute top-0 left-0 z-[19] h-full w-full rounded-2xl select-none object-cover',
+              'absolute top-0 left-0 z-[19] h-full w-full rounded-2xl object-cover select-none',
               secondImageClassname
             )}
             alt="second image"

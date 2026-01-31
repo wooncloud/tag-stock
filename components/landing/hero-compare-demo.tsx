@@ -2,9 +2,10 @@
 
 import React, { useCallback, useRef, useState } from 'react';
 
+import Image from 'next/image';
+
 import { IconDotsVertical } from '@tabler/icons-react';
 import { AnimatePresence, motion } from 'motion/react';
-import Image from 'next/image';
 
 import { cn } from '@/lib/utils';
 

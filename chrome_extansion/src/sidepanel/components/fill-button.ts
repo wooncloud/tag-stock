@@ -6,49 +6,49 @@ const btnSpinner = document.getElementById('btnSpinner') as HTMLElement;
 const fillBtn = document.getElementById('fillBtn') as HTMLButtonElement;
 
 /**
- * Set button to loading state
+ * 버튼을 로딩 상태로 설정합니다.
  */
 export function setButtonLoading(loading: boolean): void {
-    if (loading) {
-        btnIcon.classList.add('hidden');
-        btnSpinner.classList.remove('hidden');
-        btnText.textContent = 'Generating...';
-        fillBtn.disabled = true;
-    } else {
-        btnIcon.classList.remove('hidden');
-        btnSpinner.classList.add('hidden');
-        btnText.textContent = 'Fill Metadata';
-        fillBtn.disabled = false;
-    }
+  if (loading) {
+    btnIcon.classList.add('hidden');
+    btnSpinner.classList.remove('hidden');
+    btnText.textContent = 'Generating...';
+    fillBtn.disabled = true;
+  } else {
+    btnIcon.classList.remove('hidden');
+    btnSpinner.classList.add('hidden');
+    btnText.textContent = 'Fill Metadata';
+    fillBtn.disabled = false;
+  }
 }
 
 /**
- * Set button to success state
+ * 버튼을 성공 상태로 설정합니다.
  */
 export function setButtonSuccess(): void {
-    btnIcon.classList.remove('hidden');
-    btnSpinner.classList.add('hidden');
-    btnText.textContent = 'Done!';
-    fillBtn.className = fillBtn.className.replace('bg-primary', 'bg-green-600');
+  btnIcon.classList.remove('hidden');
+  btnSpinner.classList.add('hidden');
+  btnText.textContent = 'Done!';
+  fillBtn.className = fillBtn.className.replace('bg-primary', 'bg-green-600');
 
-    setTimeout(() => {
-        btnText.textContent = 'Fill Metadata';
-        fillBtn.className = fillBtn.className.replace('bg-green-600', 'bg-primary');
-    }, TIMEOUTS.BUTTON_FEEDBACK);
+  setTimeout(() => {
+    btnText.textContent = 'Fill Metadata';
+    fillBtn.className = fillBtn.className.replace('bg-green-600', 'bg-primary');
+  }, TIMEOUTS.BUTTON_FEEDBACK);
 }
 
 /**
- * Set button to error state
+ * 버튼을 에러 상태로 설정합니다.
  */
 export function setButtonError(): void {
-    btnIcon.classList.remove('hidden');
-    btnSpinner.classList.add('hidden');
-    btnText.textContent = 'Error';
-    fillBtn.className = fillBtn.className.replace('bg-primary', 'bg-red-600');
-    fillBtn.disabled = false;
+  btnIcon.classList.remove('hidden');
+  btnSpinner.classList.add('hidden');
+  btnText.textContent = 'Error';
+  fillBtn.className = fillBtn.className.replace('bg-primary', 'bg-red-600');
+  fillBtn.disabled = false;
 
-    setTimeout(() => {
-        btnText.textContent = 'Fill Metadata';
-        fillBtn.className = fillBtn.className.replace('bg-red-600', 'bg-primary');
-    }, TIMEOUTS.BUTTON_FEEDBACK);
+  setTimeout(() => {
+    btnText.textContent = 'Fill Metadata';
+    fillBtn.className = fillBtn.className.replace('bg-red-600', 'bg-primary');
+  }, TIMEOUTS.BUTTON_FEEDBACK);
 }

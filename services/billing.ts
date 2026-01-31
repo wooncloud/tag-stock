@@ -4,7 +4,7 @@ import type { UserPlan } from '@/types/database';
 
 import { PLAN_LIMITS } from '@/lib/plan-limits';
 
-// Lazy initialization to avoid build-time errors
+// 빌드 에러를 방지하기 위한 지연 초기화
 function getSupabaseAdmin() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -33,8 +33,8 @@ interface UpdateSubscriptionParams {
 }
 
 /**
- * Updates user profile with subscription status
- * Used by Lemon Squeezy webhooks
+ * 구독 상태로 사용자 프로필 업데이트
+ * Lemon Squeezy 웹훅에서 사용
  */
 export async function updateSubscriptionStatus(params: UpdateSubscriptionParams): Promise<void> {
   const { userId, plan, status, subscriptionId, managementUrl } = params;
@@ -44,25 +44,25 @@ export async function updateSubscriptionStatus(params: UpdateSubscriptionParams)
     subscription_status: status,
   };
 
-  // Provider-specific subscription ID field
+  // 제공업체별 구독 ID 필드
   if (subscriptionId) {
     updateData.lemon_squeezy_subscription_id = subscriptionId;
   }
 
-  // Lemon Squeezy specific: management URL
+  // Lemon Squeezy 전용: 관리 URL
   if (managementUrl) {
     updateData.subscription_management_url = managementUrl;
   }
 
-  // Update credits based on plan for paid plans
+  // 유료 플랜의 경우 플랜에 따라 크레딧 업데이트
   if (status === 'active' || status === 'on_trial') {
     const limits = PLAN_LIMITS[plan];
     if (limits) {
-      // If unlimited (-1), we still set it. Otherwise set the monthly amount.
+      // 무제한(-1)인 경우에도 설정하고, 그렇지 않으면 매월 금액을 설정합니다.
       updateData.credits_subscription = limits.monthlyCredits;
     }
   } else {
-    // Revert to free plan credits if subscription is not active
+    // 구독이 활성화되지 않은 경우 무료 플랜 크레딧으로 복구
     updateData.credits_subscription = PLAN_LIMITS.free.monthlyCredits;
   }
 
@@ -72,7 +72,7 @@ export async function updateSubscriptionStatus(params: UpdateSubscriptionParams)
 }
 
 /**
- * Cancels a subscription by updating user profile to free plan
+ * 사용자 프로필을 무료 플랜으로 업데이트하여 구독 취소 처리
  */
 export async function cancelSubscription(userId: string): Promise<void> {
   await getSupabaseAdmin()
@@ -88,7 +88,7 @@ export async function cancelSubscription(userId: string): Promise<void> {
 }
 
 /**
- * Finds a user ID by their subscription ID
+ * 구독 ID로 사용자 ID 찾기
  */
 export async function findUserBySubscriptionId(subscriptionId: string): Promise<string | null> {
   const { data: profile } = await getSupabaseAdmin()
@@ -101,7 +101,7 @@ export async function findUserBySubscriptionId(subscriptionId: string): Promise<
 }
 
 /**
- * Determines the plan based on Lemon Squeezy variant ID
+ * Lemon Squeezy 변형(Variant) ID를 기반으로 플랜 결정
  */
 export function getLemonSqueezyPlan(variantId: string): UserPlan {
   const proVariants = [
@@ -126,7 +126,7 @@ export function getLemonSqueezyPlan(variantId: string): UserPlan {
 }
 
 /**
- * Gets the credit amount for a credit pack variant
+ * 크레딧 팩 변형(Variant)에 대한 크레딧 양 가져오기
  */
 export function getCreditPackAmount(variantId: string): number {
   const creditPackS = process.env.NEXT_PUBLIC_LEMON_SQUEEZY_CREDIT_PACK_S_VARIANT_ID;
@@ -144,10 +144,10 @@ export function getCreditPackAmount(variantId: string): number {
 }
 
 /**
- * Adds purchased credits to user profile
+ * 사용자 프로필에 구매한 크레딧 추가
  */
 export async function addPurchasedCredits(userId: string, amount: number): Promise<void> {
-  // First get current credits
+  // 먼저 현재 크레딧을 가져옵니다.
   const { data: profile } = await getSupabaseAdmin()
     .from('profiles')
     .select('credits_purchased')
