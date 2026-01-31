@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
 import { fileURLToPath, URL } from 'url';
+import { copyFileSync, mkdirSync, cpSync } from 'fs';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
@@ -14,7 +15,7 @@ export default defineConfig({
             },
             output: {
                 entryFileNames: (chunkInfo) => {
-                    // Put sidepanel.js in sidepanel directory
+                    // Map each entry to its correct location in dist
                     if (chunkInfo.name === 'sidepanel') {
                         return 'sidepanel/index.js';
                     }
@@ -35,4 +36,36 @@ export default defineConfig({
     resolve: {
         extensions: ['.ts', '.js'],
     },
+    plugins: [
+        {
+            name: 'copy-extension-files',
+            closeBundle() {
+                // Copy manifest.json
+                copyFileSync(
+                    resolve(__dirname, 'manifest.json'),
+                    resolve(__dirname, 'dist/manifest.json')
+                );
+
+                // Copy sidepanel HTML and CSS
+                mkdirSync(resolve(__dirname, 'dist/sidepanel'), { recursive: true });
+                copyFileSync(
+                    resolve(__dirname, 'src/sidepanel/sidepanel.html'),
+                    resolve(__dirname, 'dist/sidepanel/sidepanel.html')
+                );
+                copyFileSync(
+                    resolve(__dirname, 'src/sidepanel/styles.css'),
+                    resolve(__dirname, 'dist/sidepanel/styles.css')
+                );
+
+                // Copy assets directory
+                cpSync(
+                    resolve(__dirname, 'assets'),
+                    resolve(__dirname, 'dist/assets'),
+                    { recursive: true }
+                );
+
+                console.log('✅ Copied manifest.json, HTML, CSS, and assets to dist/');
+            },
+        },
+    ],
 });
