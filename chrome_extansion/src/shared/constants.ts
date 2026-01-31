@@ -1,7 +1,7 @@
 /**
  * Gemini AI 모델 설정
  */
-export const AI_MODEL = 'gemini-2.5-flash-lite';
+export const AI_MODEL = 'gemini-flash-latest';
 
 /**
  * 사이드패널에 유지할 최대 로그 항목 수

@@ -56,7 +56,7 @@ export function getSiteConfig(siteType: SiteType): SiteConfig | null {
       keywordSeparator: ', ',
       urlPatterns: [SITE_PATTERNS.SHUTTERSTOCK.UPLOAD_PATH],
       selectors: {
-        imageElement: 'div.css-rq1v45[data-testid="asset-card"] img',
+        imageElement: 'div[data-testid="asset-card"][aria-checked="true"] img',
         checkbox: 'button[data-testid="content_editor_buttons_delete-button"]',
         titleField: 'div[data-testid="description"] > textarea',
         keywordField: 'div[data-testid="keyword-input-text"] input',

@@ -102,12 +102,16 @@ async function handleFillClick(): Promise<void> {
   addLog('Starting AI metadata generation...');
 
   try {
+    console.log('[TagStock] Sending to tab:', currentTabId);
+
     const message: SidepanelToContentMessage = {
       action: 'generateMetadata',
       siteType: siteType,
     };
 
+    console.log('[TagStock] Message:', message);
     const response: ContentScriptResponse = await sendToContentScript(currentTabId, message);
+    console.log('[TagStock] Response:', response);
 
     setButtonLoading(false);
 

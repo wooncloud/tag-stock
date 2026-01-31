@@ -26,13 +26,49 @@ chrome.runtime.onInstalled.addListener(() => {
 });
 
 /**
- * 메시지 라우팅 (필요한 경우)
+ * 메시지 라우팅
  */
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  // 필요한 경우 사이드패널과 콘텐츠 스크립트 간의 메시지 중계
+  // 사이드패널 열기
   if (message.action === 'openSidePanel' && sender.tab?.windowId) {
     chrome.sidePanel.open({ windowId: sender.tab.windowId });
     sendResponse({ success: true });
+    return true;
   }
+
+  // 이미지 fetch (CORS 우회)
+  if (message.action === 'fetchImage' && message.url) {
+    fetchImageAsBase64(message.url)
+      .then((base64) => sendResponse({ success: true, base64 }))
+      .catch((error) => sendResponse({ success: false, error: error.message }));
+    return true; // 비동기 응답을 위해 true 반환
+  }
+
   return true;
 });
+
+/**
+ * 이미지 URL을 base64로 변환 (CORS 우회)
+ */
+async function fetchImageAsBase64(url: string): Promise<string> {
+  console.log('[TagStock BG] Fetching image:', url);
+
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch image: ${response.status}`);
+  }
+
+  const blob = await response.blob();
+  const arrayBuffer = await blob.arrayBuffer();
+  const uint8Array = new Uint8Array(arrayBuffer);
+
+  let binary = '';
+  for (let i = 0; i < uint8Array.length; i++) {
+    binary += String.fromCharCode(uint8Array[i]);
+  }
+
+  const base64 = btoa(binary);
+  console.log('[TagStock BG] Image converted, length:', base64.length);
+
+  return base64;
+}

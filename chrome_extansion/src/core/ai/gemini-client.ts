@@ -17,7 +17,7 @@ export async function generateMetadata(
     // 환경 변수에서 API 키 가져오기 (빌드 시 설정됨)
     const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
 
-    if (!apiKey || apiKey === 'your-api-key-here' || apiKey === 'your-gemini-api-key-here') {
+    if (!apiKey) {
       throw new Error(
         'Gemini API key not configured. Please set VITE_GEMINI_API_KEY in .env file.'
       );

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "cd .. && npm run format && cd chrome_extansion && vite build",
+    "build": "cd .. && npm run format && cd chrome_extansion && vite build && BUILD_TARGET=content vite build",
     "preview": "vite preview"
   },
   "keywords": [

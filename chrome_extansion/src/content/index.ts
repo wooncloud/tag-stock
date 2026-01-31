@@ -3,12 +3,13 @@ import { sendStatus } from '../shared/messenger';
 import { setupKeyboardHandler } from './keyboard-handler';
 import { setupMessageHandler } from './message-handler';
 
+// 메시지 핸들러는 즉시 설정 (DOM 준비 여부와 무관하게 통신 가능해야 함)
+setupMessageHandler();
+
 /**
- * 콘텐츠 스크립트 초기화
+ * 콘텐츠 스크립트 초기화 (DOM 준비 후 실행)
  */
 function init(): void {
-  // 메시지 및 키보드 핸들러를 먼저 설정하여 통신 수단 확보
-  setupMessageHandler();
   setupKeyboardHandler();
 
   const siteType = detectStockSite();

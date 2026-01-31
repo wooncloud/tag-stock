@@ -5,17 +5,45 @@ import { defineConfig } from 'vite';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
-export default defineConfig({
+const target = process.env.BUILD_TARGET;
+
+// Content script 빌드 (IIFE - ES module 지원 안함)
+const contentConfig = defineConfig({
   build: {
+    emptyOutDir: false,
     rollupOptions: {
       input: {
         content: resolve(__dirname, 'src/content/index.ts'),
+      },
+      output: {
+        entryFileNames: '[name].js',
+        format: 'iife',
+        dir: 'dist',
+      },
+    },
+    target: 'es2020',
+    minify: false,
+    sourcemap: true,
+  },
+  define: {
+    global: 'globalThis',
+  },
+  resolve: {
+    extensions: ['.ts', '.js'],
+  },
+});
+
+// Background & Sidepanel 빌드 (ES module)
+const mainConfig = defineConfig({
+  build: {
+    emptyOutDir: true,
+    rollupOptions: {
+      input: {
         background: resolve(__dirname, 'src/background/index.ts'),
         sidepanel: resolve(__dirname, 'src/sidepanel/index.ts'),
       },
       output: {
         entryFileNames: (chunkInfo) => {
-          // Map each entry to its correct location in dist
           if (chunkInfo.name === 'sidepanel') {
             return 'sidepanel/index.js';
           }
@@ -40,10 +68,8 @@ export default defineConfig({
     {
       name: 'copy-extension-files',
       closeBundle() {
-        // Copy manifest.json
         copyFileSync(resolve(__dirname, 'manifest.json'), resolve(__dirname, 'dist/manifest.json'));
 
-        // Copy sidepanel HTML and CSS
         mkdirSync(resolve(__dirname, 'dist/sidepanel'), { recursive: true });
         copyFileSync(
           resolve(__dirname, 'src/sidepanel/sidepanel.html'),
@@ -54,7 +80,6 @@ export default defineConfig({
           resolve(__dirname, 'dist/sidepanel/styles.css')
         );
 
-        // Copy assets directory
         cpSync(resolve(__dirname, 'assets'), resolve(__dirname, 'dist/assets'), {
           recursive: true,
         });
@@ -64,3 +89,5 @@ export default defineConfig({
     },
   ],
 });
+
+export default target === 'content' ? contentConfig : mainConfig;

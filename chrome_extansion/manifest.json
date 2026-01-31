@@ -6,7 +6,9 @@
   "permissions": ["activeTab", "sidePanel", "tabs", "storage", "identity"],
   "host_permissions": [
     "https://contributor.stock.adobe.com/*",
-    "https://submit.shutterstock.com/*"
+    "https://submit.shutterstock.com/*",
+    "https://cdn.shutterstock.com/*",
+    "https://*.ftcdn.net/*"
   ],
   "icons": {
     "16": "assets/icon/icon16.png",
@@ -25,13 +27,14 @@
   },
   "content_scripts": [
     {
-      "matches": [
-        "https://contributor.stock.adobe.com/*/uploads",
-        "https://contributor.stock.adobe.com/uploads",
-        "https://submit.shutterstock.com/*"
-      ],
+      "matches": ["https://contributor.stock.adobe.com/*"],
       "js": ["content.js"],
-      "run_at": "document_start"
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://submit.shutterstock.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
     }
   ],
   "action": {

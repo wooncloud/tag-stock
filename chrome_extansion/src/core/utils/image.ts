@@ -4,39 +4,26 @@ import { detectStockSite, getSiteConfig } from '../sites/detector';
  * 이미지 URL을 base64 인코딩된 문자열로 변환합니다.
  */
 export async function getImageAsBase64(imageUrl: string): Promise<string> {
-  try {
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.crossOrigin = 'anonymous';
+  console.log('[TagStock] Loading image via background:', imageUrl);
 
-      img.onload = function () {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
+  // Background script를 통해 이미지 fetch (CORS 우회)
+  return new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage({ action: 'fetchImage', url: imageUrl }, (response) => {
+      if (chrome.runtime.lastError) {
+        console.error('[TagStock] Background fetch error:', chrome.runtime.lastError);
+        reject(new Error(chrome.runtime.lastError.message || 'Background fetch failed'));
+        return;
+      }
 
-        if (!ctx) {
-          reject(new Error('Failed to get canvas context'));
-          return;
-        }
-
-        canvas.width = img.width;
-        canvas.height = img.height;
-
-        ctx.drawImage(img, 0, 0);
-
-        const base64 = canvas.toDataURL('image/jpeg', 0.8).split(',')[1];
-        resolve(base64);
-      };
-
-      img.onerror = function () {
-        reject(new Error('Failed to load image.'));
-      };
-
-      img.src = imageUrl;
+      if (response?.success && response.base64) {
+        console.log('[TagStock] Image fetched via background, length:', response.base64.length);
+        resolve(response.base64);
+      } else {
+        console.error('[TagStock] Background fetch failed:', response?.error);
+        reject(new Error(response?.error || 'Failed to fetch image'));
+      }
     });
-  } catch (error) {
-    console.error('Error during image conversion:', error);
-    throw error;
-  }
+  });
 }
 
 /**
@@ -78,6 +65,11 @@ export function getThumbnailImage(): HTMLImageElement {
     throw new Error(`${config.name} thumbnail image not found.`);
   }
 
-  console.log(`${config.name} thumbnail image found:`, thumbnail.src);
+  console.log(`[TagStock] Thumbnail found:`, {
+    src: thumbnail.src,
+    currentSrc: thumbnail.currentSrc,
+    naturalWidth: thumbnail.naturalWidth,
+    naturalHeight: thumbnail.naturalHeight,
+  });
   return thumbnail;
 }

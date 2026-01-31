@@ -7,7 +7,10 @@ import { fillMetadata } from './metadata-filler';
  * 사이드패널과의 통신을 위한 메시지 리스너 설정
  */
 export function setupMessageHandler(): void {
+  console.log('[TagStock] Message handler registered');
+
   onMessage((message: SidepanelToContentMessage, _sender, sendResponse) => {
+    console.log('[TagStock] Message received:', message);
     if (message.action === 'generateMetadata') {
       const siteType = message.siteType || detectStockSite();
 
