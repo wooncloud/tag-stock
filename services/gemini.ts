@@ -5,7 +5,11 @@ import { AIGeneratedMetadata } from '@/types/database';
 import { STOCK_METADATA_PROMPT } from './prompts/stock-metadata';
 
 // Gemini AI 초기화
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_API_KEY || '');
+const apiKey = process.env.GOOGLE_GEMINI_API_KEY;
+if (!apiKey) {
+  console.error('GOOGLE_GEMINI_API_KEY is not set');
+}
+const genAI = new GoogleGenerativeAI(apiKey || '');
 
 const model = genAI.getGenerativeModel({
   model: 'gemini-flash-latest',

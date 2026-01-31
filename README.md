@@ -45,8 +45,6 @@ Detailed project documentation is available in the [`/docs`](./docs) directory:
 - 크롬 익스텐션 셔터스톡 카테고리 자동화
 - 크롬 익스텐션 셔터스톡 설명 자동화
 - 크롬 익스텐션 어도비스톡 "인물, 사유물" 자동화
-- 
-
 
 ---
 
