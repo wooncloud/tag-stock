@@ -1,120 +1,184 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>TagStock</title>
   <link rel="stylesheet" href="styles.css">
 </head>
+
 <body class="bg-background text-foreground min-h-screen">
   <div class="flex flex-col h-screen">
     <!-- Header -->
-    <header class="border-b px-4 py-3">
+    <header class="px-4 py-2 bg-primary text-primary-foreground">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
-          <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-            <svg class="w-5 h-5 text-primary-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z" />
-            </svg>
-          </div>
           <div>
             <h1 class="font-semibold text-base">TagStock</h1>
-            <p class="text-xs text-muted-foreground">AI Metadata Generator</p>
+            <p class="text-[10px] opacity-70">AI Metadata Generator</p>
           </div>
         </div>
         <div class="flex items-center gap-1">
-          <button id="homeBtn" class="p-2 rounded-lg text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors" title="TagStock Homepage">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-            </svg>
+          <button id="homeBtn" class="p-2 rounded-lg hover:bg-white/10 transition-colors" title="TagStock Homepage">
+            <img src="../../assets/icons/home.svg" alt="Home" class="w-5 h-5 opacity-90" />
           </button>
-          <button id="contactBtn" class="p-2 rounded-lg text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors" title="Contact Us">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-            </svg>
+          <button id="contactBtn" class="p-2 rounded-lg hover:bg-white/10 transition-colors" title="Contact Us">
+            <img src="../../assets/icons/contact.svg" alt="Contact" class="w-5 h-5 opacity-90" />
+          </button>
+          <button id="signOutBtn" class="p-2 rounded-lg hover:bg-white/10 transition-colors hidden" title="Sign Out">
+            <img src="../../assets/icons/logout.svg" alt="Sign Out" class="w-5 h-5 opacity-90" />
           </button>
         </div>
       </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="flex-1 overflow-y-auto p-4 space-y-4">
-      <!-- Status Card -->
-      <div class="rounded-lg border bg-card p-4">
-        <div class="flex items-center justify-between mb-2">
-          <span class="text-sm font-medium">Current Page</span>
-          <span id="statusBadge" class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium bg-muted text-muted-foreground">
-            Checking...
-          </span>
+    <!-- Loading Screen (shown while checking auth) -->
+    <section id="loadingContainer" class="flex-1 flex items-center justify-center p-4">
+      <div class="text-center space-y-4">
+        <div class="flex justify-center">
+          <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center animate-pulse">
+            <img src="../../assets/icons/list-checks.svg" alt="Checking" class="w-10 h-10" />
+          </div>
         </div>
-        <p id="statusText" class="text-sm text-muted-foreground">Detecting page type...</p>
+        <div class="space-y-1">
+          <h2 class="text-lg font-semibold">Checking Account...</h2>
+          <p class="text-sm text-muted-foreground">Please wait a moment</p>
+        </div>
       </div>
+    </section>
 
-      <!-- Main Action -->
-      <div class="space-y-2">
-        <button id="fillBtn" disabled class="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-primary text-primary-foreground h-11 px-4 text-sm font-medium shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles-icon lucide-sparkles"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg>
-          <span id="btnText">Fill Metadata</span>
-          <svg id="btnSpinner" class="w-4 h-4 animate-spin hidden" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
-          </svg>
-        </button>
-        <p class="text-xs text-center text-muted-foreground">
-          Shortcut: <kbd class="px-1.5 py-0.5 rounded bg-muted text-muted-foreground font-mono text-xs">⌘E</kbd> / <kbd class="px-1.5 py-0.5 rounded bg-muted text-muted-foreground font-mono text-xs">Ctrl+E</kbd>
-        </p>
-      </div>
+    <!-- Authentication Screen (shown when not logged in) -->
+    <section id="authContainer" class="hidden flex-1 flex items-center justify-center p-4">
+      <div class="w-full max-w-sm space-y-4">
+        <div class="text-center space-y-2">
+          <h2 class="text-xl font-semibold">Welcome to TagStock</h2>
+          <p class="text-sm text-muted-foreground">Sign in to generate AI-powered metadata for your stock photos</p>
+        </div>
 
-      <!-- Quick Links -->
-      <div class="space-y-2">
-        <h2 class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Quick Links</h2>
-        <div class="grid gap-2">
-          <button id="adobeBtn" class="flex items-center justify-between w-full rounded-lg border bg-card px-4 py-3 text-left text-sm transition-colors hover:bg-accent hover:text-accent-foreground">
-            <div class="flex items-center gap-3">
-              <div class="w-8 h-8 rounded flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Google Material Icons by Material Design Authors - https://github.com/material-icons/material-icons/blob/master/LICENSE --><path fill="currentColor" d="M18.97 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h13.97c1.1 0 2-.9 2-2V5a2 2 0 0 0-2-2m-1.59 13.98c-.03.01-.07.02-.1.02h-2.26a.49.49 0 0 1-.46-.3l-2.46-5.74c-.02-.06-.08-.09-.13-.07a.12.12 0 0 0-.07.07l-1.53 3.65c-.03.07 0 .14.07.17c.02.01.03.01.05.01h1.68c.1 0 .2.06.24.16l.74 1.64c.07.15-.01.33-.16.4c-.06 0-.1.01-.14.01H6.73c-.15 0-.28-.13-.28-.28c0-.04.01-.07.02-.11l3.9-9.28c.08-.2.28-.33.49-.33h2.25c.22 0 .41.13.49.33l3.92 9.28c.07.14.01.31-.14.37"/></svg>
-              </div>
-              <div>
-                <div class="font-medium">Adobe Stock</div>
-                <div class="text-xs text-muted-foreground">Contributor Dashboard</div>
-              </div>
+        <div class="space-y-3">
+          <button id="loginBtn"
+            class="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-primary text-primary-foreground h-10 p-4 text-sm font-medium shadow transition-colors hover:bg-primary/90">
+            <img src="../../assets/icons/google.svg" alt="Google" class="w-5 h-5" />
+            Continue with Google
+          </button>
+          <div id="loginLoading" class="hidden text-center space-y-2">
+            <div class="flex justify-center">
+              <img src="../../assets/icons/loading.svg" alt="Loading" class="w-6 h-6 animate-spin" />
             </div>
-            <svg class="w-4 h-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            <p class="text-sm font-medium">Signing in...</p>
+          </div>
+          <p id="authError" class="text-sm text-red-500 text-center min-h-[20px]"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- App Container (shown when logged in) -->
+    <div id="appContainer" class="hidden flex flex-col flex-1">
+      <!-- User Info & Credits -->
+      <section
+        class="px-4 py-2 rounded-xl bg-gradient-to-br from-primary/5 to-primary/10 border border-primary/10 shadow-sm relative overflow-hidden">
+        <div class="relative z-10 flex flex-col gap-3">
+          <div class="flex items-center justify-between">
+            <div class="space-y-0.5">
+              <div id="userEmail" class="text-sm font-semibold truncate max-w-[150px]">Loading...</div>
+              <div id="userPlan"
+                class="text-[10px] font-bold uppercase tracking-wider text-primary rounded-full bg-primary/10 inline-block w-fit px-1.5 py-0.5">
+                Free Plan</div>
+            </div>
+            <div class="text-right">
+              <div class="text-[10px] text-muted-foreground uppercase tracking-tight">Credits</div>
+              <div class="font-black text-xl leading-none text-primary" id="creditDisplay">--</div>
+            </div>
+          </div>
+
+          <div id="lowCreditWarning"
+            class="hidden text-[10px] font-medium text-yellow-700 bg-yellow-500/10 border border-yellow-500/20 rounded-lg px-2 py-1.5 animate-pulse">
+          </div>
+        </div>
+      </section>
+
+      <!-- Main Content -->
+      <main class="flex-1 overflow-y-auto p-4 space-y-4">
+        <!-- Status Card -->
+        <section class="rounded-lg border bg-card p-4">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-sm font-medium">Current Page</span>
+            <span id="statusBadge"
+              class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium bg-muted text-muted-foreground">
+              Checking...
+            </span>
+          </div>
+          <p id="statusText" class="text-sm text-muted-foreground">Detecting page type...</p>
+        </section>
+
+        <!-- Main Action -->
+        <section class="space-y-2">
+          <button id="fillBtn" disabled
+            class="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-primary text-primary-foreground h-11 px-4 text-sm font-medium shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50">
+            <img src="../../assets/icons/sparkles.svg" alt="Sparkles" class="w-4 h-4 brightness-0 invert" />
+            <span id="btnText">Fill Metadata</span>
+            <svg id="btnSpinner" class="w-4 h-4 animate-spin hidden" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
             </svg>
           </button>
-          <button id="shutterstockBtn" class="flex items-center justify-between w-full rounded-lg border bg-card px-4 py-3 text-left text-sm transition-colors hover:bg-accent hover:text-accent-foreground">
-            <div class="flex items-center gap-3">
-              <div class="w-8 h-8 rounded flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><!-- Icon from Simple Icons by Simple Icons Collaborators - https://github.com/simple-icons/simple-icons/blob/develop/LICENSE.md --><path fill="currentColor" d="M9.839 18.761h5.313a1.53 1.53 0 0 0 1.527-1.528v-5.76h5.237v5.76A6.767 6.767 0 0 1 15.152 24H9.839zM14.16 5.237H8.85a1.53 1.53 0 0 0-1.53 1.527v5.761H2.085V6.764A6.763 6.763 0 0 1 8.85 0h5.31z"/></svg>
-              </div>
-              <div>
-                <div class="font-medium">Shutterstock</div>
-                <div class="text-xs text-muted-foreground">Upload Portfolio</div>
-              </div>
-            </div>
-            <svg class="w-4 h-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-        </div>
-      </div>
+          <p class="text-xs text-center text-muted-foreground">
+            Shortcut: <kbd class="px-1.5 py-0.5 rounded bg-muted text-muted-foreground font-mono text-xs">⌘E</kbd> /
+            <kbd class="px-1.5 py-0.5 rounded bg-muted text-muted-foreground font-mono text-xs">Ctrl+E</kbd>
+          </p>
+        </section>
 
-      <!-- Activity Log -->
-      <div class="space-y-2">
-        <h2 class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Activity Log</h2>
-        <div id="logSection" class="rounded-lg border bg-muted/50 p-3 h-32 overflow-y-auto space-y-1 font-mono text-xs scrollbar-thin">
-          <div class="text-muted-foreground">Ready to use.</div>
-        </div>
-      </div>
-    </main>
+        <!-- Quick Links -->
+        <section class="space-y-2">
+          <h2 class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Quick Links</h2>
+          <div class="grid gap-2">
+            <button id="adobeBtn"
+              class="flex items-center gap-3 rounded-lg border bg-card p-3 text-left transition-colors hover:bg-accent">
+              <div class="w-10 h-10 rounded-lg bg-red-500/10 flex items-center justify-center">
+                <img src="../../assets/icons/adobe.svg" alt="Adobe" class="w-8 h-8 text-red-600" />
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium">Adobe Stock</p>
+                <p class="text-xs text-muted-foreground truncate">contributor.stock.adobe.com</p>
+              </div>
+            </button>
+            <button id="shutterstockBtn"
+              class="flex items-center gap-3 rounded-lg border bg-card p-3 text-left transition-colors hover:bg-accent">
+              <div class="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                <img src="../../assets/icons/shutterstock.svg" alt="Shutterstock" class="w-6 h-6 text-blue-600" />
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium">Shutterstock</p>
+                <p class="text-xs text-muted-foreground truncate">submit.shutterstock.com</p>
+              </div>
+            </button>
+          </div>
+        </section>
+
+        <!-- Activity Log -->
+        <section class="space-y-2">
+          <div class="flex items-center justify-between">
+            <h2 class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Activity Log</h2>
+            <button id="clearLogBtn"
+              class="text-xs text-muted-foreground hover:text-foreground transition-colors">Clear</button>
+          </div>
+          <div id="activityLog" class="rounded-lg border bg-card divide-y overflow-y-auto" style="height: 200px;">
+            <div class="p-3 text-sm text-muted-foreground">
+              No activity yet
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
 
     <!-- Footer -->
-    <footer class="border-t px-4 py-2">
-      <p class="text-xs text-center text-muted-foreground">TagStock v1.1.0</p>
+    <footer class="px-4 py-2 text-center bg-primary text-primary-foreground">
+      <p class="text-[10px] opacity-70">TagStock v1.1.0</p>
     </footer>
   </div>
 
   <script type="module" src="./index.js"></script>
 </body>
+
 </html>

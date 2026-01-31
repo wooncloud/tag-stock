@@ -1,18 +1,26 @@
-import type { ContentToSidepanelMessage, SidepanelToContentMessage, ContentScriptResponse } from '../shared/types';
+import type { ContentToSidepanelMessage, SidepanelToContentMessage, ContentScriptResponse, UserProfile } from '../shared/types';
 import { LINKS } from '../shared/constants';
 import { sendToContentScript, onMessage } from '../shared/messenger';
 import { updateStatus, getCurrentSiteType } from './components/status-badge';
 import { setButtonLoading, setButtonSuccess, setButtonError } from './components/fill-button';
-import { addLog } from './components/activity-log';
+import { addLog, clearLog } from './components/activity-log';
+import { initAuthScreen, checkAuth, showAuthScreen, hideAuthScreen, handleSignOut, showLoadingScreen, hideLoadingScreen, setOnLoginSuccess } from './components/auth-screen';
+import { initCreditDisplay, showLowCreditWarning, hideLowCreditWarning } from './components/credit-display';
+import { hasSufficientCredits } from '../lib/supabase/auth';
 
 // Get DOM elements
-const fillBtn = document.getElementById('fillBtn') as HTMLButtonElement;
-const homeBtn = document.getElementById('homeBtn') as HTMLButtonElement;
-const contactBtn = document.getElementById('contactBtn') as HTMLButtonElement;
-const adobeBtn = document.getElementById('adobeBtn') as HTMLButtonElement;
-const shutterstockBtn = document.getElementById('shutterstockBtn') as HTMLButtonElement;
+const fillBtn = document.getElementById('fillBtn') as HTMLButtonElement | null;
+const homeBtn = document.getElementById('homeBtn') as HTMLButtonElement | null;
+const contactBtn = document.getElementById('contactBtn') as HTMLButtonElement | null;
+const adobeBtn = document.getElementById('adobeBtn') as HTMLButtonElement | null;
+const shutterstockBtn = document.getElementById('shutterstockBtn') as HTMLButtonElement | null;
+const signOutBtn = document.getElementById('signOutBtn') as HTMLButtonElement | null;
+const clearLogBtn = document.getElementById('clearLogBtn') as HTMLButtonElement | null;
+const userEmailEl = document.getElementById('userEmail') as HTMLDivElement | null;
+const userPlanEl = document.getElementById('userPlan') as HTMLDivElement | null;
 
 let currentTabId: number | null = null;
+let currentProfile: UserProfile | null = null;
 
 /**
  * Check current tab status
@@ -55,6 +63,17 @@ async function handleFillClick(): Promise<void> {
         return;
     }
 
+    // Check auth and credits
+    if (!currentProfile) {
+        addLog('Please login first', 'error');
+        return;
+    }
+
+    if (!hasSufficientCredits(currentProfile)) {
+        addLog('Insufficient credits. Please upgrade your plan', 'error');
+        return;
+    }
+
     const siteType = getCurrentSiteType();
     if (!siteType) {
         addLog('No valid page detected', 'error');
@@ -77,6 +96,9 @@ async function handleFillClick(): Promise<void> {
         if (response && response.success) {
             setButtonSuccess();
             addLog(`Metadata generated: "${response.title}"`, 'success');
+
+            // Refresh profile to update credits
+            await refreshProfile();
         } else {
             throw new Error(response?.error || 'Unknown error');
         }
@@ -89,43 +111,152 @@ async function handleFillClick(): Promise<void> {
 }
 
 /**
+ * Refresh user profile and update UI
+ */
+async function refreshProfile(): Promise<void> {
+    const profile = await checkAuth();
+
+    if (profile) {
+        currentProfile = profile;
+        initCreditDisplay(profile);
+
+        const totalCredits = profile.credits_subscription + profile.credits_purchased;
+        if (totalCredits <= 5) {
+            showLowCreditWarning(totalCredits);
+        } else {
+            hideLowCreditWarning();
+        }
+    }
+}
+
+/**
+ * Initialize user session
+ */
+async function initializeUserSession(profile: UserProfile): Promise<void> {
+    currentProfile = profile;
+
+    // Update UI
+    if (userEmailEl) {
+        userEmailEl.textContent = profile.email;
+    }
+
+    if (userPlanEl) {
+        const planName = profile.plan.charAt(0).toUpperCase() + profile.plan.slice(1);
+        userPlanEl.textContent = `${planName} Plan`;
+    }
+
+    // Initialize credit display
+    initCreditDisplay(profile);
+
+    // Check for low credits
+    const totalCredits = profile.credits_subscription + profile.credits_purchased;
+    if (totalCredits <= 5) {
+        showLowCreditWarning(totalCredits);
+    }
+
+    // Show app
+    hideAuthScreen();
+    addLog('Signed in successfully');
+}
+
+/**
  * Initialize sidepanel
  */
 async function init(): Promise<void> {
-    // Header links
-    homeBtn.addEventListener('click', () => {
-        chrome.tabs.create({ url: LINKS.HOME });
+    // Show loading screen first
+    showLoadingScreen();
+
+    // Initialize auth screen
+    initAuthScreen();
+
+    // Set callback for after successful login
+    setOnLoginSuccess(async () => {
+        showLoadingScreen();
+        const profile = await checkAuth();
+        if (profile) {
+            hideLoadingScreen();
+            await initializeUserSession(profile);
+        } else {
+            hideLoadingScreen();
+            showAuthScreen();
+        }
     });
 
-    contactBtn.addEventListener('click', () => {
-        chrome.tabs.create({ url: LINKS.CONTACT });
-    });
+    // Check auth status
+    const profile = await checkAuth();
+
+    if (profile) {
+        // User is authenticated
+        hideLoadingScreen();
+        await initializeUserSession(profile);
+    } else {
+        // User is not authenticated
+        hideLoadingScreen();
+        showAuthScreen();
+        addLog('Please sign in to use TagStock');
+        return;
+    }
+
+    // Header links
+    if (homeBtn) {
+        homeBtn.addEventListener('click', () => {
+            chrome.tabs.create({ url: LINKS.HOME });
+        });
+    }
+
+    if (contactBtn) {
+        contactBtn.addEventListener('click', () => {
+            chrome.tabs.create({ url: LINKS.CONTACT });
+        });
+    }
 
     // Quick links
-    adobeBtn.addEventListener('click', () => {
-        chrome.tabs.create({ url: LINKS.ADOBE_PORTFOLIO });
-    });
+    if (adobeBtn) {
+        adobeBtn.addEventListener('click', () => {
+            chrome.tabs.create({ url: LINKS.ADOBE_PORTFOLIO });
+        });
+    }
 
-    shutterstockBtn.addEventListener('click', () => {
-        chrome.tabs.create({ url: LINKS.SHUTTERSTOCK_PORTFOLIO });
-    });
+    if (shutterstockBtn) {
+        shutterstockBtn.addEventListener('click', () => {
+            chrome.tabs.create({ url: LINKS.SHUTTERSTOCK_PORTFOLIO });
+        });
+    }
 
     // Fill button click
-    fillBtn.addEventListener('click', handleFillClick);
+    if (fillBtn) {
+        fillBtn.addEventListener('click', handleFillClick);
+    }
+
+    // Sign out button
+    if (signOutBtn) {
+        signOutBtn.addEventListener('click', async () => {
+            await handleSignOut();
+            currentProfile = null;
+            addLog('Signed out successfully');
+        });
+    }
+
+    // Clear log button
+    if (clearLogBtn) {
+        clearLogBtn.addEventListener('click', () => {
+            clearLog();
+        });
+    }
 
     // Tab change listeners
     chrome.tabs.onActivated.addListener(() => {
         checkCurrentTab();
     });
 
-    chrome.tabs.onUpdated.addListener((_tabId, changeInfo, _tab) => {
+    chrome.tabs.onUpdated.addListener((_tabId, changeInfo) => {
         if (changeInfo.status === 'complete') {
             checkCurrentTab();
         }
     });
 
     // Listen for messages from content script
-    onMessage((message: ContentToSidepanelMessage, _sender, _sendResponse) => {
+    onMessage((message: ContentToSidepanelMessage) => {
         if (message.type === 'log') {
             addLog(message.text || '', message.level || 'info');
         } else if (message.type === 'status') {

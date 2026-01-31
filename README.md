@@ -41,6 +41,9 @@ Detailed project documentation is available in the [`/docs`](./docs) directory:
 
 - 레몬스퀴지 실제 결제 해봐야함.
 - 레몬스퀴지 설정 디테일하게 해야함.
+- 서비스 아이콘
+- 크롬 익스텐션 계정 연결
+- 크롬 익스텐션 실제 사용가능하게
 
 
 ---

@@ -1,5 +1,10 @@
 @import "tailwindcss";
-@config "../../tailwind.config.js";
+
+:root {
+  --color-primary: #000000;
+  --color-primary-foreground: #ffffff;
+  --color-foreground: #000000;
+}
 
 @layer base {
   * {

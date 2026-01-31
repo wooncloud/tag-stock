@@ -86,3 +86,27 @@ export interface ContentScriptResponse {
     siteType?: SiteType;
     siteName?: string;
 }
+
+/**
+ * User profile from database
+ */
+export interface UserProfile {
+    id: string;
+    email: string;
+    plan: string;
+    credits_subscription: number;
+    credits_purchased: number;
+    created_at?: string;
+    updated_at?: string;
+}
+
+/**
+ * Authentication state
+ */
+export interface AuthState {
+    user: import('@supabase/supabase-js').User | null;
+    profile: UserProfile | null;
+    isLoading: boolean;
+    error: string | null;
+}
+

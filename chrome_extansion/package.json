@@ -23,11 +23,10 @@
   "author": "TagStock",
   "license": "MIT",
   "dependencies": {
-    "@google/genai": "^1.0.2"
+    "@google/genai": "^1.0.2",
+    "@supabase/supabase-js": "^2.93.3"
   },
   "devDependencies": {
-    "@iconify-json/ic": "^1.2.4",
-    "@iconify-json/simple-icons": "^1.2.68",
     "@tailwindcss/postcss": "^4.0.0",
     "@types/chrome": "^0.0.278",
     "autoprefixer": "^10.4.20",
