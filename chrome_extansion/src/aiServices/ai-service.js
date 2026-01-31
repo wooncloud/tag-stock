@@ -5,7 +5,7 @@ export async function generateMetadata(systemPrompt, imageBase64) {
     const ai = new GoogleGenAI({
       apiKey: 'AIzaSyD9U0R9Fjjav47xiKipCgNcyTQPaJPPFAs',
     });
-    
+
     const config = {
       responseMimeType: 'application/json',
       responseSchema: {
@@ -24,7 +24,7 @@ export async function generateMetadata(systemPrompt, imageBase64) {
         },
       },
     };
-    
+
     const model = 'gemini-2.5-flash-lite';
     const contents = [
       {
@@ -48,14 +48,14 @@ export async function generateMetadata(systemPrompt, imageBase64) {
       config,
       contents,
     });
-    
+
     if (!response.candidates || !response.candidates[0] || !response.candidates[0].content) {
-      throw new Error('응답 구조가 예상과 다릅니다.');
+      throw new Error('Response structure is different from expected.');
     }
     const result = response.candidates[0].content.parts[0].text;
     return JSON.parse(result);
   } catch (error) {
-    console.error('AI 생성 중 오류:', error);
+    console.error('Error during AI generation:', error);
     throw error;
   }
-} 
+}

@@ -5,28 +5,28 @@ export async function getImageAsBase64(imageUrl) {
     return new Promise((resolve, reject) => {
       const img = new Image();
       img.crossOrigin = 'anonymous';
-      
+
       img.onload = function() {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
-        
+
         canvas.width = img.width;
         canvas.height = img.height;
-        
+
         ctx.drawImage(img, 0, 0);
-        
+
         const base64 = canvas.toDataURL('image/jpeg', 0.8).split(',')[1];
         resolve(base64);
       };
-      
+
       img.onerror = function() {
-        reject(new Error('이미지를 로드할 수 없습니다.'));
+        reject(new Error('Failed to load image.'));
       };
-      
+
       img.src = imageUrl;
     });
   } catch (error) {
-    console.error('이미지 변환 중 오류:', error);
+    console.error('Error during image conversion:', error);
     throw error;
   }
 }
@@ -38,13 +38,13 @@ export async function getImageAsBase64(imageUrl) {
 export function getThumbnailImage() {
   const siteType = detectStockSite();
   const config = getSiteConfig(siteType);
-  
+
   if (!config) {
-    throw new Error(`지원되지 않는 사이트: ${siteType}`);
+    throw new Error(`Unsupported site: ${siteType}`);
   }
-  
+
   let thumbnail = null;
-  
+
   switch (siteType) {
   case 'adobe':
     // Adobe Stock: 기존 방식
@@ -55,19 +55,19 @@ export function getThumbnailImage() {
     thumbnail = document.querySelector(config.selectors.imageElement);
     break;
   default:
-    throw new Error(`알 수 없는 사이트 타입: ${siteType}`);
+    throw new Error(`Unknown site type: ${siteType}`);
   }
-  
+
   if (!thumbnail || !thumbnail.src) {
-    console.error(`${config.name} 썸네일 이미지를 찾을 수 없습니다`, {
+    console.error(`${config.name} thumbnail image not found`, {
       siteType,
       selector: siteType === 'adobe' ? 'img[data-t="asset-sidebar-header-thumbnail"]' : config.selectors.imageElement,
       found: !!thumbnail,
       hasSrc: thumbnail ? !!thumbnail.src : false
     });
-    throw new Error(`${config.name} 썸네일 이미지를 찾을 수 없습니다.`);
+    throw new Error(`${config.name} thumbnail image not found.`);
   }
-  
-  console.log(`${config.name} 썸네일 이미지 찾음:`, thumbnail.src);
+
+  console.log(`${config.name} thumbnail image found:`, thumbnail.src);
   return thumbnail;
-} 
+}

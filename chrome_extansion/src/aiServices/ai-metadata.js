@@ -16,7 +16,7 @@ function getPromptForSite(siteType) {
   case 'shutterstock':
     return SHUTTERSTOCK_PROMPT;
   default:
-    console.warn(`알 수 없는 사이트 타입: ${siteType}, 프롬프트를 기본값으로 사용합니다.`);
+    console.warn(`Unknown site type: ${siteType}, using default prompt.`);
     return ADOBE_STOCK_PROMPT;
   }
 }
@@ -30,28 +30,28 @@ export async function generateAIMetadata() {
     // 현재 사이트 감지
     const siteType = detectStockSite();
     const siteConfig = getSiteConfig(siteType);
-    
-    console.debug(`감지된 사이트: ${siteType} (${siteConfig?.name || 'Unknown'})`);
-    
+
+    console.debug(`Detected site: ${siteType} (${siteConfig?.name || 'Unknown'})`);
+
     // 해당 사이트용 프롬프트 선택
     const systemPrompt = getPromptForSite(siteType);
-    
-    console.debug('썸네일 이미지 검색 중...');
+
+    console.debug('Searching for thumbnail image...');
     const thumbnail = getThumbnailImage();
-    
-    console.debug('이미지 변환 중...', thumbnail.src);
+
+    console.debug('Converting image...', thumbnail.src);
     const imageBase64 = await getImageAsBase64(thumbnail.src);
-    
-    console.debug(`${siteConfig?.name || siteType} AI 메타데이터 생성 중...`);
+
+    console.debug(`${siteConfig?.name || siteType} AI metadata generation in progress...`);
     const result = await generateMetadata(systemPrompt, imageBase64);
-    
-    console.debug('생성된 메타데이터:', result);
-    
+
+    console.debug('Generated metadata:', result);
+
     // 사이트별 후처리 (필요한 경우)
     return postProcessMetadata(result, siteType, siteConfig);
-    
+
   } catch (error) {
-    console.error('AI 메타데이터 생성 실패:', error);
+    console.error('AI metadata generation failed:', error);
     throw error;
   }
 }
@@ -66,10 +66,10 @@ export async function generateAIMetadata() {
 function postProcessMetadata(metadata, siteType, siteConfig) {
   // 제목 길이 제한 확인
   if (metadata.title && metadata.title.length > siteConfig.maxTitleLength) {
-    console.warn(`제목이 ${siteConfig.maxTitleLength}자를 초과합니다. 자동으로 잘립니다.`);
+    console.warn(`Title exceeds ${siteConfig.maxTitleLength} characters. Truncating automatically.`);
     metadata.title = metadata.title.substring(0, siteConfig.maxTitleLength);
   }
-  
+
   // 사이트별 특별 처리
   switch (siteType) {
     case 'shutterstock':
@@ -82,7 +82,7 @@ function postProcessMetadata(metadata, siteType, siteConfig) {
       // Adobe Stock은 특별한 후처리가 필요하지 않음
       break;
   }
-  
+
   return metadata;
 }
 
@@ -97,4 +97,4 @@ function filterEnglishKeywords(keywords) {
     .map(keyword => keyword.trim())
     .filter(keyword => /^[a-zA-Z\s\-']+$/.test(keyword))
     .join(', ');
-} 
+}

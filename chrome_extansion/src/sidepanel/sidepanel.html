@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TagStock</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-background text-foreground min-h-screen">
+  <div class="flex flex-col h-screen">
+    <!-- Header -->
+    <header class="border-b px-4 py-3">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+            <svg class="w-5 h-5 text-primary-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z" />
+            </svg>
+          </div>
+          <div>
+            <h1 class="font-semibold text-base">TagStock</h1>
+            <p class="text-xs text-muted-foreground">AI Metadata Generator</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-1">
+          <button id="homeBtn" class="p-2 rounded-lg text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors" title="TagStock Homepage">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+          </button>
+          <button id="contactBtn" class="p-2 rounded-lg text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors" title="Contact Us">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 overflow-y-auto p-4 space-y-4">
+      <!-- Status Card -->
+      <div class="rounded-lg border bg-card p-4">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-sm font-medium">Current Page</span>
+          <span id="statusBadge" class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium bg-muted text-muted-foreground">
+            Checking...
+          </span>
+        </div>
+        <p id="statusText" class="text-sm text-muted-foreground">Detecting page type...</p>
+      </div>
+
+      <!-- Main Action -->
+      <div class="space-y-2">
+        <button id="fillBtn" disabled class="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-primary text-primary-foreground h-11 px-4 text-sm font-medium shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles-icon lucide-sparkles"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg>
+          <span id="btnText">Fill Metadata</span>
+          <svg id="btnSpinner" class="w-4 h-4 animate-spin hidden" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+          </svg>
+        </button>
+        <p class="text-xs text-center text-muted-foreground">
+          Shortcut: <kbd class="px-1.5 py-0.5 rounded bg-muted text-muted-foreground font-mono text-xs">⌘E</kbd> / <kbd class="px-1.5 py-0.5 rounded bg-muted text-muted-foreground font-mono text-xs">Ctrl+E</kbd>
+        </p>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="space-y-2">
+        <h2 class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Quick Links</h2>
+        <div class="grid gap-2">
+          <button id="adobeBtn" class="flex items-center justify-between w-full rounded-lg border bg-card px-4 py-3 text-left text-sm transition-colors hover:bg-accent hover:text-accent-foreground">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Google Material Icons by Material Design Authors - https://github.com/material-icons/material-icons/blob/master/LICENSE --><path fill="currentColor" d="M18.97 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h13.97c1.1 0 2-.9 2-2V5a2 2 0 0 0-2-2m-1.59 13.98c-.03.01-.07.02-.1.02h-2.26a.49.49 0 0 1-.46-.3l-2.46-5.74c-.02-.06-.08-.09-.13-.07a.12.12 0 0 0-.07.07l-1.53 3.65c-.03.07 0 .14.07.17c.02.01.03.01.05.01h1.68c.1 0 .2.06.24.16l.74 1.64c.07.15-.01.33-.16.4c-.06 0-.1.01-.14.01H6.73c-.15 0-.28-.13-.28-.28c0-.04.01-.07.02-.11l3.9-9.28c.08-.2.28-.33.49-.33h2.25c.22 0 .41.13.49.33l3.92 9.28c.07.14.01.31-.14.37"/></svg>
+              </div>
+              <div>
+                <div class="font-medium">Adobe Stock</div>
+                <div class="text-xs text-muted-foreground">Contributor Dashboard</div>
+              </div>
+            </div>
+            <svg class="w-4 h-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+          <button id="shutterstockBtn" class="flex items-center justify-between w-full rounded-lg border bg-card px-4 py-3 text-left text-sm transition-colors hover:bg-accent hover:text-accent-foreground">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><!-- Icon from Simple Icons by Simple Icons Collaborators - https://github.com/simple-icons/simple-icons/blob/develop/LICENSE.md --><path fill="currentColor" d="M9.839 18.761h5.313a1.53 1.53 0 0 0 1.527-1.528v-5.76h5.237v5.76A6.767 6.767 0 0 1 15.152 24H9.839zM14.16 5.237H8.85a1.53 1.53 0 0 0-1.53 1.527v5.761H2.085V6.764A6.763 6.763 0 0 1 8.85 0h5.31z"/></svg>
+              </div>
+              <div>
+                <div class="font-medium">Shutterstock</div>
+                <div class="text-xs text-muted-foreground">Upload Portfolio</div>
+              </div>
+            </div>
+            <svg class="w-4 h-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Activity Log -->
+      <div class="space-y-2">
+        <h2 class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Activity Log</h2>
+        <div id="logSection" class="rounded-lg border bg-muted/50 p-3 h-32 overflow-y-auto space-y-1 font-mono text-xs scrollbar-thin">
+          <div class="text-muted-foreground">Ready to use.</div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t px-4 py-2">
+      <p class="text-xs text-center text-muted-foreground">TagStock v1.1.0</p>
+    </footer>
+  </div>
+
+  <script src="sidepanel.js"></script>
+</body>
+</html>

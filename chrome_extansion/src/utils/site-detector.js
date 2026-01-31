@@ -6,24 +6,24 @@ export function detectStockSite() {
   const hostname = window.location.hostname;
   const pathname = window.location.pathname;
   const fullUrl = window.location.href;
-  
-  console.log('🔍 사이트 감지 중...', {
+
+  console.log('🔍 Detecting site...', {
     hostname,
     pathname,
     fullUrl
   });
-  
+
   if (hostname.includes('adobe.com') || hostname.includes('stock.adobe.com')) {
-    console.log('✅ Adobe Stock 사이트 감지됨');
+    console.log('✅ Adobe Stock site detected');
     return 'adobe';
   }
-  
+
   if (hostname.includes('shutterstock.com')) {
-    console.log('✅ Shutterstock 사이트 감지됨');
+    console.log('✅ Shutterstock site detected');
     return 'shutterstock';
   }
-  
-  console.warn('❌ 알 수 없는 사이트:', hostname);
+
+  console.warn('❌ Unknown site:', hostname);
   return 'unknown';
 }
 
@@ -68,7 +68,7 @@ export function getSiteConfig(siteType) {
       }
     }
   };
-  
+
   return configs[siteType] || null;
 }
 
@@ -89,16 +89,16 @@ export function isSupportedSite() {
 export function isUploadPage(siteType) {
   const config = getSiteConfig(siteType);
   if (!config) return false;
-  
+
   const pathname = window.location.pathname;
   const isUpload = config.urlPatterns.some(pattern => pathname.includes(pattern));
-  
-  console.log('📄 업로드 페이지 확인:', {
+
+  console.log('📄 Upload page check:', {
     siteType,
     pathname,
     urlPatterns: config.urlPatterns,
     isUpload
   });
-  
+
   return isUpload;
-} 
+}

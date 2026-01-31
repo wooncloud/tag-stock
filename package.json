@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "build:ce": "npm run package --prefix chrome_extansion"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",

@@ -6,26 +6,23 @@ const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
 export default defineConfig({
   build: {
-    watch: {},
     rollupOptions: {
-      input: resolve(__dirname, 'src/main.js'),
-      output: {
-        entryFileNames: 'content.js',
-        format: 'iife',
-        dir: 'dist',
-        inlineDynamicImports: true,
+      input: {
+        content: resolve(__dirname, 'src/main.js'),
+        background: resolve(__dirname, 'src/background/background.js'),
       },
-      watch: {
-        include: ['src/**'],
-        exclude: ['node_modules/**'],
-        clearScreen: false,
+      output: {
+        entryFileNames: '[name].js',
+        chunkFileNames: 'chunks/[name].js',
+        format: 'es',
+        dir: 'dist',
       },
     },
-    target: 'es2015',
+    target: 'es2020',
     minify: false,
     sourcemap: true,
   },
   define: {
     global: 'globalThis',
   },
-}); 
+});
