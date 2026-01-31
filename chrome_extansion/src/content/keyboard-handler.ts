@@ -1,5 +1,5 @@
 import { detectStockSite, isUploadPage } from '../core/sites/detector';
-import { sendLog } from '../core/utils/logger';
+import { sendLog } from '../shared/messenger';
 import { fillMetadata } from './metadata-filler';
 
 /**

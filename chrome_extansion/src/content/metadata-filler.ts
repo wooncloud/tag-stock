@@ -2,8 +2,8 @@ import { generateAIMetadata } from '../core/ai/metadata-generator';
 import { getSiteConfig } from '../core/sites/detector';
 import { handleShutterstockKeywordInput } from '../core/sites/handlers/shutterstock';
 import { setInputValue, setTextareaValue } from '../core/utils/dom';
-import { sendLog } from '../core/utils/logger';
 import { TIMEOUTS } from '../shared/constants';
+import { sendLog } from '../shared/messenger';
 import type { AIMetadataResult, ProcessedMetadata, SiteType } from '../shared/types';
 
 /**

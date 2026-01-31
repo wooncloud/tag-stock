@@ -15,13 +15,6 @@ export function initCreditDisplay(profile: UserProfile): void {
 }
 
 /**
- * 새로운 값으로 크레딧 표시를 업데이트합니다.
- */
-export function updateCreditDisplay(profile: UserProfile): void {
-  initCreditDisplay(profile);
-}
-
-/**
  * 부족한 크레딧 경고를 표시합니다.
  */
 export function showLowCreditWarning(credits: number): void {

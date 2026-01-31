@@ -1,6 +1,5 @@
 import { detectStockSite, getSiteConfig } from '../core/sites/detector';
-import { sendLog } from '../core/utils/logger';
-import { onMessage } from '../shared/messenger';
+import { onMessage, sendLog } from '../shared/messenger';
 import type { ContentScriptResponse, SidepanelToContentMessage } from '../shared/types';
 import { fillMetadata } from './metadata-filler';
 
