@@ -12,9 +12,7 @@
   ],
   "icons": {
     "16": "assets/icon/icon16.png",
-    "19": "assets/icon/icon19.png",
     "32": "assets/icon/icon32.png",
-    "38": "assets/icon/icon38.png",
     "48": "assets/icon/icon48.png",
     "128": "assets/icon/icon128.png"
   },
@@ -41,9 +39,7 @@
     "default_title": "TagStock",
     "default_icon": {
       "16": "assets/icon/icon16.png",
-      "19": "assets/icon/icon19.png",
-      "32": "assets/icon/icon32.png",
-      "38": "assets/icon/icon38.png"
+      "32": "assets/icon/icon32.png"
     }
   }
 }

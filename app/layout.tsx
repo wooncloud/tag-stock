@@ -33,6 +33,15 @@ export const metadata: Metadata = {
     'Shutterstock',
   ],
   authors: [{ name: 'TagStock Team' }],
+  icons: {
+    icon: [
+      { url: '/favicon/favicon.ico', sizes: 'any' },
+      { url: '/favicon/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon/favicon-96x96.png', sizes: '96x96', type: 'image/png' },
+    ],
+    apple: '/favicon/apple-touch-icon.png',
+  },
+  manifest: '/favicon/site.webmanifest',
   openGraph: {
     type: 'website',
     locale: 'en_US',

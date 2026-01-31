@@ -36,14 +36,16 @@ Detailed project documentation is available in the [`/docs`](./docs) directory:
 - [x] **Contact Logic**: Discord webhook integration
 - [x] **IPTC Embedding**: Direct metadata injection into image files
 - [ ] **Batch Processing**: Multiple image upload optimization
-- [ ] **Landing Page**: Enhanced design and social proofs
-- [ ] **Chrome Extension**: Direct metadata capture from browser
+- [x] **Landing Page**: Enhanced design and social proofs
+- [x] **Chrome Extension**: Direct metadata capture from browser
 
 - 레몬스퀴지 실제 결제 해봐야함.
 - 레몬스퀴지 설정 디테일하게 해야함.
-- 서비스 아이콘
-- 크롬 익스텐션 실제 사용가능하게
 - 크레딧 없으면 사용 못하게.
+- 크롬 익스텐션 셔터스톡 카테고리 자동화
+- 크롬 익스텐션 셔터스톡 설명 자동화
+- 크롬 익스텐션 어도비스톡 "인물, 사유물" 자동화
+- 
 
 
 ---
