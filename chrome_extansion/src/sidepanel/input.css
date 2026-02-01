@@ -1,18 +1,34 @@
 @import 'tailwindcss';
 
-:root {
-  --color-primary: #000000;
-  --color-primary-foreground: #ffffff;
-  --color-foreground: #000000;
+@theme {
+  /* Colors */
+  --color-background: hsl(0 0% 100%);
+  --color-foreground: hsl(0 0% 0%);
+  --color-card: hsl(0 0% 100%);
+  --color-card-foreground: hsl(0 0% 0%);
+  --color-primary: hsl(0 0% 0%);
+  --color-primary-foreground: hsl(210 40% 98%);
+  --color-secondary: hsl(210 40% 96.1%);
+  --color-secondary-foreground: hsl(0 0% 0%);
+  --color-muted: hsl(210 40% 96.1%);
+  --color-muted-foreground: hsl(215.4 16.3% 46.9%);
+  --color-accent: hsl(210 40% 96.1%);
+  --color-accent-foreground: hsl(0 0% 0%);
+  --color-destructive: hsl(0 84.2% 60.2%);
+  --color-destructive-foreground: hsl(210 40% 98%);
+  --color-border: hsl(214.3 31.8% 91.4%);
+  --color-input: hsl(214.3 31.8% 91.4%);
+  --color-ring: hsl(0 0% 0%);
 }
 
 @layer base {
   * {
-    @apply border-border;
+    border-color: var(--color-border);
   }
 
   body {
-    @apply bg-background text-foreground;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
   }
 }
 
@@ -32,5 +48,96 @@
   .scrollbar-thin::-webkit-scrollbar-thumb {
     background: hsl(215.4, 16.3%, 80%);
     border-radius: 3px;
+  }
+
+  /* Text fade out effect */
+  .text-fade {
+    mask-image: linear-gradient(to right, black 70%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, black 70%, transparent 100%);
+  }
+
+  /* Shadcn-style tooltip (bottom position) */
+  .tooltip {
+    position: relative;
+  }
+
+  .tooltip[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%) scale(0.95);
+    padding: 4px 8px;
+    background: hsl(222.2 84% 4.9%);
+    color: hsl(210 40% 98%);
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 1.2;
+    white-space: nowrap;
+    border-radius: 4px;
+    box-shadow:
+      0 4px 6px -1px rgb(0 0 0 / 0.1),
+      0 2px 4px -2px rgb(0 0 0 / 0.1);
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      opacity 0.15s ease,
+      transform 0.15s ease;
+    z-index: 50;
+  }
+
+  .tooltip[data-tooltip]:hover::after {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+
+  /* Tooltip arrow (pointing up) */
+  .tooltip[data-tooltip]::before {
+    content: '';
+    position: absolute;
+    top: calc(100% + 2px);
+    left: 50%;
+    transform: translateX(-50%);
+    border: 4px solid transparent;
+    border-bottom-color: hsl(222.2 84% 4.9%);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+    z-index: 50;
+  }
+
+  .tooltip[data-tooltip]:hover::before {
+    opacity: 1;
+  }
+
+  /* Tooltip position variants */
+  .tooltip-left[data-tooltip]::after {
+    left: 0;
+    transform: translateX(0) scale(0.95);
+  }
+
+  .tooltip-left[data-tooltip]:hover::after {
+    transform: translateX(0) scale(1);
+  }
+
+  .tooltip-left[data-tooltip]::before {
+    left: 12px;
+    transform: translateX(0);
+  }
+
+  .tooltip-right[data-tooltip]::after {
+    left: auto;
+    right: 0;
+    transform: translateX(0) scale(0.95);
+  }
+
+  .tooltip-right[data-tooltip]:hover::after {
+    transform: translateX(0) scale(1);
+  }
+
+  .tooltip-right[data-tooltip]::before {
+    left: auto;
+    right: 12px;
+    transform: translateX(0);
   }
 }

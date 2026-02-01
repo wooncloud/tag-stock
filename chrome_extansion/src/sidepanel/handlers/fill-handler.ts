@@ -26,7 +26,7 @@ export async function handleFillClick(): Promise<void> {
   }
 
   if (!hasSufficientCredits(currentProfile)) {
-    addLog('Insufficient credits. Please upgrade your plan', 'error');
+    addLog('Not enough credits.', 'error');
     return;
   }
 

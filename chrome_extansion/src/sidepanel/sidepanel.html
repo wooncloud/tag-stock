@@ -114,18 +114,16 @@
       <!-- App Container (shown when logged in) -->
       <div id="appContainer" class="flex hidden flex-1 flex-col">
         <!-- User Info & Credits -->
-        <section
-          class="from-primary/5 to-primary/10 border-primary/10 relative overflow-hidden rounded-xl border bg-gradient-to-br px-4 py-2 shadow-sm"
-        >
-          <div class="relative z-10 flex flex-col gap-3">
+        <section class="border-primary/10 relative border px-4 py-2">
+          <div class="relative z-10 flex flex-col gap-1">
             <div class="flex items-center justify-between">
-              <div class="space-y-0.5">
-                <div id="userEmail" class="max-w-[150px] truncate text-sm font-semibold">
+              <div>
+                <div id="userEmail" class="max-w-[200px] overflow-hidden text-sm font-semibold">
                   Loading...
                 </div>
                 <div
                   id="userPlan"
-                  class="text-primary bg-primary/10 inline-block w-fit rounded-full text-[10px] font-bold tracking-wider uppercase"
+                  class="text-primary inline-block w-fit text-[10px] tracking-wider uppercase"
                 >
                   Free Plan
                 </div>
@@ -134,7 +132,10 @@
                 <div class="text-muted-foreground text-[10px] tracking-tight uppercase">
                   Credits
                 </div>
-                <div class="text-primary text-xl leading-none font-black" id="creditDisplay">
+                <div
+                  id="creditDisplay"
+                  class="tooltip tooltip-right text-primary text-xl leading-none font-black"
+                >
                   --
                 </div>
               </div>
@@ -220,7 +221,7 @@
                 id="adobeBtn"
                 class="bg-card hover:bg-accent flex items-center gap-3 rounded-lg border p-3 text-left transition-colors"
               >
-                <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-red-500/10">
+                <div class="flex h-10 w-10 items-center justify-center rounded-lg">
                   <img
                     src="../../assets/icons/adobe.svg"
                     alt="Adobe"
@@ -236,7 +237,7 @@
                 id="shutterstockBtn"
                 class="bg-card hover:bg-accent flex items-center gap-3 rounded-lg border p-3 text-left transition-colors"
               >
-                <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500/10">
+                <div class="flex h-10 w-10 items-center justify-center rounded-lg">
                   <img
                     src="../../assets/icons/shutterstock.svg"
                     alt="Shutterstock"

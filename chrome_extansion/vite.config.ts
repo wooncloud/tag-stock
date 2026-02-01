@@ -1,3 +1,4 @@
+import tailwindcss from '@tailwindcss/vite';
 import { copyFileSync, cpSync, mkdirSync } from 'fs';
 import { resolve } from 'path';
 import { URL, fileURLToPath } from 'url';
@@ -37,6 +38,7 @@ const contentConfig = defineConfig({
 const mainConfig = defineConfig({
   build: {
     emptyOutDir: true,
+    cssCodeSplit: true,
     rollupOptions: {
       input: {
         background: resolve(__dirname, 'src/background/index.ts'),
@@ -50,6 +52,12 @@ const mainConfig = defineConfig({
           return '[name].js';
         },
         chunkFileNames: 'chunks/[name].js',
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.name?.endsWith('.css')) {
+            return 'sidepanel/styles.css';
+          }
+          return 'assets/[name][extname]';
+        },
         format: 'es',
         dir: 'dist',
       },
@@ -65,6 +73,7 @@ const mainConfig = defineConfig({
     extensions: ['.ts', '.js'],
   },
   plugins: [
+    tailwindcss(),
     {
       name: 'copy-extension-files',
       closeBundle() {
@@ -75,10 +84,7 @@ const mainConfig = defineConfig({
           resolve(__dirname, 'src/sidepanel/sidepanel.html'),
           resolve(__dirname, 'dist/sidepanel/sidepanel.html')
         );
-        copyFileSync(
-          resolve(__dirname, 'src/sidepanel/styles.css'),
-          resolve(__dirname, 'dist/sidepanel/styles.css')
-        );
+        // styles.css는 Vite가 Tailwind CSS를 자동으로 빌드하여 생성
 
         cpSync(resolve(__dirname, 'assets'), resolve(__dirname, 'dist/assets'), {
           recursive: true,

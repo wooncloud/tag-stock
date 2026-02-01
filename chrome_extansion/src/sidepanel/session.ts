@@ -40,6 +40,16 @@ export async function initializeUserSession(profile: UserProfile): Promise<void>
   // UI 업데이트
   if (userEmailEl) {
     userEmailEl.textContent = profile.email;
+    userEmailEl.setAttribute('title', profile.email);
+
+    // 텍스트가 넘치면 페이드 효과 적용
+    requestAnimationFrame(() => {
+      if (userEmailEl.scrollWidth > userEmailEl.clientWidth) {
+        userEmailEl.classList.add('text-fade');
+      } else {
+        userEmailEl.classList.remove('text-fade');
+      }
+    });
   }
 
   if (userPlanEl) {

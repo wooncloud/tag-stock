@@ -9,6 +9,7 @@ import {
 } from './components/auth-screen';
 import { setupEventListeners } from './event-listeners';
 import { checkCurrentTab } from './handlers/tab-handler';
+import './input.css';
 import { initializeUserSession } from './session';
 
 /**

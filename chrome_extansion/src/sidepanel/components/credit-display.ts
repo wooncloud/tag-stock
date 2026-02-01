@@ -10,7 +10,13 @@ export function initCreditDisplay(profile: UserProfile): void {
   // 총 크레딧 표시 업데이트
   const creditDisplay = document.getElementById('creditDisplay');
   if (creditDisplay) {
-    creditDisplay.textContent = totalCredits.toString();
+    if (totalCredits > 999) {
+      creditDisplay.textContent = '999+';
+      creditDisplay.setAttribute('data-tooltip', `${totalCredits.toLocaleString()} credits`);
+    } else {
+      creditDisplay.textContent = totalCredits.toString();
+      creditDisplay.removeAttribute('data-tooltip');
+    }
   }
 }
 
