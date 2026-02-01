@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@plugin '@tailwindcss/typography';
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -100,4 +101,20 @@
       'rlig' 1,
       'calt' 1;
   }
+}
+
+/* Custom prose styles for dark mode blog content */
+.prose-blog {
+  @apply prose prose-zinc max-w-none;
+  @apply prose-headings:text-foreground prose-headings:font-semibold;
+  @apply prose-p:text-muted-foreground;
+  @apply prose-a:text-primary prose-a:no-underline hover:prose-a:underline;
+  @apply prose-strong:text-foreground;
+  @apply prose-code:text-primary prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:font-normal;
+  @apply prose-code:before:content-[''] prose-code:after:content-[''];
+  @apply prose-pre:bg-muted prose-pre:border prose-pre:border-border;
+  @apply prose-blockquote:border-l-primary prose-blockquote:text-muted-foreground;
+  @apply prose-ul:text-muted-foreground prose-ol:text-muted-foreground prose-li:text-muted-foreground;
+  @apply prose-hr:border-border;
+  @apply prose-img:rounded-lg prose-img:border prose-img:border-border;
 }
