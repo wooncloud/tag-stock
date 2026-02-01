@@ -1,35 +1,29 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
+import type { Post, PostMeta, PostFrontmatter } from './types';
+import { calculateReadingTime } from './utils';
 
 const BLOG_DIRECTORY = path.join(process.cwd(), 'content/blog');
 
-export interface PostFrontmatter {
-  title: string;
-  date: string;
-  description: string;
-  coverImage?: string;
-  category?: string;
-  tags?: string[];
-}
+// Cache for posts - improves performance in development
+let postsCache: PostMeta[] | null = null;
+let postsCacheTime = 0;
+const CACHE_TTL = process.env.NODE_ENV === 'development' ? 5000 : Infinity; // 5s in dev, forever in prod
 
-export interface PostMeta extends PostFrontmatter {
-  slug: string;
-  readingTime: number;
-}
-
-export interface Post extends PostMeta {
-  content: string;
+/**
+ * Clear the posts cache (useful for testing or forced refresh)
+ */
+export function clearPostsCache(): void {
+  postsCache = null;
+  postsCacheTime = 0;
 }
 
 /**
- * Calculate estimated reading time based on word count
- * Average reading speed: ~200 words per minute
+ * Check if cache is valid
  */
-function calculateReadingTime(content: string): number {
-  const wordsPerMinute = 200;
-  const words = content.trim().split(/\s+/).length;
-  return Math.max(1, Math.ceil(words / wordsPerMinute));
+function isCacheValid(): boolean {
+  return postsCache !== null && Date.now() - postsCacheTime < CACHE_TTL;
 }
 
 /**
@@ -77,6 +71,11 @@ function parsePost(fileName: string): Post | null {
  * Get all blog posts sorted by date (newest first)
  */
 export function getAllPosts(): PostMeta[] {
+  // Return cached posts if valid
+  if (isCacheValid()) {
+    return postsCache!;
+  }
+
   const files = getMdxFiles();
 
   const posts = files
@@ -86,11 +85,15 @@ export function getAllPosts(): PostMeta[] {
 
       // Return metadata only (exclude content for list view)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { content, ...meta } = post;
+      const { content: _content, ...meta } = post;
       return meta;
     })
     .filter((post): post is PostMeta => post !== null)
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  // Update cache
+  postsCache = posts;
+  postsCacheTime = Date.now();
 
   return posts;
 }
@@ -155,16 +158,4 @@ export function getPostsByTag(tag: string): PostMeta[] {
   return getAllPosts().filter((post) =>
     post.tags?.some((t) => t.toLowerCase() === tag.toLowerCase())
   );
-}
-
-/**
- * Format a date string for display
- */
-export function formatDate(dateString: string): string {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
 }

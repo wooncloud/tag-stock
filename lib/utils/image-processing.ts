@@ -2,7 +2,7 @@ import imageCompression from 'browser-image-compression';
 
 import type { UserPlan } from '@/types/database';
 
-import { PLAN_LIMITS, type StorageType } from '@/lib/plan-limits';
+import { PLAN_LIMITS } from '@/lib/plan-limits';
 
 interface ProcessImageOptions {
   userPlan?: UserPlan;
