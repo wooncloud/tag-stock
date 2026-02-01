@@ -3,7 +3,7 @@ import { cache } from 'react';
 import { SupabaseClient } from '@supabase/supabase-js';
 
 export const getProfile = cache(async (supabase: SupabaseClient, userId: string, email: string) => {
-  let { data: profile, error } = await supabase
+  const { data: profile, error } = await supabase
     .from('profiles')
     .select('*')
     .eq('id', userId)

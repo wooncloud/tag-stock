@@ -17,7 +17,7 @@ export function sendLog(text: string, level: LogLevel = 'info'): void {
       level,
     };
     chrome.runtime.sendMessage(message);
-  } catch (e) {
+  } catch {
     // 사이드패널이 열려 있지 않음, 무시
   }
 }
@@ -34,7 +34,7 @@ export function sendStatus(connected: boolean, site: string, info: string): void
       info,
     };
     chrome.runtime.sendMessage(message);
-  } catch (e) {
+  } catch {
     // 사이드패널이 열려 있지 않음, 무시
   }
 }
@@ -54,9 +54,9 @@ export async function sendToContentScript(
  */
 export function onMessage(
   callback: (
-    message: any,
+    message: ContentToSidepanelMessage | SidepanelToContentMessage,
     sender: chrome.runtime.MessageSender,
-    sendResponse: (response?: any) => void
+    sendResponse: (response?: ContentScriptResponse) => void
   ) => boolean | void
 ): void {
   chrome.runtime.onMessage.addListener(callback);
