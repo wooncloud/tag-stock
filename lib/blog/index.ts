@@ -1,36 +1,13 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
+import type { Post, PostMeta, PostFrontmatter } from './types';
+import { calculateReadingTime } from './utils';
+
+export type { Post, PostMeta, PostFrontmatter } from './types';
+export { formatDate, calculateReadingTime } from './utils';
 
 const BLOG_DIRECTORY = path.join(process.cwd(), 'content/blog');
-
-export interface PostFrontmatter {
-  title: string;
-  date: string;
-  description: string;
-  coverImage?: string;
-  category?: string;
-  tags?: string[];
-}
-
-export interface PostMeta extends PostFrontmatter {
-  slug: string;
-  readingTime: number;
-}
-
-export interface Post extends PostMeta {
-  content: string;
-}
-
-/**
- * Calculate estimated reading time based on word count
- * Average reading speed: ~200 words per minute
- */
-function calculateReadingTime(content: string): number {
-  const wordsPerMinute = 200;
-  const words = content.trim().split(/\s+/).length;
-  return Math.max(1, Math.ceil(words / wordsPerMinute));
-}
 
 /**
  * Get all MDX files from the blog directory
@@ -52,10 +29,8 @@ function parsePost(fileName: string): Post | null {
   try {
     const fileContents = fs.readFileSync(filePath, 'utf8');
     const { data, content } = matter(fileContents);
-
     const frontmatter = data as PostFrontmatter;
 
-    // Validate required fields
     if (!frontmatter.title || !frontmatter.date || !frontmatter.description) {
       console.warn(`Post "${slug}" is missing required frontmatter fields`);
       return null;
@@ -79,20 +54,17 @@ function parsePost(fileName: string): Post | null {
 export function getAllPosts(): PostMeta[] {
   const files = getMdxFiles();
 
-  const posts = files
+  return files
     .map((fileName) => {
       const post = parsePost(fileName);
       if (!post) return null;
 
-      // Return metadata only (exclude content for list view)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { content, ...meta } = post;
       return meta;
     })
     .filter((post): post is PostMeta => post !== null)
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-
-  return posts;
 }
 
 /**
@@ -155,16 +127,4 @@ export function getPostsByTag(tag: string): PostMeta[] {
   return getAllPosts().filter((post) =>
     post.tags?.some((t) => t.toLowerCase() === tag.toLowerCase())
   );
-}
-
-/**
- * Format a date string for display
- */
-export function formatDate(dateString: string): string {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
 }
