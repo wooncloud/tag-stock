@@ -1,4 +1,4 @@
-import { getProfile, getUser, signInWithGoogle, signOut } from '../../lib/supabase/auth';
+import { getProfile, getUser, signInWithGoogle, signOut } from '../../lib/supabase';
 import type { UserProfile } from '../../shared/types';
 
 let onLoginSuccessCallback: (() => Promise<void>) | null = null;

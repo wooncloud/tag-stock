@@ -1,4 +1,4 @@
-import { getTotalCredits } from '../../lib/supabase/auth';
+import { getTotalCredits } from '../../lib/supabase';
 import type { UserProfile } from '../../shared/types';
 
 /**
