@@ -41,7 +41,6 @@ Detailed project documentation is available in the [`/docs`](./docs) directory:
 
 - 레몬스퀴지 실제 결제 해봐야함.
 - 레몬스퀴지 설정 디테일하게 해야함.
-- 크레딧 없으면 사용 못하게.
 - 크롬 익스텐션 셔터스톡 카테고리 자동화
 - 크롬 익스텐션 셔터스톡 설명 자동화
 - 크롬 익스텐션 어도비스톡 "인물, 사유물" 자동화
