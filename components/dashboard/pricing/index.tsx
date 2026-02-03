@@ -38,7 +38,8 @@ export function PricingCards({ currentPlan }: PricingCardsProps) {
     }
     setIsLoading(true);
     try {
-      await createSubscriptionCheckout(variantId);
+      const checkoutUrl = await createSubscriptionCheckout(variantId);
+      window.location.href = checkoutUrl;
     } catch (error) {
       console.error('Subscription error:', error);
       alert('Failed to start checkout. Please try again.');
@@ -49,7 +50,8 @@ export function PricingCards({ currentPlan }: PricingCardsProps) {
   const handleManageBilling = async () => {
     setIsLoading(true);
     try {
-      await manageBilling();
+      const billingUrl = await manageBilling();
+      window.location.href = billingUrl;
     } catch (error) {
       console.error('Billing management error:', error);
       alert('Failed to open billing portal. Please try again.');
@@ -64,7 +66,8 @@ export function PricingCards({ currentPlan }: PricingCardsProps) {
     }
     setIsLoading(true);
     try {
-      await createCreditPackCheckout(variantId);
+      const checkoutUrl = await createCreditPackCheckout(variantId);
+      window.location.href = checkoutUrl;
     } catch (error) {
       console.error('Credit pack purchase error:', error);
       alert('Failed to start checkout. Please try again.');

@@ -45,7 +45,7 @@ export const PLAN_LIMITS: Record<UserPlan, PlanLimit> = {
     maxFileSizeMB: 50,
     compressionEnabled: false,
     iptcEnabled: true,
-    monthlyCredits: -1, // 무제한
+    monthlyCredits: 2000, // Max plan: 2,000 credits/month
     storageType: 'original',
   },
 } as const;
