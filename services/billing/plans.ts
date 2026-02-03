@@ -7,13 +7,13 @@ import { PLAN_LIMITS } from '@/lib/plan-limits';
  */
 export function getLemonSqueezyPlan(variantId: string): UserPlan {
   const proVariants = [
-    process.env.LEMON_SQUEEZY_PRO_MONTHLY_VARIANT_ID,
-    process.env.LEMON_SQUEEZY_PRO_YEARLY_VARIANT_ID,
+    process.env.NEXT_PUBLIC_LEMON_SQUEEZY_PRO_MONTHLY_VARIANT_ID,
+    process.env.NEXT_PUBLIC_LEMON_SQUEEZY_PRO_YEARLY_VARIANT_ID,
   ];
 
   const maxVariants = [
-    process.env.LEMON_SQUEEZY_MAX_MONTHLY_VARIANT_ID,
-    process.env.LEMON_SQUEEZY_MAX_YEARLY_VARIANT_ID,
+    process.env.NEXT_PUBLIC_LEMON_SQUEEZY_MAX_MONTHLY_VARIANT_ID,
+    process.env.NEXT_PUBLIC_LEMON_SQUEEZY_MAX_YEARLY_VARIANT_ID,
   ];
 
   if (proVariants.includes(variantId)) {
