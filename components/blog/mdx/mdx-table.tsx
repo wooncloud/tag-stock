@@ -15,7 +15,7 @@ export function Table({ children, ...props }: TableProps) {
 export function TableHeader({ children, ...props }: ThHTMLAttributes<HTMLTableCellElement>) {
   return (
     <th
-      className="border border-border bg-muted px-4 py-2 text-left font-semibold text-foreground"
+      className="border-border bg-muted text-foreground border px-4 py-2 text-left font-semibold"
       {...props}
     >
       {children}
@@ -25,7 +25,7 @@ export function TableHeader({ children, ...props }: ThHTMLAttributes<HTMLTableCe
 
 export function TableCell({ children, ...props }: TdHTMLAttributes<HTMLTableCellElement>) {
   return (
-    <td className="border border-border px-4 py-2 text-muted-foreground" {...props}>
+    <td className="border-border text-muted-foreground border px-4 py-2" {...props}>
       {children}
     </td>
   );

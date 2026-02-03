@@ -1,6 +1,8 @@
-import Link from 'next/link';
 import Image from 'next/image';
+import Link from 'next/link';
+
 import { type PostMeta } from '@/lib/blog';
+
 import { CategoryBadge, PostMetaInfo, TagList } from './shared';
 
 interface PostCardProps {
@@ -11,9 +13,9 @@ export function PostCard({ post }: PostCardProps) {
   return (
     <article className="group">
       <Link href={`/blog/${post.slug}`} className="block">
-        <div className="overflow-hidden rounded-lg border border-border bg-card transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5">
+        <div className="border-border bg-card hover:border-primary/50 hover:shadow-primary/5 overflow-hidden rounded-lg border transition-all duration-300 hover:shadow-lg">
           {post.coverImage && (
-            <div className="relative aspect-video w-full overflow-hidden bg-muted">
+            <div className="bg-muted relative aspect-video w-full overflow-hidden">
               <Image
                 src={post.coverImage}
                 alt={post.title}
@@ -27,11 +29,11 @@ export function PostCard({ post }: PostCardProps) {
           <div className="p-5">
             {post.category && <CategoryBadge category={post.category} size="sm" />}
 
-            <h2 className="mt-3 text-xl font-semibold text-foreground transition-colors group-hover:text-primary">
+            <h2 className="text-foreground group-hover:text-primary mt-3 text-xl font-semibold transition-colors">
               {post.title}
             </h2>
 
-            <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{post.description}</p>
+            <p className="text-muted-foreground mt-2 line-clamp-2 text-sm">{post.description}</p>
 
             <div className="mt-4">
               <PostMetaInfo date={post.date} readingTime={post.readingTime} size="sm" />

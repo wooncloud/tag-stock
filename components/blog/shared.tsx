@@ -1,7 +1,10 @@
 import Link from 'next/link';
+
 import { ArrowLeft, Calendar, Clock, Tag } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+
 import { formatDate } from '@/lib/blog';
+
+import { Button } from '@/components/ui/button';
 
 /**
  * Back navigation button - reused in BlogHeader and PostHeader
@@ -19,7 +22,7 @@ export function BackButton({
 }: BackButtonProps) {
   return (
     <Button variant="ghost" size="sm" asChild className={`-ml-2 ${className}`}>
-      <Link href={href} className="flex items-center gap-2 text-muted-foreground">
+      <Link href={href} className="text-muted-foreground flex items-center gap-2">
         <ArrowLeft className="h-4 w-4" />
         {label}
       </Link>
@@ -43,7 +46,7 @@ export function CategoryBadge({ category, size = 'md' }: CategoryBadgeProps) {
 
   return (
     <span
-      className={`inline-block rounded-full bg-primary/10 font-medium text-primary ${sizeClasses[size]}`}
+      className={`bg-primary/10 text-primary inline-block rounded-full font-medium ${sizeClasses[size]}`}
     >
       {category}
     </span>
@@ -67,7 +70,7 @@ export function PostMetaInfo({ date, readingTime, size = 'md' }: PostMetaInfoPro
   const iconSize = size === 'sm' ? 'h-3.5 w-3.5' : 'h-4 w-4';
 
   return (
-    <div className={`flex flex-wrap items-center gap-4 text-muted-foreground ${sizeClasses[size]}`}>
+    <div className={`text-muted-foreground flex flex-wrap items-center gap-4 ${sizeClasses[size]}`}>
       <span className={`flex items-center ${sizeClasses[size]}`}>
         <Calendar className={iconSize} />
         {formatDate(date)}
@@ -105,7 +108,7 @@ export function TagList({ tags, maxVisible, variant = 'default' }: TagListProps)
       {visibleTags.map((tag) => (
         <span
           key={tag}
-          className={`flex items-center gap-1 text-muted-foreground ${tagClasses[variant]}`}
+          className={`text-muted-foreground flex items-center gap-1 ${tagClasses[variant]}`}
         >
           <Tag className={variant === 'default' ? 'h-3 w-3' : 'h-3.5 w-3.5'} />
           {tag}

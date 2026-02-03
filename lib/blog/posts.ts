@@ -1,7 +1,8 @@
 import fs from 'fs';
-import path from 'path';
 import matter from 'gray-matter';
-import type { Post, PostMeta, PostFrontmatter } from './types';
+import path from 'path';
+
+import type { Post, PostFrontmatter, PostMeta } from './types';
 import { calculateReadingTime } from './utils';
 
 const BLOG_DIRECTORY = path.join(process.cwd(), 'content/blog');
@@ -146,9 +147,7 @@ export function getAllTags(): string[] {
  * Get posts by category
  */
 export function getPostsByCategory(category: string): PostMeta[] {
-  return getAllPosts().filter(
-    (post) => post.category?.toLowerCase() === category.toLowerCase()
-  );
+  return getAllPosts().filter((post) => post.category?.toLowerCase() === category.toLowerCase());
 }
 
 /**

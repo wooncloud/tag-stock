@@ -1,7 +1,10 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+
 import { MDXRemote } from 'next-mdx-remote/rsc';
+
 import { getAllPosts, getPostBySlug } from '@/lib/blog';
+
 import { PostHeader, mdxComponents } from '@/components/blog';
 
 interface BlogPostPageProps {
@@ -70,13 +73,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
         {/* Cover Image */}
         {post.coverImage && (
-          <div className="mb-10 overflow-hidden rounded-lg border border-border">
+          <div className="border-border mb-10 overflow-hidden rounded-lg border">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={post.coverImage}
-              alt={post.title}
-              className="h-auto w-full object-cover"
-            />
+            <img src={post.coverImage} alt={post.title} className="h-auto w-full object-cover" />
           </div>
         )}
 

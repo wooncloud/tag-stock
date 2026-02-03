@@ -2,7 +2,7 @@ import type { HTMLAttributes, LiHTMLAttributes } from 'react';
 
 export function UnorderedList({ children, ...props }: HTMLAttributes<HTMLUListElement>) {
   return (
-    <ul className="my-4 ml-6 list-disc text-muted-foreground" {...props}>
+    <ul className="text-muted-foreground my-4 ml-6 list-disc" {...props}>
       {children}
     </ul>
   );
@@ -10,7 +10,7 @@ export function UnorderedList({ children, ...props }: HTMLAttributes<HTMLUListEl
 
 export function OrderedList({ children, ...props }: HTMLAttributes<HTMLOListElement>) {
   return (
-    <ol className="my-4 ml-6 list-decimal text-muted-foreground" {...props}>
+    <ol className="text-muted-foreground my-4 ml-6 list-decimal" {...props}>
       {children}
     </ol>
   );

@@ -1,10 +1,11 @@
 import type { MDXComponents } from 'mdx/types';
+
+import { CodeBlock, PreBlock } from './mdx-code';
 import { MDXImage } from './mdx-image';
 import { MDXLink } from './mdx-link';
-import { CodeBlock, PreBlock } from './mdx-code';
-import { H1, H2, H3, Blockquote, Paragraph, HorizontalRule, Strong } from './mdx-typography';
-import { Table, TableHeader, TableCell } from './mdx-table';
-import { UnorderedList, OrderedList, ListItem } from './mdx-list';
+import { ListItem, OrderedList, UnorderedList } from './mdx-list';
+import { Table, TableCell, TableHeader } from './mdx-table';
+import { Blockquote, H1, H2, H3, HorizontalRule, Paragraph, Strong } from './mdx-typography';
 
 export const mdxComponents: MDXComponents = {
   // Media

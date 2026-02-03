@@ -6,7 +6,7 @@ interface CodeBlockProps {
 export function CodeBlock({ children, className }: CodeBlockProps) {
   return (
     <code
-      className={`rounded-md bg-muted px-1.5 py-0.5 font-mono text-sm text-primary ${className || ''}`}
+      className={`bg-muted text-primary rounded-md px-1.5 py-0.5 font-mono text-sm ${className || ''}`}
     >
       {children}
     </code>
@@ -16,7 +16,7 @@ export function CodeBlock({ children, className }: CodeBlockProps) {
 export function PreBlock({ children, ...props }: React.HTMLAttributes<HTMLPreElement>) {
   return (
     <pre
-      className="overflow-x-auto rounded-lg border border-border bg-muted p-4 font-mono text-sm"
+      className="border-border bg-muted overflow-x-auto rounded-lg border p-4 font-mono text-sm"
       {...props}
     >
       {children}

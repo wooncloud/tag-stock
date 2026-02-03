@@ -14,15 +14,10 @@ export function MDXImage({ src, alt, width, height }: MDXImageProps) {
 
   return (
     <figure className="my-8">
-      <div className="relative overflow-hidden rounded-lg border border-border">
+      <div className="border-border relative overflow-hidden rounded-lg border">
         {isExternal ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={src}
-            alt={alt || ''}
-            className="mx-auto h-auto w-full"
-            loading="lazy"
-          />
+          <img src={src} alt={alt || ''} className="mx-auto h-auto w-full" loading="lazy" />
         ) : (
           <Image
             src={src}
@@ -36,7 +31,7 @@ export function MDXImage({ src, alt, width, height }: MDXImageProps) {
         )}
       </div>
       {alt && (
-        <figcaption className="mt-3 text-center text-sm italic text-muted-foreground">
+        <figcaption className="text-muted-foreground mt-3 text-center text-sm italic">
           {alt}
         </figcaption>
       )}

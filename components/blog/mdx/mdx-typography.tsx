@@ -7,7 +7,7 @@ type HRProps = HTMLAttributes<HTMLHRElement>;
 
 export function H1({ children, ...props }: HeadingProps) {
   return (
-    <h1 className="mb-4 mt-10 text-3xl font-bold tracking-tight text-foreground" {...props}>
+    <h1 className="text-foreground mt-10 mb-4 text-3xl font-bold tracking-tight" {...props}>
       {children}
     </h1>
   );
@@ -15,7 +15,7 @@ export function H1({ children, ...props }: HeadingProps) {
 
 export function H2({ children, ...props }: HeadingProps) {
   return (
-    <h2 className="mb-4 mt-8 text-2xl font-semibold tracking-tight text-foreground" {...props}>
+    <h2 className="text-foreground mt-8 mb-4 text-2xl font-semibold tracking-tight" {...props}>
       {children}
     </h2>
   );
@@ -23,7 +23,7 @@ export function H2({ children, ...props }: HeadingProps) {
 
 export function H3({ children, ...props }: HeadingProps) {
   return (
-    <h3 className="mb-3 mt-6 text-xl font-semibold tracking-tight text-foreground" {...props}>
+    <h3 className="text-foreground mt-6 mb-3 text-xl font-semibold tracking-tight" {...props}>
       {children}
     </h3>
   );
@@ -32,7 +32,7 @@ export function H3({ children, ...props }: HeadingProps) {
 export function Blockquote({ children, ...props }: BlockquoteProps) {
   return (
     <blockquote
-      className="mt-6 border-l-4 border-primary pl-4 italic text-muted-foreground"
+      className="border-primary text-muted-foreground mt-6 border-l-4 pl-4 italic"
       {...props}
     >
       {children}
@@ -42,19 +42,19 @@ export function Blockquote({ children, ...props }: BlockquoteProps) {
 
 export function Paragraph({ children, ...props }: ParagraphProps) {
   return (
-    <p className="my-4 leading-7 text-muted-foreground" {...props}>
+    <p className="text-muted-foreground my-4 leading-7" {...props}>
       {children}
     </p>
   );
 }
 
 export function HorizontalRule(props: HRProps) {
-  return <hr className="my-8 border-border" {...props} />;
+  return <hr className="border-border my-8" {...props} />;
 }
 
 export function Strong({ children, ...props }: HTMLAttributes<HTMLElement>) {
   return (
-    <strong className="font-semibold text-foreground" {...props}>
+    <strong className="text-foreground font-semibold" {...props}>
       {children}
     </strong>
   );

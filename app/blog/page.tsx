@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
+
 import { getAllPosts } from '@/lib/blog';
+
 import { BlogHeader, PostList } from '@/components/blog';
 
 export const metadata: Metadata = {
