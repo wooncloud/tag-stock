@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
 
-import { ApiAuthError, authenticateApiRequest } from '@/lib/supabase/api-auth';
-import { decrementCredits, hasEnoughCredits } from '@/lib/supabase/credits';
 import { generateSiteMetadata } from '@/services/gemini';
 import { type SiteType } from '@/services/prompts';
+
+import { ApiAuthError, authenticateApiRequest } from '@/lib/supabase/api-auth';
+import { decrementCredits, hasEnoughCredits } from '@/lib/supabase/credits';
 
 interface GenerateRequestBody {
   imageBase64: string;

@@ -33,7 +33,8 @@ export async function generateMetadata(
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      const errorMessage = (errorData as { error?: string }).error || `Server error: ${response.status}`;
+      const errorMessage =
+        (errorData as { error?: string }).error || `Server error: ${response.status}`;
       throw new Error(errorMessage);
     }
 
