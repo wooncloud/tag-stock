@@ -46,9 +46,7 @@ export function renderGrid(): void {
           </div>
           <img src="${img.thumbnailDataUrl}" alt="${escapeHtml(img.file.name)}" class="aspect-square w-full object-cover" />
           <button class="card-detail-btn" data-detail-id="${img.id}">
-            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
-            </svg>
+            <img src="../../assets/icons/square-arrow-out-up-right.svg" alt="" class="h-3 w-3" />
             Detail
           </button>
           <div class="p-2">

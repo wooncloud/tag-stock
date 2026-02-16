@@ -1,11 +1,28 @@
 import { generateMetadata } from '../../core/ai/gemini-client';
 import { resizeImageForAI } from '../../core/utils/image';
 import { setBatchAnalyzeLoading } from '../components/action-buttons';
+import { showCreditModal } from '../components/credit-modal';
 import { refreshModalIfOpen } from '../components/detail-panel';
 import { renderGrid } from '../components/image-grid';
 import { refreshCredits } from '../credit-display';
 import { getImageById, updateImage } from '../state';
 import { readFileAsBase64 } from '../utils';
+
+/** Sentinel error to stop batch processing when credits run out */
+class InsufficientCreditsError extends Error {
+  constructor() {
+    super('Insufficient credits');
+    this.name = 'InsufficientCreditsError';
+  }
+}
+
+export function isInsufficientCreditsError(error: unknown): boolean {
+  if (error instanceof InsufficientCreditsError) return true;
+  if (error instanceof Error) {
+    return error.message.toLowerCase().includes('insufficient credits');
+  }
+  return false;
+}
 
 export async function analyzeImage(imageId: string): Promise<void> {
   const image = getImageById(imageId);
@@ -44,6 +61,13 @@ export async function analyzeImage(imageId: string): Promise<void> {
     refreshModalIfOpen();
     await refreshCredits();
   } catch (error) {
+    // Re-throw credit errors as InsufficientCreditsError so callers can detect them
+    if (isInsufficientCreditsError(error)) {
+      updateImage(imageId, { status: 'pending' });
+      renderGrid();
+      throw new InsufficientCreditsError();
+    }
+
     console.error('AI analysis failed:', error);
     updateImage(imageId, {
       status: 'error',
@@ -70,6 +94,11 @@ export async function batchAnalyze(imageIds: string[]): Promise<void> {
     try {
       await analyzeImage(id);
     } catch (error) {
+      if (isInsufficientCreditsError(error)) {
+        const progress = `${completed}/${total} images analyzed before credits ran out.`;
+        showCreditModal(progress);
+        return; // Stop the entire batch
+      }
       console.error(`Failed to analyze image ${id}:`, error);
     }
 

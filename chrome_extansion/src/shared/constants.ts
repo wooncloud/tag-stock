@@ -40,6 +40,7 @@ export const LOCAL_PAGE = {
  */
 export const LINKS = {
   HOME: 'https://tagstock.app/',
+  PRICING: 'https://tagstock.app/dashboard/pricing',
   CONTACT: 'https://tagstock.app/contact',
   ADOBE_PORTFOLIO: 'https://contributor.stock.adobe.com/kr/portfolio',
   SHUTTERSTOCK_PORTFOLIO: 'https://submit.shutterstock.com/ko/portfolio/not_submitted/photo',

@@ -27,14 +27,11 @@
               class="rounded-lg bg-white/20 px-3 py-1.5 text-sm font-medium transition-colors hover:bg-white/30"
             >
               <span class="flex items-center gap-1.5">
-                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 4v16m8-8H4"
-                  />
-                </svg>
+                <img
+                  src="../../assets/icons/plus.svg"
+                  alt="+"
+                  class="h-4 w-4 brightness-0 invert"
+                />
                 Upload
               </span>
             </button>
@@ -47,19 +44,11 @@
       <div id="uploadPopup" class="upload-popup hidden">
         <section id="filePicker" class="cursor-pointer p-6 transition-colors hover:bg-white/80">
           <div class="rounded-lg border-2 border-dashed border-black/20 p-8 text-center">
-            <svg
+            <img
+              src="../../assets/icons/upload.svg"
+              alt="Upload"
               class="mx-auto mb-3 h-10 w-10 opacity-40"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="1.5"
-                d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
-              />
-            </svg>
+            />
             <p class="mb-1 text-sm font-medium">Drag & drop images here</p>
             <p class="text-muted-foreground mb-2 text-xs">or click to browse</p>
             <p class="text-muted-foreground text-xs">JPEG only, max 50MB per file</p>
@@ -79,43 +68,37 @@
           <span class="text-muted-foreground text-xs">|</span>
           <span id="selectionCount" class="text-muted-foreground text-xs">0 selected</span>
 
-          <div class="flex-1"></div>
+          <div class="flex-1">
+            <span
+              id="processingWarning"
+              class="hidden animate-pulse text-xs font-medium text-amber-600"
+            >
+              ⏳ Processing... Do not close this page.
+            </span>
+          </div>
 
           <!-- Batch Actions -->
           <button id="batchAnalyzeBtn" class="toolbar-btn toolbar-btn-primary" disabled>
-            <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"
-              />
-            </svg>
+            <img
+              src="../../assets/icons/sparkles.svg"
+              alt="AI"
+              class="h-3.5 w-3.5 brightness-0 invert"
+            />
             <span id="batchAnalyzeBtnText">AI Analyze</span>
           </button>
           <button id="batchDownloadBtn" class="toolbar-btn toolbar-btn-success" disabled>
-            <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"
-              />
-            </svg>
+            <img
+              src="../../assets/icons/download.svg"
+              alt="Download"
+              class="h-3.5 w-3.5 brightness-0 invert"
+            />
             <span id="batchDownloadBtnText">Download</span>
           </button>
 
           <!-- Help Icon -->
           <div class="help-icon-wrapper">
             <button id="helpIcon" class="toolbar-btn-icon" title="Status guide">
-              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M12 18.75h.008v.008H12v-.008z"
-                />
-              </svg>
+              <img src="../../assets/icons/circle-question-mark.svg" alt="?" class="h-4 w-4" />
             </button>
             <div id="helpPopover" class="help-popover hidden">
               <div class="help-popover-title">Status Guide</div>
@@ -232,6 +215,36 @@
             </button>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- Credit Exhausted Modal -->
+    <div id="creditModalBackdrop" class="modal-backdrop hidden"></div>
+    <div id="creditModal" class="credit-modal hidden">
+      <div class="credit-modal-icon">
+        <img src="../../assets/icons/zap.svg" alt="Credits" class="mx-auto h-10 w-10" />
+      </div>
+      <h2 class="text-lg font-semibold">Credits Exhausted</h2>
+      <p class="text-muted-foreground mt-2 text-sm">
+        All credits have been used. Purchase more credits or upgrade your plan to continue analyzing
+        images.
+      </p>
+      <p id="creditModalProgress" class="mt-2 hidden text-xs text-amber-600"></p>
+      <div class="mt-5 flex gap-3">
+        <button
+          id="creditModalClose"
+          class="flex-1 rounded-lg border px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100"
+        >
+          Close
+        </button>
+        <a
+          id="creditModalLink"
+          href="#"
+          target="_blank"
+          class="bg-primary text-primary-foreground hover:bg-primary/90 flex-1 rounded-lg px-4 py-2 text-center text-sm font-medium transition-colors"
+        >
+          Get Credits
+        </a>
       </div>
     </div>
 

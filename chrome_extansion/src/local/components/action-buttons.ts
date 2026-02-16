@@ -7,6 +7,7 @@ const batchAnalyzeBtn = document.getElementById('batchAnalyzeBtn') as HTMLButton
 const batchAnalyzeBtnText = document.getElementById('batchAnalyzeBtnText')!;
 const batchDownloadBtn = document.getElementById('batchDownloadBtn') as HTMLButtonElement;
 const batchDownloadBtnText = document.getElementById('batchDownloadBtnText')!;
+const processingWarning = document.getElementById('processingWarning')!;
 
 export function initActionButtons(): void {
   selectAllCheckbox.addEventListener('change', () => {
@@ -51,6 +52,7 @@ export function updateToolbar(): void {
 export function setBatchAnalyzeLoading(loading: boolean, progress?: string): void {
   batchAnalyzeBtn.disabled = loading;
   batchAnalyzeBtnText.textContent = loading ? progress || 'Analyzing...' : 'AI Analyze';
+  processingWarning.classList.toggle('hidden', !loading);
   if (loading) {
     batchDownloadBtn.disabled = true;
   }
@@ -59,6 +61,7 @@ export function setBatchAnalyzeLoading(loading: boolean, progress?: string): voi
 export function setBatchDownloadLoading(loading: boolean, progress?: string): void {
   batchDownloadBtn.disabled = loading;
   batchDownloadBtnText.textContent = loading ? progress || 'Downloading...' : 'Download';
+  processingWarning.classList.toggle('hidden', !loading);
   if (loading) {
     batchAnalyzeBtn.disabled = true;
   }

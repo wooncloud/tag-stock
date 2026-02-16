@@ -7,12 +7,13 @@ import {
   setBatchAnalyzeLoading,
   setBatchDownloadLoading,
 } from './components/action-buttons';
+import { initCreditModal, showCreditModal } from './components/credit-modal';
 import { getCurrentModalImageId, initDetailModal } from './components/detail-panel';
 import { initFilePicker } from './components/file-picker';
 import { initHelpPopover } from './components/help-popover';
 import { renderGrid } from './components/image-grid';
 import { initMetadataEditor } from './components/metadata-editor';
-import { analyzeImage, batchAnalyze } from './handlers/ai-handler';
+import { analyzeImage, batchAnalyze, isInsufficientCreditsError } from './handlers/ai-handler';
 import { batchEmbedAndDownload, embedAndDownload } from './handlers/iptc-handler';
 import { getCheckedIds } from './state';
 
@@ -22,6 +23,7 @@ export function setupEventListeners(): void {
   initDetailModal();
   initActionButtons();
   initHelpPopover();
+  initCreditModal();
 
   // Batch AI Analyze
   getBatchAnalyzeBtn().addEventListener('click', async () => {
@@ -66,7 +68,11 @@ export function setupEventListeners(): void {
     try {
       await analyzeImage(id);
     } catch (error) {
-      console.error('Analysis failed:', error);
+      if (isInsufficientCreditsError(error)) {
+        showCreditModal();
+      } else {
+        console.error('Analysis failed:', error);
+      }
     } finally {
       btn.disabled = false;
       btn.textContent = 'AI Analyze';
