@@ -22,6 +22,12 @@ interface DashboardHeaderProps {
   plan: string;
 }
 
+const PLAN_LABELS: Record<string, string> = {
+  max: 'Max',
+  pro: 'Pro',
+  free: 'Free',
+};
+
 export function DashboardHeader({
   userEmail,
   userInitial,
@@ -60,7 +66,7 @@ export function DashboardHeader({
                 <div className="flex flex-col space-y-1">
                   <p className="text-sm font-medium">{userEmail}</p>
                   <p className="text-muted-foreground text-xs">
-                    {plan === 'pro' ? 'Pro' : 'Free'} Plan
+                    {PLAN_LABELS[plan] ?? 'Free'} Plan
                   </p>
                 </div>
               </DropdownMenuLabel>
