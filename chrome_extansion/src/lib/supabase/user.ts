@@ -75,3 +75,14 @@ export async function getProfile(userId: string): Promise<UserProfile | null> {
 
   return profile as UserProfile;
 }
+
+/**
+ * 현재 세션의 access token 가져오기
+ */
+export async function getAccessToken(): Promise<string | null> {
+  const supabase = createClient();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  return session?.access_token ?? null;
+}

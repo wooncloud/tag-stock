@@ -1,22 +1,10 @@
-import { createClient } from '../lib/supabase/client';
-import { getTotalCredits } from '../lib/supabase/credits';
-import type { UserProfile } from '../shared/types';
+import { getUser } from '../lib/supabase/user';
+import { refreshCredits } from './credit-display';
 import { setupEventListeners } from './event-listeners';
 import './local.css';
-import { setCurrentProfile } from './state';
-
-function updateCreditDisplay(profile: UserProfile): void {
-  const el = document.getElementById('creditDisplay');
-  if (el) {
-    el.textContent = getTotalCredits(profile).toString();
-  }
-}
 
 async function init(): Promise<void> {
-  const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getUser();
 
   if (!user) {
     document.body.innerHTML =
@@ -24,13 +12,7 @@ async function init(): Promise<void> {
     return;
   }
 
-  const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single();
-
-  if (profile) {
-    setCurrentProfile(profile as UserProfile);
-    updateCreditDisplay(profile as UserProfile);
-  }
-
+  await refreshCredits();
   setupEventListeners();
 }
 

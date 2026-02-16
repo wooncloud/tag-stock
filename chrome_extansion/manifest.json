@@ -5,16 +5,18 @@
   "description": "AI-powered metadata automation for stock photo sites",
   "permissions": ["activeTab", "sidePanel", "tabs", "storage", "identity", "downloads"],
   "host_permissions": [
+    "https://tagstock.app/*",
+    "http://localhost:3000/*",
     "https://contributor.stock.adobe.com/*",
     "https://submit.shutterstock.com/*",
     "https://cdn.shutterstock.com/*",
     "https://*.ftcdn.net/*"
   ],
   "icons": {
-    "16": "assets/icon/icon16.png",
-    "32": "assets/icon/icon32.png",
-    "48": "assets/icon/icon48.png",
-    "128": "assets/icon/icon128.png"
+    "16": "assets/icons/icon16.png",
+    "32": "assets/icons/icon32.png",
+    "48": "assets/icons/icon48.png",
+    "128": "assets/icons/icon128.png"
   },
   "background": {
     "service_worker": "background.js",
@@ -38,8 +40,8 @@
   "action": {
     "default_title": "TagStock",
     "default_icon": {
-      "16": "assets/icon/icon16.png",
-      "32": "assets/icon/icon32.png"
+      "16": "assets/icons/icon16.png",
+      "32": "assets/icons/icon32.png"
     }
   }
 }

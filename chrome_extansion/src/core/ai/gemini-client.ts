@@ -1,4 +1,4 @@
-import { createClient } from '../../lib/supabase/client';
+import { getAccessToken, getUser } from '../../lib/supabase/user';
 import { LINKS } from '../../shared/constants';
 import type { AIMetadataResult, SiteType } from '../../shared/types';
 
@@ -13,20 +13,22 @@ export async function generateMetadata(
   imageBase64: string
 ): Promise<AIMetadataResult> {
   try {
-    const supabase = createClient();
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-
-    if (!session?.access_token) {
+    // getUser()를 먼저 호출하여 만료된 토큰을 자동 갱신
+    const user = await getUser();
+    if (!user) {
       throw new Error('Not authenticated. Please login first.');
+    }
+
+    const accessToken = await getAccessToken();
+    if (!accessToken) {
+      throw new Error('Session expired. Please login again.');
     }
 
     const response = await fetch(`${API_BASE_URL}api/generate`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${session.access_token}`,
+        Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({ imageBase64, siteType }),
     });

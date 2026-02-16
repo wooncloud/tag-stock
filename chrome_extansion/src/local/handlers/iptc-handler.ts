@@ -1,4 +1,5 @@
 import { embedIPTCToJpeg } from '../../core/iptc';
+import { setBatchDownloadLoading } from '../components/action-buttons';
 import { renderGrid } from '../components/image-grid';
 import { getImageById, updateImage } from '../state';
 
@@ -34,6 +35,31 @@ export async function embedAndDownload(imageId: string): Promise<void> {
     });
     renderGrid();
     throw error;
+  }
+}
+
+export async function batchEmbedAndDownload(imageIds: string[]): Promise<void> {
+  const total = imageIds.length;
+  let completed = 0;
+
+  for (const id of imageIds) {
+    const image = getImageById(id);
+    // Only download images that have metadata (ready or completed)
+    if (!image || !image.editedMetadata || !image.originalBase64) {
+      completed++;
+      continue;
+    }
+
+    setBatchDownloadLoading(true, `Downloading ${completed + 1}/${total}...`);
+
+    try {
+      await embedAndDownload(id);
+    } catch (error) {
+      console.error(`Failed to download image ${id}:`, error);
+      // Continue with next
+    }
+
+    completed++;
   }
 }
 

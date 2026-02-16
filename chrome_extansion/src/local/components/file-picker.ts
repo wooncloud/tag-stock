@@ -5,8 +5,35 @@ import { renderGrid } from './image-grid';
 
 const filePicker = document.getElementById('filePicker')!;
 const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+const uploadBtn = document.getElementById('uploadBtn')!;
+const uploadPopup = document.getElementById('uploadPopup')!;
+const uploadPopupBackdrop = document.getElementById('uploadPopupBackdrop')!;
+
+let isOpen = false;
+
+function toggleUploadPopup(): void {
+  isOpen = !isOpen;
+  uploadPopup.classList.toggle('hidden', !isOpen);
+  uploadPopupBackdrop.classList.toggle('hidden', !isOpen);
+}
+
+function closeUploadPopup(): void {
+  isOpen = false;
+  uploadPopup.classList.add('hidden');
+  uploadPopupBackdrop.classList.add('hidden');
+}
 
 export function initFilePicker(): void {
+  // Upload button in header
+  uploadBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleUploadPopup();
+  });
+
+  // Backdrop click closes popup
+  uploadPopupBackdrop.addEventListener('click', closeUploadPopup);
+
+  // File picker area click
   filePicker.addEventListener('click', () => {
     fileInput.click();
   });
@@ -62,6 +89,8 @@ async function handleFiles(files: File[]): Promise<void> {
     addImage(imageFile);
   }
 
+  // Close popup and render
+  closeUploadPopup();
   renderGrid();
   updateFileCount();
 }

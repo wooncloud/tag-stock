@@ -1,12 +1,13 @@
-import { getImageById, getSelectedImageId, updateImage } from '../state';
+import { getImageById, updateImage } from '../state';
 import { escapeHtml } from '../utils';
 
-const metadataEditor = document.getElementById('metadataEditor')!;
 const titleInput = document.getElementById('titleInput') as HTMLInputElement;
 const keywordInput = document.getElementById('keywordInput') as HTMLInputElement;
 const keywordTags = document.getElementById('keywordTags')!;
 const keywordCount = document.getElementById('keywordCount')!;
 const captionInput = document.getElementById('captionInput') as HTMLTextAreaElement;
+
+let currentEditingId: string | null = null;
 
 export function initMetadataEditor(): void {
   titleInput.addEventListener('input', () => {
@@ -30,13 +31,12 @@ export function initMetadataEditor(): void {
 }
 
 function saveCurrentMetadata(): void {
-  const id = getSelectedImageId();
-  if (!id) return;
+  if (!currentEditingId) return;
 
-  const image = getImageById(id);
+  const image = getImageById(currentEditingId);
   if (!image) return;
 
-  updateImage(id, {
+  updateImage(currentEditingId, {
     editedMetadata: {
       title: titleInput.value,
       keywords: image.editedMetadata?.keywords || [],
@@ -45,11 +45,10 @@ function saveCurrentMetadata(): void {
   });
 }
 
-export function renderEditor(): void {
-  const id = getSelectedImageId();
-  if (!id) return;
+export function renderEditor(imageId: string): void {
+  currentEditingId = imageId;
 
-  const image = getImageById(id);
+  const image = getImageById(imageId);
   if (!image) return;
 
   const metadata = image.editedMetadata || {
@@ -87,10 +86,9 @@ function renderKeywords(keywords: string[]): void {
 }
 
 function addKeyword(keyword: string): void {
-  const id = getSelectedImageId();
-  if (!id) return;
+  if (!currentEditingId) return;
 
-  const image = getImageById(id);
+  const image = getImageById(currentEditingId);
   if (!image) return;
 
   const currentKeywords = image.editedMetadata?.keywords || image.metadata?.keyword || [];
@@ -98,7 +96,7 @@ function addKeyword(keyword: string): void {
   if (currentKeywords.includes(keyword)) return;
 
   const newKeywords = [...currentKeywords, keyword];
-  updateImage(id, {
+  updateImage(currentEditingId, {
     editedMetadata: {
       title: titleInput.value,
       keywords: newKeywords,
@@ -110,16 +108,15 @@ function addKeyword(keyword: string): void {
 }
 
 function removeKeyword(index: number): void {
-  const id = getSelectedImageId();
-  if (!id) return;
+  if (!currentEditingId) return;
 
-  const image = getImageById(id);
+  const image = getImageById(currentEditingId);
   if (!image) return;
 
   const keywords = [...(image.editedMetadata?.keywords || [])];
   keywords.splice(index, 1);
 
-  updateImage(id, {
+  updateImage(currentEditingId, {
     editedMetadata: {
       title: titleInput.value,
       keywords,
@@ -128,12 +125,4 @@ function removeKeyword(index: number): void {
   });
 
   renderKeywords(keywords);
-}
-
-export function showEditor(): void {
-  metadataEditor.classList.remove('hidden');
-}
-
-export function hideEditor(): void {
-  metadataEditor.classList.add('hidden');
 }

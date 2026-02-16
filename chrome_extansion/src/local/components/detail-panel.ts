@@ -1,57 +1,64 @@
 import type { LocalImageFile } from '../../shared/types';
-import { getImageById, getSelectedImageId, updateImage } from '../state';
-import { hideActionButtons, showActionButtons } from './action-buttons';
-import { hideEditor, renderEditor, showEditor } from './metadata-editor';
+import { getImageById, setDetailImageId, updateImage } from '../state';
+import { formatFileSize, readFileAsBase64 } from '../utils';
+import { renderEditor } from './metadata-editor';
 
-const detailPlaceholder = document.getElementById('detailPlaceholder')!;
-const detailContent = document.getElementById('detailContent')!;
+const detailModal = document.getElementById('detailModal')!;
+const detailModalBackdrop = document.getElementById('detailModalBackdrop')!;
+const detailModalClose = document.getElementById('detailModalClose')!;
 const detailImage = document.getElementById('detailImage') as HTMLImageElement;
 const detailFileName = document.getElementById('detailFileName')!;
 const detailFileSize = document.getElementById('detailFileSize')!;
 const detailDimensions = document.getElementById('detailDimensions')!;
 
-export function renderDetail(): void {
-  const selectedId = getSelectedImageId();
+let currentModalImageId: string | null = null;
 
-  if (!selectedId) {
-    detailPlaceholder.classList.remove('hidden');
-    detailContent.classList.add('hidden');
-    hideEditor();
-    hideActionButtons();
-    return;
-  }
+export function initDetailModal(): void {
+  detailModalClose.addEventListener('click', closeDetailModal);
+  detailModalBackdrop.addEventListener('click', closeDetailModal);
 
-  const image = getImageById(selectedId);
-  if (!image) return;
-
-  detailPlaceholder.classList.add('hidden');
-  detailContent.classList.remove('hidden');
-  showEditor();
-  showActionButtons();
-
-  // Load full-res base64 if not yet loaded
-  if (!image.originalBase64) {
-    loadFullResImage(image).then(() => {
-      displayImageInfo(image);
-    });
-  } else {
-    displayImageInfo(image);
-  }
-
-  renderEditor();
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && currentModalImageId) {
+      closeDetailModal();
+    }
+  });
 }
 
-async function loadFullResImage(image: LocalImageFile): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const base64 = (reader.result as string).split(',')[1];
-      updateImage(image.id, { originalBase64: base64 });
-      resolve();
-    };
-    reader.onerror = () => reject(new Error('Failed to read file'));
-    reader.readAsDataURL(image.file);
-  });
+export async function openDetailModal(imageId: string): Promise<void> {
+  currentModalImageId = imageId;
+  const image = getImageById(imageId);
+  if (!image) return;
+
+  if (!image.originalBase64) {
+    const base64 = await readFileAsBase64(image.file);
+    updateImage(imageId, { originalBase64: base64 });
+  }
+
+  displayImageInfo(getImageById(imageId)!);
+  renderEditor(imageId);
+
+  detailModal.classList.remove('hidden');
+  detailModalBackdrop.classList.remove('hidden');
+}
+
+export function closeDetailModal(): void {
+  currentModalImageId = null;
+  setDetailImageId(null);
+  detailModal.classList.add('hidden');
+  detailModalBackdrop.classList.add('hidden');
+}
+
+export function getCurrentModalImageId(): string | null {
+  return currentModalImageId;
+}
+
+export function refreshModalIfOpen(): void {
+  if (currentModalImageId) {
+    const image = getImageById(currentModalImageId);
+    if (image) {
+      renderEditor(currentModalImageId);
+    }
+  }
 }
 
 function displayImageInfo(image: LocalImageFile): void {
@@ -59,7 +66,6 @@ function displayImageInfo(image: LocalImageFile): void {
   detailFileName.textContent = image.file.name;
   detailFileSize.textContent = formatFileSize(image.file.size);
 
-  // Get actual dimensions
   const img = new Image();
   img.onload = () => {
     detailDimensions.textContent = `${img.width} x ${img.height}`;
@@ -69,9 +75,4 @@ function displayImageInfo(image: LocalImageFile): void {
   } else {
     img.src = image.thumbnailDataUrl;
   }
-}
-
-function formatFileSize(bytes: number): string {
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
 }
