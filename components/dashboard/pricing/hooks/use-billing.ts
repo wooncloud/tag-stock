@@ -34,7 +34,7 @@ export function useBilling() {
         console.error('Subscription error:', error);
         alert('Failed to start checkout. Please try again.');
         setIsLoading(false);
-      },
+      }
     );
   };
 
@@ -46,7 +46,7 @@ export function useBilling() {
         console.error('Billing management error:', error);
         alert('Failed to open billing portal. Please try again.');
         setIsLoading(false);
-      },
+      }
     );
   };
 
@@ -62,7 +62,7 @@ export function useBilling() {
         console.error('Credit pack purchase error:', error);
         alert('Failed to start checkout. Please try again.');
         setIsLoading(false);
-      },
+      }
     );
   };
 

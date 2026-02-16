@@ -41,13 +41,13 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
       tags: post.tags,
       images: post.coverImage
         ? [
-          {
-            url: post.coverImage,
-            width: 1200,
-            height: 630,
-            alt: post.title,
-          },
-        ]
+            {
+              url: post.coverImage,
+              width: 1200,
+              height: 630,
+              alt: post.title,
+            },
+          ]
         : undefined,
     },
     twitter: {

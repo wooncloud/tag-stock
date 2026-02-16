@@ -17,11 +17,7 @@ export function ChromeExtensionBanner() {
           </div>
         </div>
         <Button asChild className="shrink-0">
-          <a
-            href="https://chromewebstore.google.com"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <a href="https://chromewebstore.google.com" target="_blank" rel="noopener noreferrer">
             Download
           </a>
         </Button>

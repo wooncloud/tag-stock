@@ -13,7 +13,7 @@ export function CodeBlock({ children, className }: CodeBlockProps) {
     return (
       <div className="relative">
         {language && (
-          <span className="absolute top-0 right-0 rounded-bl-md bg-primary/10 px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider text-primary">
+          <span className="bg-primary/10 text-primary absolute top-0 right-0 rounded-bl-md px-2.5 py-1 font-mono text-[10px] tracking-wider uppercase">
             {language}
           </span>
         )}
@@ -24,7 +24,7 @@ export function CodeBlock({ children, className }: CodeBlockProps) {
 
   // Inline code
   return (
-    <code className="rounded-md bg-primary/10 px-1.5 py-0.5 font-mono text-sm font-medium text-primary">
+    <code className="bg-primary/10 text-primary rounded-md px-1.5 py-0.5 font-mono text-sm font-medium">
       {children}
     </code>
   );
@@ -33,7 +33,7 @@ export function CodeBlock({ children, className }: CodeBlockProps) {
 export function PreBlock({ children, ...props }: React.HTMLAttributes<HTMLPreElement>) {
   return (
     <pre
-      className="my-6 overflow-x-auto rounded-xl border border-border bg-[hsl(240,10%,6%)] p-5 font-mono text-sm leading-relaxed text-gray-300 shadow-lg dark:bg-[hsl(240,10%,6%)]"
+      className="border-border my-6 overflow-x-auto rounded-xl border bg-[hsl(240,10%,6%)] p-5 font-mono text-sm leading-relaxed text-gray-300 shadow-lg dark:bg-[hsl(240,10%,6%)]"
       {...props}
     >
       {children}

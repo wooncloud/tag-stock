@@ -37,7 +37,11 @@ export function PricingCards({ currentPlan }: PricingCardsProps) {
               title={plan.title}
               description={plan.description}
               price={plan.plan === 'free' ? '$0' : plan.price[billingCycle]}
-              period={plan.plan === 'free' ? 'per month' : `per ${billingCycle === 'monthly' ? 'month' : 'year'}`}
+              period={
+                plan.plan === 'free'
+                  ? 'per month'
+                  : `per ${billingCycle === 'monthly' ? 'month' : 'year'}`
+              }
               features={plan.features}
               isCurrentPlan={currentPlan === plan.plan}
               isPopular={plan.isPopular}

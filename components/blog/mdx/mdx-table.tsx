@@ -13,11 +13,7 @@ export function Table({ children, ...props }: TableProps) {
 }
 
 export function TableHead({ children, ...props }: HTMLAttributes<HTMLTableSectionElement>) {
-  return (
-    <thead {...props}>
-      {children}
-    </thead>
-  );
+  return <thead {...props}>{children}</thead>;
 }
 
 export function TableBody({ children, ...props }: HTMLAttributes<HTMLTableSectionElement>) {
@@ -26,10 +22,7 @@ export function TableBody({ children, ...props }: HTMLAttributes<HTMLTableSectio
 
 export function TableRow({ children, ...props }: HTMLAttributes<HTMLTableRowElement>) {
   return (
-    <tr
-      className="transition-colors hover:bg-muted/40"
-      {...props}
-    >
+    <tr className="hover:bg-muted/40 transition-colors" {...props}>
       {children}
     </tr>
   );
@@ -38,7 +31,7 @@ export function TableRow({ children, ...props }: HTMLAttributes<HTMLTableRowElem
 export function TableHeader({ children, ...props }: ThHTMLAttributes<HTMLTableCellElement>) {
   return (
     <th
-      className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-foreground"
+      className="text-foreground px-4 py-3 text-left text-xs font-semibold tracking-wider uppercase"
       {...props}
     >
       {children}
@@ -48,7 +41,7 @@ export function TableHeader({ children, ...props }: ThHTMLAttributes<HTMLTableCe
 
 export function TableCell({ children, ...props }: TdHTMLAttributes<HTMLTableCellElement>) {
   return (
-    <td className="px-4 py-3 text-muted-foreground" {...props}>
+    <td className="text-muted-foreground px-4 py-3" {...props}>
       {children}
     </td>
   );

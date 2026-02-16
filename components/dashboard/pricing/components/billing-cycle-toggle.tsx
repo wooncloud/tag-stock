@@ -9,7 +9,11 @@ interface BillingCycleToggleProps {
   disabled: boolean;
 }
 
-export function BillingCycleToggle({ billingCycle, onCycleChange, disabled }: BillingCycleToggleProps) {
+export function BillingCycleToggle({
+  billingCycle,
+  onCycleChange,
+  disabled,
+}: BillingCycleToggleProps) {
   return (
     <div className="flex items-center justify-center gap-4">
       <Button

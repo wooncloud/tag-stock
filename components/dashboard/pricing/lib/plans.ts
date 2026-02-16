@@ -60,7 +60,9 @@ export const VARIANT_IDS = {
 };
 
 export function getVariantId(plan: UserPlan, billingCycle: 'monthly' | 'yearly'): string {
-  if (plan === 'pro') return billingCycle === 'monthly' ? VARIANT_IDS.pro_monthly : VARIANT_IDS.pro_yearly;
-  if (plan === 'max') return billingCycle === 'monthly' ? VARIANT_IDS.max_monthly : VARIANT_IDS.max_yearly;
+  if (plan === 'pro')
+    return billingCycle === 'monthly' ? VARIANT_IDS.pro_monthly : VARIANT_IDS.pro_yearly;
+  if (plan === 'max')
+    return billingCycle === 'monthly' ? VARIANT_IDS.max_monthly : VARIANT_IDS.max_yearly;
   return '';
 }

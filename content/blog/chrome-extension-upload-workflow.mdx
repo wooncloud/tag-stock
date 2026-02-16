@@ -75,11 +75,11 @@ Below the header, you'll see:
 
 This card shows whether the extension recognizes the current page:
 
-| Status | Meaning |
-|--------|---------|
-| ✅ Ready | You're on a supported upload page—ready to generate metadata |
-| ⚠️ Unsupported | The current page isn't a recognized stock site upload page |
-| 🔍 Checking... | The extension is analyzing the current page |
+| Status         | Meaning                                                      |
+| -------------- | ------------------------------------------------------------ |
+| ✅ Ready       | You're on a supported upload page—ready to generate metadata |
+| ⚠️ Unsupported | The current page isn't a recognized stock site upload page   |
+| 🔍 Checking... | The extension is analyzing the current page                  |
 
 ### Fill Metadata Button
 
@@ -139,6 +139,7 @@ You have two options:
 **6. Review the results**
 
 The AI will:
+
 - Fill in the **title field** with a descriptive, natural-language title
 - Fill in the **keyword field** with comma-separated keywords optimized for Adobe Stock
 - Automatically click the **Save** button after a brief delay
@@ -176,12 +177,14 @@ Click the TagStock extension icon. The status badge should show "✅ Ready" when
 **5. Generate and fill metadata**
 
 Use either:
+
 - **"Fill Metadata" button** in the Side Panel
 - **Keyboard shortcut `⌘E` / `Ctrl+E`**
 
 **6. Review the results**
 
 The extension handles Shutterstock's unique keyword input:
+
 - **Description field** is filled with the AI-generated title
 - **Keywords** are entered individually into Shutterstock's keyword input field, which requires single entries rather than comma-separated lists
 - The extension simulates keyboard input to properly register each keyword
@@ -201,12 +204,13 @@ Select the next image and repeat. The extension maintains your authentication th
 
 The keyboard shortcut is the fastest way to use the extension:
 
-| Shortcut | Platform | Action |
-|----------|----------|--------|
-| `⌘E` | Mac | Generate and fill metadata |
+| Shortcut | Platform      | Action                     |
+| -------- | ------------- | -------------------------- |
+| `⌘E`     | Mac           | Generate and fill metadata |
 | `Ctrl+E` | Windows/Linux | Generate and fill metadata |
 
 The shortcut works as long as:
+
 - The TagStock Side Panel is open
 - You're on a supported upload page
 - An image is selected for editing
@@ -217,7 +221,7 @@ The shortcut works as long as:
 ### Without TagStock Extension
 
 ```
-1. Take a photo                         ✅ 
+1. Take a photo                         ✅
 2. Edit in Lightroom                    ✅
 3. Export files                         ✅
 4. Open TagStock web dashboard          ⏱️ 1 min
@@ -261,6 +265,7 @@ For 50 images: ~37 minutes
 **Problem:** The extension shows "Unsupported" status even though you're on Adobe Stock or Shutterstock.
 
 **Solutions:**
+
 - Make sure you're on the **upload/submission** page, not the main website
 - For Adobe Stock: `contributor.stock.adobe.com/kr/uploads`
 - For Shutterstock: `submit.shutterstock.com`
@@ -271,6 +276,7 @@ For 50 images: ~37 minutes
 **Problem:** You click "Fill Metadata" but nothing happens.
 
 **Solutions:**
+
 - Ensure an image is **selected** on the upload page (click on it first)
 - Check that the Side Panel shows "✅ Ready" status
 - Verify you have remaining credits
@@ -281,6 +287,7 @@ For 50 images: ~37 minutes
 **Problem:** The extension can't find the title or keyword fields.
 
 **Solutions:**
+
 - Wait for the upload page to fully load before using the extension
 - Don't modify the page with other extensions that might change the DOM
 - Try refreshing the page and waiting 3-5 seconds before using TagStock
@@ -290,6 +297,7 @@ For 50 images: ~37 minutes
 **Problem:** Pressing `⌘E` / `Ctrl+E` doesn't trigger metadata generation.
 
 **Solutions:**
+
 - Ensure the Side Panel is **open** (click the TagStock icon first)
 - Click somewhere on the page first to ensure the page has focus
 - Check that the shortcut isn't conflicting with another extension
@@ -299,6 +307,7 @@ For 50 images: ~37 minutes
 **Problem:** Credit display shows "--" or "0".
 
 **Solutions:**
+
 - Try signing out and signing back in
 - Check your subscription status at [tagstock.app/dashboard](/dashboard)
 - Credits refresh monthly—check if your refresh date has passed
