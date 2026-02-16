@@ -1,5 +1,9 @@
 'use client';
 
+import Link from 'next/link';
+
+import { Mail } from 'lucide-react';
+
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -42,7 +46,7 @@ export function DashboardHeader({
     <header className="bg-background border-b">
       <div className="flex h-16 items-center justify-between px-6">
         <div>
-          <h2 className="text-lg font-semibold">Dashboard</h2>
+          <h2 className="text-lg font-semibold">TagStock</h2>
         </div>
 
         <div className="flex items-center gap-4">
@@ -71,6 +75,12 @@ export function DashboardHeader({
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
+              <DropdownMenuItem asChild className="cursor-pointer">
+                <Link href="/contact">
+                  <Mail className="mr-2 h-4 w-4" />
+                  Contact
+                </Link>
+              </DropdownMenuItem>
               <DropdownMenuItem
                 className="text-destructive focus:text-destructive cursor-pointer"
                 onSelect={handleSignOut}

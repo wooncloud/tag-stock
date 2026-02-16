@@ -1,6 +1,6 @@
 import { CreditCard, Sparkles } from 'lucide-react';
 
-import { UserPlan, Profile } from '@/types/database';
+import { Profile, UserPlan } from '@/types/database';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
@@ -44,12 +44,8 @@ export function StatsCards({ profile }: StatsCardsProps) {
           <CreditCard className="text-muted-foreground h-4 w-4" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">
-            {PLAN_LABELS[profile?.plan ?? 'free']}
-          </div>
-          <p className="text-muted-foreground text-xs">
-            {PLAN_CREDITS[profile?.plan ?? 'free']}
-          </p>
+          <div className="text-2xl font-bold">{PLAN_LABELS[profile?.plan ?? 'free']}</div>
+          <p className="text-muted-foreground text-xs">{PLAN_CREDITS[profile?.plan ?? 'free']}</p>
         </CardContent>
       </Card>
     </div>
