@@ -319,26 +319,16 @@ Response: { title: string, keywords: string[], description: string, ... }
 
 #### 6-1. 테이블 변경
 
-```sql
--- images 테이블: 제거 또는 사용 이력 로그로 축소
--- 기존: 이미지 파일 관리용
--- 변경: 사용 이력 기록용 (선택사항)
-
--- usage_logs 테이블 (신규, 선택사항)
-CREATE TABLE usage_logs (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
-  action TEXT NOT NULL,          -- 'generate', 'embed', 'download'
-  site_type TEXT,                -- 'adobe', 'shutterstock', 'local'
-  credits_used INTEGER DEFAULT 1,
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
-```
+- [x] `images` 테이블 DROP (`supabase/migrations/001_cleanup_and_usage_logs.sql`)
+- [x] `metadata` 테이블 DROP
+- [x] `usage_logs` 테이블 CREATE (RLS + 인덱스 포함)
+- [x] `types/database.ts` 정리 — `ImageStatus`, `StorageType`, `Image`, `Metadata`, `ImageWithMetadata` 제거, `UsageLog` 추가
+- [x] `/api/generate` 라우트에 usage_logs INSERT 추가
 
 #### 6-2. 크레딧 관련 (유지)
 
-- `profiles` 테이블의 `credits_subscription`, `credits_purchased` 컬럼 유지
-- 월간 크레딧 리셋 Edge Function 유지
+- [x] `profiles` 테이블의 `credits_subscription`, `credits_purchased` 컬럼 유지
+- [x] 월간 크레딧 리셋 Edge Function 유지
 
 ---
 

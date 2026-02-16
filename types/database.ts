@@ -1,9 +1,5 @@
 export type UserPlan = 'free' | 'pro' | 'max';
 
-export type ImageStatus = 'uploading' | 'processing' | 'completed' | 'failed';
-
-export type StorageType = 'compressed' | 'original';
-
 export interface Profile {
   id: string;
   email: string;
@@ -17,40 +13,6 @@ export interface Profile {
   updated_at: string;
 }
 
-export interface Image {
-  id: string;
-  user_id: string;
-  storage_path: string;
-  original_filename: string;
-  file_size: number;
-  mime_type: string;
-  width?: number;
-  height?: number;
-  status: ImageStatus;
-  storage_type: StorageType;
-  error_message?: string;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface Metadata {
-  id: string;
-  image_id: string;
-  tags: string[];
-  title?: string;
-  description?: string;
-  keywords?: string[];
-  category?: string;
-  ai_confidence?: number;
-  embedded: boolean;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface ImageWithMetadata extends Image {
-  metadata?: Metadata;
-}
-
 export interface AIGeneratedMetadata {
   title: string;
   description: string;
@@ -58,4 +20,13 @@ export interface AIGeneratedMetadata {
   tags: string[];
   category: string;
   confidence: number;
+}
+
+export interface UsageLog {
+  id: string;
+  user_id: string;
+  action: 'generate' | 'embed' | 'download';
+  site_type: string | null;
+  credits_used: number;
+  created_at: string;
 }

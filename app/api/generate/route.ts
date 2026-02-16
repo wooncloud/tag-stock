@@ -46,7 +46,20 @@ export async function POST(request: Request) {
       console.error('Credit deduction failed:', creditError);
     }
 
-    // 6. 결과 반환
+    // 6. 사용 이력 기록 (실패해도 무시)
+    await supabase
+      .from('usage_logs')
+      .insert({
+        user_id: userId,
+        action: 'generate',
+        site_type: body.siteType,
+        credits_used: 1,
+      })
+      .then(({ error: logError }) => {
+        if (logError) console.warn('Usage log insert failed:', logError.message);
+      });
+
+    // 7. 결과 반환
     return NextResponse.json(metadata);
   } catch (error) {
     if (error instanceof ApiAuthError) {
