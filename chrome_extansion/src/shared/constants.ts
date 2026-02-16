@@ -1,9 +1,4 @@
 /**
- * Gemini AI 모델 설정
- */
-export const AI_MODEL = 'gemini-flash-latest';
-
-/**
  * 사이드패널에 유지할 최대 로그 항목 수
  */
 export const MAX_LOG_ENTRIES = 20;
@@ -29,13 +24,6 @@ export const SITE_PATTERNS = {
     HOSTNAME: 'shutterstock.com',
     UPLOAD_PATH: '/portfolio/not_submitted/photo',
   },
-} as const;
-
-/**
- * 크롬 저장소 키
- */
-export const STORAGE_KEYS = {
-  API_KEY: 'geminiApiKey',
 } as const;
 
 /**

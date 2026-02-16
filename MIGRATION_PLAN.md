@@ -122,15 +122,15 @@ Response: { title: string, keywords: string[], description: string, ... }
 
 #### 2-1. Gemini 직접 호출 제거
 
-- [ ] `chrome_extansion/src/core/ai/gemini-client.ts` 수정
+- [x] `chrome_extansion/src/core/ai/gemini-client.ts` 수정
   - Gemini SDK 직접 호출 → `fetch('https://tagstock.app/api/generate')` 로 변경
   - Supabase access token을 Authorization 헤더에 포함
-- [ ] `VITE_GEMINI_API_KEY` 환경변수 제거
-- [ ] `@google/genai` 패키지 제거 (익스텐션에서)
+- [x] `VITE_GEMINI_API_KEY` 환경변수 제거
+- [x] `@google/genai` 패키지 제거 (익스텐션에서)
 
 #### 2-2. 이미지 리사이즈 로직 추가
 
-- [ ] `chrome_extansion/src/core/utils/image.ts`에 리사이즈 함수 추가
+- [x] `chrome_extansion/src/core/utils/image.ts`에 리사이즈 함수 추가
   - Canvas API 사용
   - AI 분석용: 긴 변 기준 1024~2048px, JPEG 품질 0.8 → ~200KB 이하
   - 원본 이미지는 로컬 메모리에 유지 (IPTC 삽입용)

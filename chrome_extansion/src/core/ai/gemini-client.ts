@@ -1,83 +1,43 @@
-import { GoogleGenAI, Type } from '@google/genai';
+import { createClient } from '../../lib/supabase/client';
+import { LINKS } from '../../shared/constants';
+import type { AIMetadataResult, SiteType } from '../../shared/types';
 
-import { AI_MODEL } from '../../shared/constants';
-import type { AIMetadataResult } from '../../shared/types';
+const API_BASE_URL = LINKS.HOME;
 
 /**
- * Gemini AI를 사용하여 메타데이터를 생성합니다.
- * @param systemPrompt - AI 모델을 위한 프롬프트
- * @param imageBase64 - Base64로 인코딩된 이미지 데이터
- * @returns 제목과 키워드가 포함된 생성된 메타데이터
+ * 서버 프록시를 통해 AI 메타데이터를 생성합니다.
+ * Gemini API 키는 서버에만 존재하며, 익스텐션은 Supabase access token으로 인증합니다.
  */
 export async function generateMetadata(
-  systemPrompt: string,
+  siteType: SiteType,
   imageBase64: string
 ): Promise<AIMetadataResult> {
   try {
-    // 환경 변수에서 API 키 가져오기 (빌드 시 설정됨)
-    const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+    const supabase = createClient();
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
 
-    if (!apiKey) {
-      throw new Error(
-        'Gemini API key not configured. Please set VITE_GEMINI_API_KEY in .env file.'
-      );
+    if (!session?.access_token) {
+      throw new Error('Not authenticated. Please login first.');
     }
 
-    const ai = new GoogleGenAI({
-      apiKey,
+    const response = await fetch(`${API_BASE_URL}api/generate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${session.access_token}`,
+      },
+      body: JSON.stringify({ imageBase64, siteType }),
     });
 
-    const config = {
-      responseMimeType: 'application/json',
-      responseSchema: {
-        type: Type.OBJECT,
-        required: ['title', 'keyword'],
-        properties: {
-          title: {
-            type: Type.STRING,
-          },
-          keyword: {
-            type: Type.ARRAY,
-            items: {
-              type: Type.STRING,
-            },
-          },
-        },
-      },
-    };
-
-    const contents = [
-      {
-        role: 'user',
-        parts: [
-          {
-            text: systemPrompt,
-          },
-          {
-            inlineData: {
-              data: imageBase64,
-              mimeType: 'image/jpeg',
-            },
-          },
-        ],
-      },
-    ];
-
-    const response = await ai.models.generateContent({
-      model: AI_MODEL,
-      config,
-      contents,
-    });
-
-    if (!response.candidates || !response.candidates[0] || !response.candidates[0].content) {
-      throw new Error('Response structure is different from expected.');
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      const errorMessage = (errorData as { error?: string }).error || `Server error: ${response.status}`;
+      throw new Error(errorMessage);
     }
 
-    const resultText = response.candidates[0].content.parts?.[0]?.text;
-    if (!resultText) {
-      throw new Error('Empty response from AI model.');
-    }
-    return JSON.parse(resultText) as AIMetadataResult;
+    return (await response.json()) as AIMetadataResult;
   } catch (error) {
     console.error('Error during AI generation:', error);
     throw error;

@@ -1,24 +1,7 @@
 import type { AIMetadataResult, SiteConfig, SiteType } from '../../shared/types';
 import { detectStockSite, getSiteConfig } from '../sites/detector';
-import { getImageAsBase64, getThumbnailImage } from '../utils/image';
+import { getImageAsBase64, getThumbnailImage, resizeImageForAI } from '../utils/image';
 import { generateMetadata } from './gemini-client';
-import { ADOBE_STOCK_PROMPT } from './prompts/adobe';
-import { SHUTTERSTOCK_PROMPT } from './prompts/shutterstock';
-
-/**
- * 해당 사이트 유형에 적합한 프롬프트를 가져옵니다.
- */
-function getPromptForSite(siteType: SiteType): string {
-  switch (siteType) {
-    case 'adobe':
-      return ADOBE_STOCK_PROMPT;
-    case 'shutterstock':
-      return SHUTTERSTOCK_PROMPT;
-    default:
-      console.warn(`Unknown site type: ${siteType}, using default prompt.`);
-      return ADOBE_STOCK_PROMPT;
-  }
-}
 
 /**
  * 키워드 문자열에서 영문 키워드만 필터링합니다.
@@ -65,6 +48,7 @@ function postProcessMetadata(
 
 /**
  * 현재 사이트에 대한 AI 메타데이터를 생성합니다.
+ * 서버 프록시(/api/generate)를 통해 Gemini AI를 호출합니다.
  */
 export async function generateAIMetadata(): Promise<AIMetadataResult> {
   try {
@@ -78,17 +62,17 @@ export async function generateAIMetadata(): Promise<AIMetadataResult> {
 
     console.debug(`Detected site: ${siteType} (${siteConfig.name})`);
 
-    // 사이트에 적합한 프롬프트 선택
-    const systemPrompt = getPromptForSite(siteType);
-
     console.debug('Searching for thumbnail image...');
     const thumbnail = getThumbnailImage();
 
     console.debug('Converting image...', thumbnail.src);
-    const imageBase64 = await getImageAsBase64(thumbnail.src);
+    const rawBase64 = await getImageAsBase64(thumbnail.src);
+
+    console.debug('Resizing image for AI analysis...');
+    const imageBase64 = await resizeImageForAI(rawBase64);
 
     console.debug(`${siteConfig.name} AI metadata generation in progress...`);
-    const result = await generateMetadata(systemPrompt, imageBase64);
+    const result = await generateMetadata(siteType, imageBase64);
 
     console.debug('Generated metadata:', result);
 

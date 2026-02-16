@@ -23,7 +23,6 @@
   "author": "TagStock",
   "license": "MIT",
   "dependencies": {
-    "@google/genai": "^1.0.2",
     "@supabase/supabase-js": "^2.93.3"
   },
   "devDependencies": {

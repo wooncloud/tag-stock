@@ -1,4 +1,4 @@
-import { deductCredit, getUser, hasSufficientCredits } from '../../lib/supabase';
+import { hasSufficientCredits } from '../../lib/supabase';
 import { sendToContentScript } from '../../shared/messenger';
 import type { ContentScriptResponse, SidepanelToContentMessage } from '../../shared/types';
 import { addLog } from '../components/activity-log';
@@ -54,19 +54,11 @@ export async function handleFillClick(): Promise<void> {
     setButtonLoading(false);
 
     if (response && response.success) {
-      // 크레딧 차감
-      const user = await getUser();
-      if (user) {
-        const deducted = await deductCredit(user.id, 1);
-        if (!deducted) {
-          addLog('Warning: Credit deduction failed', 'error');
-        }
-      }
-
+      // 크레딧은 서버(/api/generate)에서 차감됨
       setButtonSuccess();
       addLog(`Metadata generated: "${response.title}"`, 'success');
 
-      // 크레딧 업데이트를 위해 프로필 새로고침
+      // 서버에서 차감된 크레딧 반영을 위해 프로필 새로고침
       await refreshProfile();
     } else {
       throw new Error(response?.error || 'Unknown error');
