@@ -31,7 +31,9 @@ export default async function DashboardPage() {
 
       <div className="p-4">
         <StatsCards profile={profile} />
-        <PlanAlert plan={profile.plan} />
+        <div className="mt-6">
+          <PlanAlert plan={profile.plan} />
+        </div>
       </div>
       <Separator />
       <div className="p-4">
