@@ -2,7 +2,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 
 import { AIGeneratedMetadata } from '@/types/database';
 
-import { type SiteType, getPromptForSite } from './prompts';
+import { type PlanTier, type SiteType, getPromptForSite } from './prompts';
 import { STOCK_METADATA_PROMPT } from './prompts/stock-metadata';
 
 // Gemini AI 초기화
@@ -76,10 +76,11 @@ export async function generateImageMetadata(
  */
 export async function generateSiteMetadata(
   imageBase64: string,
-  siteType: SiteType
+  siteType: SiteType,
+  plan: PlanTier = 'free'
 ): Promise<SiteMetadataResult> {
   try {
-    const prompt = getPromptForSite(siteType);
+    const prompt = getPromptForSite(siteType, plan);
 
     const imagePart = {
       inlineData: {
@@ -103,8 +104,9 @@ export async function generateSiteMetadata(
       throw new Error('Incomplete metadata generated');
     }
 
-    // 키워드 중복 제거 및 제한
-    metadata.keyword = [...new Set(metadata.keyword)].slice(0, 50);
+    // 키워드 중복 제거 및 플랜별 제한
+    const maxKeywords = plan === 'free' ? 20 : 50;
+    metadata.keyword = [...new Set(metadata.keyword)].slice(0, maxKeywords);
 
     // 제목 길이 제한 (200자)
     if (metadata.title.length > 200) {

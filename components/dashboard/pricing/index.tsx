@@ -112,8 +112,8 @@ export function PricingCards({ currentPlan }: PricingCardsProps) {
           period="per month"
           features={[
             '10 credits per month',
-            'AI-powered tagging',
-            'Compressed image storage',
+            'Basic AI tagging (~20 keywords)',
+            'IPTC/XMP metadata embedding',
             'Export metadata',
           ]}
           isCurrentPlan={currentPlan === 'free'}
@@ -130,9 +130,9 @@ export function PricingCards({ currentPlan }: PricingCardsProps) {
           period={`per ${billingCycle === 'monthly' ? 'month' : 'year'}`}
           features={[
             '500 credits per month',
-            'Original quality preserved',
-            'IPTC/XMP metadata embedding',
-            'Up to 10 images at once',
+            'Advanced AI tagging (~50 keywords)',
+            'Batch processing',
+            'Multi-upload',
             'All Free features',
           ]}
           isCurrentPlan={currentPlan === 'pro'}

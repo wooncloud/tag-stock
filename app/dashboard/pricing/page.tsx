@@ -69,25 +69,25 @@ export default async function PricingPage() {
                   <td className="text-muted-foreground px-4 py-3 text-center">2,000</td>
                 </tr>
                 <tr className="border-b">
-                  <td className="px-4 py-3">AI-powered tagging</td>
+                  <td className="px-4 py-3">AI keyword generation</td>
+                  <td className="px-4 py-3 text-center">Basic (~20)</td>
+                  <td className="bg-primary/5 px-4 py-3 text-center font-medium">Advanced (~50)</td>
+                  <td className="text-muted-foreground px-4 py-3 text-center">Advanced (~50)</td>
+                </tr>
+                <tr className="border-b">
+                  <td className="px-4 py-3">IPTC/XMP metadata embedding</td>
                   <td className="px-4 py-3 text-center">✓</td>
                   <td className="bg-primary/5 px-4 py-3 text-center">✓</td>
                   <td className="text-muted-foreground px-4 py-3 text-center">✓</td>
                 </tr>
                 <tr className="border-b">
-                  <td className="px-4 py-3">Image quality</td>
-                  <td className="px-4 py-3 text-center">Compressed</td>
-                  <td className="bg-primary/5 px-4 py-3 text-center font-medium">Original</td>
-                  <td className="text-muted-foreground px-4 py-3 text-center">Original</td>
-                </tr>
-                <tr className="border-b">
-                  <td className="px-4 py-3">IPTC/XMP metadata embedding</td>
+                  <td className="px-4 py-3">Batch processing</td>
                   <td className="px-4 py-3 text-center">-</td>
                   <td className="bg-primary/5 px-4 py-3 text-center">✓</td>
                   <td className="text-muted-foreground px-4 py-3 text-center">✓</td>
                 </tr>
                 <tr className="border-b">
-                  <td className="px-4 py-3">Multi-upload (up to 10)</td>
+                  <td className="px-4 py-3">Multi-upload</td>
                   <td className="px-4 py-3 text-center">-</td>
                   <td className="bg-primary/5 px-4 py-3 text-center">✓</td>
                   <td className="text-muted-foreground px-4 py-3 text-center">✓</td>

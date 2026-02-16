@@ -13,5 +13,9 @@ export async function refreshCredits(): Promise<void> {
     if (el) {
       el.textContent = getTotalCredits(profile).toString();
     }
+    const planBadge = document.getElementById('planBadge');
+    if (planBadge) {
+      planBadge.textContent = profile.plan;
+    }
   }
 }

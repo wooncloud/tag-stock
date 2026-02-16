@@ -35,3 +35,24 @@ export const LOCAL_PROMPT = [
   'Respond ONLY with a valid JSON object:',
   '{"title": "Descriptive title here", "keyword": ["keyword1", "keyword2", "keyword3"]}',
 ].join('\n');
+
+export const LOCAL_PROMPT_FREE = [
+  'You are a stock photography metadata generator.',
+  'Analyze this image and generate metadata suitable for stock photo platforms.',
+  '',
+  'Title Rules:',
+  '- Write in English only, maximum 200 characters',
+  '- Concise and descriptive',
+  '- Start with the main subject',
+  '',
+  'Keyword Rules:',
+  '- Provide 15-20 keywords in English only',
+  '- Order from most specific to broad',
+  '- Include main subject, colors, and concepts',
+  '- Use single words and short phrases',
+  '- NO generic terms like "image", "photo", "picture"',
+  '',
+  'Output Format:',
+  'Respond ONLY with a valid JSON object:',
+  '{"title": "Descriptive title here", "keyword": ["keyword1", "keyword2", "keyword3"]}',
+].join('\n');

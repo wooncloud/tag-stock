@@ -96,7 +96,7 @@ export async function batchAnalyze(imageIds: string[]): Promise<void> {
     } catch (error) {
       if (isInsufficientCreditsError(error)) {
         const progress = `${completed}/${total} images analyzed before credits ran out.`;
-        showCreditModal(progress);
+        showCreditModal({ progress });
         return; // Stop the entire batch
       }
       console.error(`Failed to analyze image ${id}:`, error);

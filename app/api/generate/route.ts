@@ -37,7 +37,7 @@ export async function POST(request: Request) {
     }
 
     // 4. Gemini AI 호출 (이미지는 메모리에서만 처리)
-    const metadata = await generateSiteMetadata(body.imageBase64, body.siteType);
+    const metadata = await generateSiteMetadata(body.imageBase64, body.siteType, profile.plan);
 
     // 5. 크레딧 차감 (성공 후)
     const { error: creditError } = await decrementCredits(supabase, userId, 1);

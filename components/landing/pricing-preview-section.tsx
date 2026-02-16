@@ -29,8 +29,8 @@ export function PricingPreviewSection() {
             <CardContent className="flex-1">
               <ul className="space-y-3">
                 <PricingFeature text="10 credits per month" />
-                <PricingFeature text="AI-powered tagging" />
-                <PricingFeature text="Compressed image storage" />
+                <PricingFeature text="Basic AI tagging (~20 keywords)" />
+                <PricingFeature text="IPTC/XMP metadata embedding" />
                 <PricingFeature text="Export metadata" />
               </ul>
             </CardContent>
@@ -54,9 +54,9 @@ export function PricingPreviewSection() {
             <CardContent className="flex-1">
               <ul className="space-y-3">
                 <PricingFeature text="500 credits per month" bold />
-                <PricingFeature text="Original quality preserved" />
-                <PricingFeature text="IPTC/XMP metadata embedding" bold />
-                <PricingFeature text="Up to 10 images at once" />
+                <PricingFeature text="Advanced AI tagging (~50 keywords)" bold />
+                <PricingFeature text="Batch processing" />
+                <PricingFeature text="Multi-upload" />
                 <PricingFeature text="All Free features" />
               </ul>
             </CardContent>

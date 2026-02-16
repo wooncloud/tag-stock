@@ -46,7 +46,7 @@ export function renderGrid(): void {
           </div>
           <img src="${img.thumbnailDataUrl}" alt="${escapeHtml(img.file.name)}" class="aspect-square w-full object-cover" />
           <button class="card-detail-btn" data-detail-id="${img.id}">
-            <img src="../../assets/icons/square-arrow-out-up-right.svg" alt="" class="h-3 w-3" />
+            <img src="../../assets/icons/square-arrow-out-up-right.svg" alt="" class="h-3 w-3 brightness-0 invert" />
             Detail
           </button>
           <div class="p-2">

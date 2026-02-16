@@ -18,6 +18,9 @@
             <span id="fileCount" class="text-xs opacity-70">0 files</span>
           </div>
           <div class="flex items-center gap-3">
+            <span id="planBadge" class="rounded-full bg-white/20 px-2 py-0.5 text-xs uppercase"
+              >free</span
+            >
             <div class="mr-2 text-right">
               <div class="text-xs opacity-70">Credits</div>
               <div id="creditDisplay" class="text-base font-bold">--</div>
@@ -224,8 +227,8 @@
       <div class="credit-modal-icon">
         <img src="../../assets/icons/zap.svg" alt="Credits" class="mx-auto h-10 w-10" />
       </div>
-      <h2 class="text-lg font-semibold">Credits Exhausted</h2>
-      <p class="text-muted-foreground mt-2 text-sm">
+      <h2 id="creditModalTitle" class="text-lg font-semibold">Credits Exhausted</h2>
+      <p id="creditModalDesc" class="text-muted-foreground mt-2 text-sm">
         All credits have been used. Purchase more credits or upgrade your plan to continue analyzing
         images.
       </p>

@@ -7,7 +7,7 @@ import {
   setBatchAnalyzeLoading,
   setBatchDownloadLoading,
 } from './components/action-buttons';
-import { initCreditModal, showCreditModal } from './components/credit-modal';
+import { initCreditModal, showCreditModal, showUpgradeModal } from './components/credit-modal';
 import { getCurrentModalImageId, initDetailModal } from './components/detail-panel';
 import { initFilePicker } from './components/file-picker';
 import { initHelpPopover } from './components/help-popover';
@@ -15,7 +15,7 @@ import { renderGrid } from './components/image-grid';
 import { initMetadataEditor } from './components/metadata-editor';
 import { analyzeImage, batchAnalyze, isInsufficientCreditsError } from './handlers/ai-handler';
 import { batchEmbedAndDownload, embedAndDownload } from './handlers/iptc-handler';
-import { getCheckedIds } from './state';
+import { getCheckedIds, getCurrentProfile } from './state';
 
 export function setupEventListeners(): void {
   initFilePicker();
@@ -29,6 +29,13 @@ export function setupEventListeners(): void {
   getBatchAnalyzeBtn().addEventListener('click', async () => {
     const checkedIds = Array.from(getCheckedIds());
     if (checkedIds.length === 0) return;
+
+    // Free 플랜은 배치 분석 불가
+    const profile = getCurrentProfile();
+    if (profile?.plan === 'free') {
+      showUpgradeModal('Batch processing');
+      return;
+    }
 
     setBatchAnalyzeLoading(true);
     try {
