@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import { MDXRemote } from 'next-mdx-remote/rsc';
+import remarkGfm from 'remark-gfm';
 
 import { getAllPosts, getPostBySlug } from '@/lib/blog';
 
@@ -40,13 +41,13 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
       tags: post.tags,
       images: post.coverImage
         ? [
-            {
-              url: post.coverImage,
-              width: 1200,
-              height: 630,
-              alt: post.title,
-            },
-          ]
+          {
+            url: post.coverImage,
+            width: 1200,
+            height: 630,
+            alt: post.title,
+          },
+        ]
         : undefined,
     },
     twitter: {
@@ -81,7 +82,11 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
         {/* MDX Content */}
         <div className="prose-blog">
-          <MDXRemote source={post.content} components={mdxComponents} />
+          <MDXRemote
+            source={post.content}
+            components={mdxComponents}
+            options={{ mdxOptions: { remarkPlugins: [remarkGfm] } }}
+          />
         </div>
       </div>
     </article>

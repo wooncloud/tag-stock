@@ -1,0 +1,365 @@
+---
+title: 'TagStock Chrome Extension: The Complete Guide to Faster Uploads'
+date: '2025-02-15'
+description: 'A step-by-step guide to installing, setting up, and using the TagStock Chrome Extension to automate metadata entry on Adobe Stock and Shutterstock upload pages.'
+category: 'Tutorial'
+tags: ['chrome-extension', 'tutorial', 'adobe-stock', 'shutterstock', 'automation', 'workflow']
+---
+
+# TagStock Chrome Extension: The Complete Guide to Faster Uploads
+
+The TagStock Chrome Extension is your secret weapon for cutting upload time in half. Instead of switching between tools to copy-paste metadata, the extension works directly on Adobe Stock and Shutterstock upload pages—analyzing your images and filling in titles and keywords automatically.
+
+This comprehensive guide walks you through everything from installation to advanced usage.
+
+## What the Chrome Extension Does
+
+The TagStock Chrome Extension adds a powerful **Side Panel** to your Chrome browser that:
+
+- **Detects** which stock platform you're on (Adobe Stock or Shutterstock)
+- **Analyzes** the image currently selected on the upload page
+- **Generates** AI-powered titles and keywords using Google Gemini
+- **Fills** the metadata form fields automatically
+- **Saves** your changes with one click
+
+All of this happens without leaving the stock site upload page.
+
+## Installation Guide
+
+### Step 1: Download the Extension
+
+Download the TagStock Chrome Extension package from your [TagStock Dashboard](/dashboard). The extension is available exclusively for Pro plan subscribers.
+
+### Step 2: Install in Chrome
+
+Since the extension is currently distributed as a developer package, follow these steps:
+
+1. Open Chrome and navigate to `chrome://extensions`
+2. Enable **Developer Mode** by toggling the switch in the top-right corner
+3. Click **"Load unpacked"** button
+4. Select the `dist` folder from the downloaded extension package
+5. The TagStock icon will appear in your Chrome toolbar
+
+> **Tip:** Pin the TagStock extension to your toolbar for quick access. Click the puzzle piece icon (🧩) in Chrome's toolbar, find TagStock, and click the pin icon.
+
+### Step 3: Sign In
+
+1. Click the TagStock icon in your toolbar to open the Side Panel
+2. The Side Panel will display a loading screen while checking your account
+3. Click **"Continue with Google"** to sign in with your TagStock account
+4. Once authenticated, you'll see your email, plan type, and remaining credits
+
+## Understanding the Side Panel Interface
+
+The TagStock Side Panel is your command center. Here's what each section does:
+
+### Header
+
+The top bar displays the TagStock logo and version. You'll find three icons:
+
+- 🏠 **Home** — Opens the TagStock website
+- 💬 **Contact** — Opens the contact page for support
+- 🚪 **Sign Out** — Signs you out of the extension
+
+### User Info & Credits
+
+Below the header, you'll see:
+
+- **Your email address** — The account you're signed in with
+- **Plan type** — "Free Plan" or "Pro Plan"
+- **Credits remaining** — Each AI metadata generation uses 1 credit
+
+> **Note:** If your credits are running low, a yellow warning banner will appear reminding you to upgrade or wait for your monthly credit refresh.
+
+### Current Page Status
+
+This card shows whether the extension recognizes the current page:
+
+| Status | Meaning |
+|--------|---------|
+| ✅ Ready | You're on a supported upload page—ready to generate metadata |
+| ⚠️ Unsupported | The current page isn't a recognized stock site upload page |
+| 🔍 Checking... | The extension is analyzing the current page |
+
+### Fill Metadata Button
+
+The main action button. When active, it:
+
+1. Captures the currently selected image from the upload page
+2. Sends it to Google Gemini AI for analysis
+3. Generates a title and relevant keywords
+4. Fills the form fields on the page automatically
+5. Triggers auto-save after a short delay
+
+### Quick Links
+
+Three shortcut buttons that open directly:
+
+- **Adobe Stock** — Opens `contributor.stock.adobe.com` upload page
+- **Shutterstock** — Opens `submit.shutterstock.com` upload page
+- **Local Files** — Opens the local file processing mode for offline metadata generation
+
+### Activity Log
+
+A real-time log showing all extension actions. Useful for:
+
+- Confirming metadata was generated successfully
+- Troubleshooting errors
+- Tracking which images have been processed
+
+You can clear the log by clicking the "Clear" button.
+
+## Using the Extension: Adobe Stock Workflow
+
+### Step-by-Step Process
+
+**1. Navigate to Adobe Stock uploads**
+
+Go to [contributor.stock.adobe.com](https://contributor.stock.adobe.com/kr/uploads) and log in to your contributor account.
+
+**2. Upload your images**
+
+Upload your images through Adobe Stock's upload interface as you normally would.
+
+**3. Select an image**
+
+Click on a single image to open its metadata editing panel. You'll see the familiar title and keyword fields on the right side.
+
+**4. Open TagStock Side Panel**
+
+Click the TagStock icon in your Chrome toolbar. The Side Panel will open on the right side of your browser. The status should show "✅ Ready" if you're on the correct page.
+
+**5. Generate and fill metadata**
+
+You have two options:
+
+- **Click the "Fill Metadata" button** in the Side Panel
+- **Press `⌘E` (Mac) or `Ctrl+E` (Windows/Linux)** for faster access
+
+**6. Review the results**
+
+The AI will:
+- Fill in the **title field** with a descriptive, natural-language title
+- Fill in the **keyword field** with comma-separated keywords optimized for Adobe Stock
+- Automatically click the **Save** button after a brief delay
+
+**7. Move to the next image**
+
+Click the next image in your upload queue and repeat the process. Each generation uses 1 credit.
+
+### Adobe Stock Tips
+
+- Adobe Stock supports up to 25 keywords—TagStock generates keywords within this limit
+- Titles should be descriptive sentences, not keyword lists
+- The extension reads the image directly from the Adobe Stock page, so no additional upload is needed
+
+## Using the Extension: Shutterstock Workflow
+
+### Step-by-Step Process
+
+**1. Navigate to Shutterstock Submit**
+
+Go to [submit.shutterstock.com](https://submit.shutterstock.com/) and log in to your contributor account.
+
+**2. Upload your content**
+
+Upload your images through Shutterstock's submission interface.
+
+**3. Select an image for editing**
+
+Click on an uploaded image to open the editing view. You'll see the description and keyword input fields.
+
+**4. Open TagStock Side Panel**
+
+Click the TagStock extension icon. The status badge should show "✅ Ready" when on the Shutterstock upload page.
+
+**5. Generate and fill metadata**
+
+Use either:
+- **"Fill Metadata" button** in the Side Panel
+- **Keyboard shortcut `⌘E` / `Ctrl+E`**
+
+**6. Review the results**
+
+The extension handles Shutterstock's unique keyword input:
+- **Description field** is filled with the AI-generated title
+- **Keywords** are entered individually into Shutterstock's keyword input field, which requires single entries rather than comma-separated lists
+- The extension simulates keyboard input to properly register each keyword
+- **Auto-save** is triggered after completion
+
+**7. Continue with your batch**
+
+Select the next image and repeat. The extension maintains your authentication throughout the session.
+
+### Shutterstock Tips
+
+- Shutterstock allows up to 50 keywords—take advantage of the higher limit
+- The keyword input system on Shutterstock works differently (individual entries), and TagStock handles this automatically
+- Always review the generated description for accuracy
+
+## Keyboard Shortcuts
+
+The keyboard shortcut is the fastest way to use the extension:
+
+| Shortcut | Platform | Action |
+|----------|----------|--------|
+| `⌘E` | Mac | Generate and fill metadata |
+| `Ctrl+E` | Windows/Linux | Generate and fill metadata |
+
+The shortcut works as long as:
+- The TagStock Side Panel is open
+- You're on a supported upload page
+- An image is selected for editing
+- You have remaining credits
+
+## Comparing Workflows: Before & After
+
+### Without TagStock Extension
+
+```
+1. Take a photo                         ✅ 
+2. Edit in Lightroom                    ✅
+3. Export files                         ✅
+4. Open TagStock web dashboard          ⏱️ 1 min
+5. Upload image to TagStock             ⏱️ 1 min
+6. Generate AI metadata                 ⏱️ 30 sec
+7. Copy title                           ⏱️ 10 sec
+8. Switch to Adobe Stock tab            ⏱️ 5 sec
+9. Paste title into Adobe Stock         ⏱️ 10 sec
+10. Switch back to TagStock              ⏱️ 5 sec
+11. Copy keywords                        ⏱️ 10 sec
+12. Switch to Adobe Stock tab            ⏱️ 5 sec
+13. Paste keywords into Adobe Stock      ⏱️ 10 sec
+14. Click Save                           ⏱️ 5 sec
+
+Total metadata time per image: ~3.5 minutes
+For 50 images: ~175 minutes (nearly 3 hours)
+```
+
+### With TagStock Extension
+
+```
+1. Take a photo                         ✅
+2. Edit in Lightroom                    ✅
+3. Export files                         ✅
+4. Open Adobe Stock upload page         ⏱️ 30 sec
+5. Upload images to Adobe Stock         ⏱️ 1 min
+6. Select image → Press ⌘E             ⏱️ 10 sec
+7. AI fills title + keywords + saves    ⏱️ 5 sec
+8. Quick review                         ⏱️ 30 sec
+
+Total metadata time per image: ~45 seconds
+For 50 images: ~37 minutes
+```
+
+**That's a 78% time reduction** with the Chrome Extension compared to the manual copy-paste workflow.
+
+## Troubleshooting
+
+### "Unsupported Page" Status
+
+**Problem:** The extension shows "Unsupported" status even though you're on Adobe Stock or Shutterstock.
+
+**Solutions:**
+- Make sure you're on the **upload/submission** page, not the main website
+- For Adobe Stock: `contributor.stock.adobe.com/kr/uploads`
+- For Shutterstock: `submit.shutterstock.com`
+- Try refreshing the page
+
+### Metadata Not Filling
+
+**Problem:** You click "Fill Metadata" but nothing happens.
+
+**Solutions:**
+- Ensure an image is **selected** on the upload page (click on it first)
+- Check that the Side Panel shows "✅ Ready" status
+- Verify you have remaining credits
+- Check the Activity Log for error messages
+
+### Form Fields Not Detected
+
+**Problem:** The extension can't find the title or keyword fields.
+
+**Solutions:**
+- Wait for the upload page to fully load before using the extension
+- Don't modify the page with other extensions that might change the DOM
+- Try refreshing the page and waiting 3-5 seconds before using TagStock
+
+### Keyboard Shortcut Not Working
+
+**Problem:** Pressing `⌘E` / `Ctrl+E` doesn't trigger metadata generation.
+
+**Solutions:**
+- Ensure the Side Panel is **open** (click the TagStock icon first)
+- Click somewhere on the page first to ensure the page has focus
+- Check that the shortcut isn't conflicting with another extension
+
+### Credits Not Showing
+
+**Problem:** Credit display shows "--" or "0".
+
+**Solutions:**
+- Try signing out and signing back in
+- Check your subscription status at [tagstock.app/dashboard](/dashboard)
+- Credits refresh monthly—check if your refresh date has passed
+
+## Best Practices
+
+### Batch Processing Workflow
+
+For maximum efficiency, follow this workflow:
+
+1. **Upload all images** to the stock platform first
+2. **Open the Side Panel** once
+3. **Process images sequentially** — select image → `⌘E` → review → next
+4. **Don't switch tabs** while processing to maintain the Side Panel connection
+
+### Quality Control
+
+While the AI is highly accurate, always:
+
+- **Check the title** — Does it accurately describe YOUR specific image?
+- **Scan keywords** — Remove any that don't apply
+- **Add specialty terms** — Include niche keywords the AI might miss
+- **Verify formatting** — Ensure keywords look correct in the platform's UI
+
+### Multi-Platform Strategy
+
+If you upload to both Adobe Stock and Shutterstock:
+
+1. Process all images on **one platform first**
+2. Then switch to the **other platform** and process the same batch
+3. The extension adapts metadata format automatically for each platform
+
+## Frequently Asked Questions
+
+**Q: Does the extension work on other stock sites?**
+A: Currently, TagStock supports Adobe Stock and Shutterstock. Support for additional platforms like iStock/Getty, 123RF, and Dreamstime is planned for future updates.
+
+**Q: Do I need to upload images to TagStock separately?**
+A: No! The extension reads images directly from the stock platform's upload page. No additional upload step is needed.
+
+**Q: How many credits does each generation use?**
+A: Each "Fill Metadata" generation uses 1 credit. Credits are included with your Pro plan subscription and refresh monthly.
+
+**Q: Can I edit the metadata after the extension fills it?**
+A: Absolutely. The extension fills the existing form fields on the stock platform. You can edit, add, or remove any content just as you normally would.
+
+**Q: Does the extension store my images?**
+A: No. The extension processes images in real-time and does not store or upload your images anywhere beyond the stock platform you're already using.
+
+**Q: Will the extension work with browser updates?**
+A: The extension uses Chrome's Manifest V3 standard, which is the latest and most secure extension framework. It will remain compatible with future Chrome updates.
+
+## Get Started
+
+Ready to transform your upload workflow? Here's how to begin:
+
+1. **Upgrade to Pro Plan** at [tagstock.app/dashboard](/dashboard) if you haven't already
+2. **Download the extension** from your dashboard
+3. **Install following the guide above**
+4. **Open your first upload page** and press `⌘E`
+
+Welcome to faster, smarter stock photography uploads.
+
+[Upgrade to Pro and get the Chrome Extension →](/dashboard)
