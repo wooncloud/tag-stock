@@ -2,6 +2,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 
 import { AIGeneratedMetadata } from '@/types/database';
 
+import { type SiteType, getPromptForSite } from './prompts';
 import { STOCK_METADATA_PROMPT } from './prompts/stock-metadata';
 
 // Gemini AI 초기화
@@ -14,6 +15,11 @@ const genAI = new GoogleGenerativeAI(apiKey || '');
 const model = genAI.getGenerativeModel({
   model: 'gemini-flash-latest',
 });
+
+export interface SiteMetadataResult {
+  title: string;
+  keyword: string[];
+}
 
 /**
  * 스톡 사진을 위한 최적화된 메타데이터를 생성합니다.
@@ -61,6 +67,54 @@ export async function generateImageMetadata(
   } catch (error) {
     console.error('Gemini AI error:', error);
     throw new Error('Failed to generate metadata');
+  }
+}
+
+/**
+ * 사이트별 프롬프트를 사용하여 메타데이터를 생성합니다.
+ * 크롬 익스텐션 API 프록시용 (title + keyword[] 형식)
+ */
+export async function generateSiteMetadata(
+  imageBase64: string,
+  siteType: SiteType
+): Promise<SiteMetadataResult> {
+  try {
+    const prompt = getPromptForSite(siteType);
+
+    const imagePart = {
+      inlineData: {
+        data: imageBase64,
+        mimeType: 'image/jpeg',
+      },
+    };
+
+    const result = await model.generateContent([prompt, imagePart]);
+    const response = await result.response;
+    const text = response.text();
+
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      throw new Error('Invalid response format from AI');
+    }
+
+    const metadata = JSON.parse(jsonMatch[0]) as SiteMetadataResult;
+
+    if (!metadata.title || !metadata.keyword) {
+      throw new Error('Incomplete metadata generated');
+    }
+
+    // 키워드 중복 제거 및 제한
+    metadata.keyword = [...new Set(metadata.keyword)].slice(0, 50);
+
+    // 제목 길이 제한 (200자)
+    if (metadata.title.length > 200) {
+      metadata.title = metadata.title.substring(0, 200);
+    }
+
+    return metadata;
+  } catch (error) {
+    console.error('Gemini AI error (site metadata):', error);
+    throw new Error('Failed to generate site metadata');
   }
 }
 

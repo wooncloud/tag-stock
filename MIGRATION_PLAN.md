@@ -87,7 +87,7 @@
 
 #### 1-1. 서버 API 엔드포인트 생성
 
-- [ ] `app/api/generate/route.ts` 생성 (또는 기존 구조 활용)
+- [x] `app/api/generate/route.ts` 생성 (또는 기존 구조 활용)
   - Supabase JWT 인증 검증
   - 크레딧 잔여량 확인 및 차감
   - 리사이즈된 이미지(Base64) 수신
@@ -102,16 +102,16 @@ Body: { imageBase64: string, siteType: 'adobe' | 'shutterstock' | 'local' }
 Response: { title: string, keywords: string[], description: string, ... }
 ```
 
-- [ ] `app/api/credits/route.ts` 생성
+- [x] `app/api/credits/route.ts` 생성
   - 크레딧 잔여량 조회 API
   - 익스텐션에서 실시간 크레딧 표시에 활용
 
 #### 1-2. 프롬프트 통합
 
-- [ ] 현재 프롬프트가 2곳에 분산됨:
+- [x] 현재 프롬프트가 2곳에 분산됨:
   - 웹 앱: `services/prompts/`
   - 익스텐션: `chrome_extansion/src/core/ai/prompts/`
-- [ ] 서버에 프롬프트를 통합 관리
+- [x] 서버에 프롬프트를 통합 관리
   - 사이트별(Adobe, Shutterstock) + 로컬 파일용 프롬프트
 
 ---
