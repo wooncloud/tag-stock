@@ -1,16 +1,13 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
-import { Sparkles, Upload } from 'lucide-react';
+import { Chrome, Sparkles } from 'lucide-react';
 
 import { ensureAuthenticated } from '@/lib/supabase/auth';
-import { getSignedUrls } from '@/lib/supabase/storage';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
-import { EmptyState } from '@/components/dashboard/shared/empty-state';
-import { RecentImagesList } from '@/components/dashboard/shared/recent-images-list';
 import { StatsCards } from '@/components/dashboard/stats/stats-cards';
 
 export default async function DashboardPage() {
@@ -21,18 +18,7 @@ export default async function DashboardPage() {
     redirect('/login');
   }
 
-  const { user, profile, supabase } = session;
-
-  const { data: images, count } = await supabase
-    .from('images')
-    .select('*', { count: 'exact' })
-    .eq('user_id', user.id)
-    .order('created_at', { ascending: false })
-    .limit(5);
-
-  const imagesWithUrls = await getSignedUrls(supabase, images);
-
-  const hasImages = imagesWithUrls && imagesWithUrls.length > 0;
+  const { profile } = session;
 
   return (
     <div className="space-y-6">
@@ -44,58 +30,41 @@ export default async function DashboardPage() {
       </div>
 
       {/* Stats Cards */}
-      <StatsCards profile={profile} imageCount={count || 0} />
+      <StatsCards profile={profile} />
 
-      {/* Recent Images or Empty State */}
+      {/* Quick Start */}
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle>Recent Images</CardTitle>
-              <CardDescription>List of recently uploaded images</CardDescription>
-            </div>
-            {hasImages && (
-              <Button asChild>
-                <Link href="/dashboard/images">View All</Link>
-              </Button>
-            )}
-          </div>
+          <CardTitle>Quick Start</CardTitle>
+          <CardDescription>Get started with TagStock</CardDescription>
         </CardHeader>
-        <CardContent>
-          {hasImages ? <RecentImagesList images={imagesWithUrls} /> : <EmptyState />}
+        <CardContent className="grid gap-4 md:grid-cols-2">
+          <Button asChild variant="outline" className="h-auto p-6">
+            <a
+              href="https://chromewebstore.google.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-col items-center gap-2"
+            >
+              <Chrome className="h-8 w-8" />
+              <span className="font-semibold">Chrome Extension</span>
+              <span className="text-muted-foreground text-center text-xs">
+                Install the extension to tag your stock photos
+              </span>
+            </a>
+          </Button>
+
+          <Button asChild variant="outline" className="h-auto p-6">
+            <Link href="/dashboard/pricing" className="flex flex-col items-center gap-2">
+              <Sparkles className="h-8 w-8" />
+              <span className="font-semibold">Upgrade to Pro</span>
+              <span className="text-muted-foreground text-center text-xs">
+                Unlimited credits and IPTC metadata embedding
+              </span>
+            </Link>
+          </Button>
         </CardContent>
       </Card>
-
-      {/* Quick Actions */}
-      {!hasImages && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Quick Start</CardTitle>
-            <CardDescription>Take your first step with TagStock</CardDescription>
-          </CardHeader>
-          <CardContent className="grid gap-4 md:grid-cols-2">
-            <Button asChild variant="outline" className="h-auto p-6">
-              <Link href="/dashboard/upload" className="flex flex-col items-center gap-2">
-                <Upload className="h-8 w-8" />
-                <span className="font-semibold">Upload Image</span>
-                <span className="text-muted-foreground text-center text-xs">
-                  Upload your first image and start AI tagging
-                </span>
-              </Link>
-            </Button>
-
-            <Button asChild variant="outline" className="h-auto p-6">
-              <Link href="/dashboard/pricing" className="flex flex-col items-center gap-2">
-                <Sparkles className="h-8 w-8" />
-                <span className="font-semibold">Upgrade to Pro</span>
-                <span className="text-muted-foreground text-center text-xs">
-                  Unlimited credits and IPTC metadata embedding
-                </span>
-              </Link>
-            </Button>
-          </CardContent>
-        </Card>
-      )}
     </div>
   );
 }

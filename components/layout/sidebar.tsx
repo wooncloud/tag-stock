@@ -3,14 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-import {
-  CreditCard,
-  Image as ImageIcon,
-  LayoutDashboard,
-  Mail,
-  Settings,
-  Upload,
-} from 'lucide-react';
+import { CreditCard, LayoutDashboard, Mail, Settings } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 
@@ -19,16 +12,6 @@ const sidebarItems = [
     title: 'Dashboard',
     href: '/dashboard',
     icon: LayoutDashboard,
-  },
-  {
-    title: 'Upload',
-    href: '/dashboard/upload',
-    icon: Upload,
-  },
-  {
-    title: 'My Images',
-    href: '/dashboard/images',
-    icon: ImageIcon,
   },
   {
     title: 'Settings',

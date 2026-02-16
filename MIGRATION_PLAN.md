@@ -282,37 +282,36 @@ Response: { title: string, keywords: string[], description: string, ... }
 
 #### 5-1. 제거 대상
 
-- [ ] **Server Actions 제거/수정**:
+- [x] **Server Actions 제거/수정**:
   - `app/actions/upload.ts` — 이미지 업로드 로직 제거
   - `app/actions/embed.ts` — IPTC 임베딩 로직 제거 (서버 폴백용 `/api/embed`로 이관)
   - `app/actions/ai.ts` — API 라우트로 이동 (익스텐션에서 호출 가능하도록)
 
-- [ ] **대시보드 수정**:
+- [x] **대시보드 수정**:
   - `app/dashboard/` — 이미지 갤러리 제거
   - 사용 통계 + 크레딧 관리 + 구독 관리만 유지
 
-- [ ] **Supabase Storage 정리**:
+- [x] **Supabase Storage 정리**:
   - `user-images` 버킷 비활성화 또는 삭제
-  - `temp-embed` 버킷 생성 (Phase 4 서버 폴백 전용, TTL 정책 적용)
-  - `lib/supabase/storage.ts` — 불필요한 함수 제거, 임시 업로드/삭제 함수만 유지
-  - `images` 테이블 사용 중단
+  - ~~`temp-embed` 버킷 생성~~ (Phase 4 서버 폴백 미구현, JPEG 로컬 처리로 충분)
+  - `lib/supabase/storage.ts` — 전체 삭제
+  - `images` 테이블 사용 중단 (코드 참조 제거, DB 스키마는 Phase 6)
 
-- [ ] **서버 의존성 정리**:
-  - `sharp` 패키지 제거 (리사이즈를 클라이언트에서 처리하므로)
-  - `exiftool-vendored` — 서버 폴백용으로 유지 여부 결정
-    - Exiv2 WASM으로 모든 포맷 로컬 처리 가능 시 → 제거
-    - 서버 폴백 필요 시 → `/api/embed` 전용으로 유지
-  - `services/metadata-embedder.ts` — 위 결정에 따라 제거 또는 API용으로 축소
+- [x] **서버 의존성 정리**:
+  - `sharp` 패키지 제거
+  - `exiftool-vendored` 패키지 제거 (JPEG 로컬 JS 처리로 대체)
+  - `services/metadata-embedder.ts` 제거
+  - `browser-image-compression`, `piexifjs`, `exif-parser`, `react-dropzone` 제거
 
 #### 5-2. 유지 대상
 
-- [ ] 랜딩 페이지 (`app/page.tsx`, `components/landing/`)
-- [ ] 인증 (`app/auth/`, `lib/supabase/auth.ts`)
-- [ ] 결제 (`services/billing/`, Lemon Squeezy 웹훅)
-- [ ] 크레딧 관리 (`lib/supabase/credits.ts`)
-- [ ] 문의 (`app/contact/`, `services/discord.ts`)
-- [ ] 블로그 (`app/blog/`)
-- [ ] API 프록시 엔드포인트 (신규: `/api/generate`, `/api/credits`, `/api/embed`)
+- [x] 랜딩 페이지 (`app/page.tsx`, `components/landing/`)
+- [x] 인증 (`app/auth/`, `lib/supabase/auth.ts`)
+- [x] 결제 (`services/billing/`, Lemon Squeezy 웹훅)
+- [x] 크레딧 관리 (`lib/supabase/credits.ts`)
+- [x] 문의 (`app/contact/`, `services/discord.ts`)
+- [x] 블로그 (`app/blog/`)
+- [x] API 프록시 엔드포인트 (`/api/generate`, `/api/credits`)
 
 ---
 
