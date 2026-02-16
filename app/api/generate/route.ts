@@ -23,7 +23,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Missing imageBase64 or siteType' }, { status: 400 });
     }
 
-    if (body.siteType !== 'adobe' && body.siteType !== 'shutterstock') {
+    if (
+      body.siteType !== 'adobe' &&
+      body.siteType !== 'shutterstock' &&
+      body.siteType !== 'local'
+    ) {
       return NextResponse.json({ error: 'Invalid siteType' }, { status: 400 });
     }
 

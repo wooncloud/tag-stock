@@ -14,6 +14,7 @@ const homeBtn = document.getElementById('homeBtn') as HTMLButtonElement | null;
 const contactBtn = document.getElementById('contactBtn') as HTMLButtonElement | null;
 const adobeBtn = document.getElementById('adobeBtn') as HTMLButtonElement | null;
 const shutterstockBtn = document.getElementById('shutterstockBtn') as HTMLButtonElement | null;
+const localFilesBtn = document.getElementById('localFilesBtn') as HTMLButtonElement | null;
 const signOutBtn = document.getElementById('signOutBtn') as HTMLButtonElement | null;
 const clearLogBtn = document.getElementById('clearLogBtn') as HTMLButtonElement | null;
 
@@ -44,6 +45,12 @@ export function setupEventListeners(): void {
   if (shutterstockBtn) {
     shutterstockBtn.addEventListener('click', () => {
       chrome.tabs.create({ url: LINKS.SHUTTERSTOCK_PORTFOLIO });
+    });
+  }
+
+  if (localFilesBtn) {
+    localFilesBtn.addEventListener('click', () => {
+      chrome.tabs.create({ url: chrome.runtime.getURL('local/local.html') });
     });
   }
 

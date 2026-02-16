@@ -1,7 +1,7 @@
 /**
  * 지원되는 스톡 사진 사이트
  */
-export type SiteType = 'adobe' | 'shutterstock' | 'unknown';
+export type SiteType = 'adobe' | 'shutterstock' | 'local' | 'unknown';
 
 /**
  * 활동 로깅을 위한 로그 레벨
@@ -93,6 +93,40 @@ export interface UserProfile {
   credits_purchased: number;
   created_at?: string;
   updated_at?: string;
+}
+
+/**
+ * 로컬 파일 처리 상태
+ */
+export type ImageProcessingStatus =
+  | 'pending'
+  | 'analyzing'
+  | 'ready'
+  | 'embedding'
+  | 'completed'
+  | 'error';
+
+/**
+ * 사용자가 편집한 메타데이터
+ */
+export interface EditedMetadata {
+  title: string;
+  keywords: string[];
+  caption?: string;
+}
+
+/**
+ * 로컬 파일 처리용 이미지
+ */
+export interface LocalImageFile {
+  id: string;
+  file: File;
+  thumbnailDataUrl: string;
+  originalBase64?: string;
+  metadata?: AIMetadataResult;
+  editedMetadata?: EditedMetadata;
+  status: ImageProcessingStatus;
+  error?: string;
 }
 
 /**

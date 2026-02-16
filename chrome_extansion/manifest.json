@@ -3,7 +3,7 @@
   "name": "TagStock",
   "version": "1.1.0",
   "description": "AI-powered metadata automation for stock photo sites",
-  "permissions": ["activeTab", "sidePanel", "tabs", "storage", "identity"],
+  "permissions": ["activeTab", "sidePanel", "tabs", "storage", "identity", "downloads"],
   "host_permissions": [
     "https://contributor.stock.adobe.com/*",
     "https://submit.shutterstock.com/*",

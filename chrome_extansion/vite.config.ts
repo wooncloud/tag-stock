@@ -38,16 +38,20 @@ const contentConfig = defineConfig({
 const mainConfig = defineConfig({
   build: {
     emptyOutDir: true,
-    cssCodeSplit: true,
+    cssCodeSplit: false,
     rollupOptions: {
       input: {
         background: resolve(__dirname, 'src/background/index.ts'),
         sidepanel: resolve(__dirname, 'src/sidepanel/index.ts'),
+        local: resolve(__dirname, 'src/local/index.ts'),
       },
       output: {
         entryFileNames: (chunkInfo) => {
           if (chunkInfo.name === 'sidepanel') {
             return 'sidepanel/index.js';
+          }
+          if (chunkInfo.name === 'local') {
+            return 'local/index.js';
           }
           return '[name].js';
         },
@@ -84,7 +88,12 @@ const mainConfig = defineConfig({
           resolve(__dirname, 'src/sidepanel/sidepanel.html'),
           resolve(__dirname, 'dist/sidepanel/sidepanel.html')
         );
-        // styles.css는 Vite가 Tailwind CSS를 자동으로 빌드하여 생성
+
+        mkdirSync(resolve(__dirname, 'dist/local'), { recursive: true });
+        copyFileSync(
+          resolve(__dirname, 'src/local/local.html'),
+          resolve(__dirname, 'dist/local/local.html')
+        );
 
         cpSync(resolve(__dirname, 'assets'), resolve(__dirname, 'dist/assets'), {
           recursive: true,

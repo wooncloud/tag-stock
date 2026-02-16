@@ -1,0 +1,110 @@
+@import '../sidepanel/input.css';
+
+/* Image card styles */
+.image-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  border: 1px solid var(--color-border);
+  background: var(--color-card);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.image-card:hover {
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+.image-card-selected {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -2px;
+}
+
+/* Status badges */
+.status-badge {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.625rem;
+  font-weight: 500;
+}
+
+.status-pending {
+  background: hsl(0 0% 90%);
+  color: hsl(0 0% 40%);
+}
+
+.status-analyzing {
+  background: hsl(210 100% 90%);
+  color: hsl(210 100% 35%);
+  animation: pulse 2s infinite;
+}
+
+.status-ready {
+  background: hsl(142 70% 90%);
+  color: hsl(142 70% 30%);
+}
+
+.status-embedding {
+  background: hsl(45 100% 90%);
+  color: hsl(45 100% 30%);
+  animation: pulse 2s infinite;
+}
+
+.status-completed {
+  background: hsl(142 70% 85%);
+  color: hsl(142 70% 25%);
+}
+
+.status-error {
+  background: hsl(0 70% 90%);
+  color: hsl(0 70% 35%);
+}
+
+/* Keyword tag pills */
+.keyword-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.125rem 0.5rem;
+  background: hsl(0 0% 0% / 0.08);
+  color: var(--color-foreground);
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.keyword-tag button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 0 0.125rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  line-height: 1;
+  color: hsl(0 0% 50%);
+  transition: all 0.15s ease;
+}
+
+.keyword-tag button:hover {
+  background: hsl(0 70% 50%);
+  color: white;
+}
+
+/* Drag over state */
+.drag-over {
+  background: hsl(0 0% 0% / 0.05);
+  border-color: var(--color-primary) !important;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}

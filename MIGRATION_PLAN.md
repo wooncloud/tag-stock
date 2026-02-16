@@ -144,12 +144,12 @@ Response: { title: string, keywords: string[], description: string, ... }
 
 #### 3-1. 익스텐션 전용 페이지 생성
 
-- [ ] `chrome_extansion/src/local/` 디렉토리 생성
+- [x] `chrome_extansion/src/local/` 디렉토리 생성
   - `local.html` — 로컬 파일 처리 전용 UI
-  - `local.ts` — 로직 엔트리포인트
+  - `index.ts` — 로직 엔트리포인트
   - `local.css` — 스타일
 
-- [ ] UI 구성 요소:
+- [x] UI 구성 요소:
   - **파일 선택 영역**: 드래그 & 드롭 + 클릭 파일 선택
   - **이미지 썸네일 그리드**: 선택된 파일들의 미리보기 목록
   - **이미지 상세 패널**: 선택된 이미지의 확대 뷰 + 파일 정보 (크기, 해상도, 포맷)
@@ -157,11 +157,11 @@ Response: { title: string, keywords: string[], description: string, ... }
     - Title 필드
     - Description 필드
     - Keywords 필드 (태그 형태, 개수 표시 e.g. `Keywords(28)`)
-  - **액션 버튼**: AI 분석 / IPTC 임베딩 + 다운로드 / 전체 다운로드(ZIP)
+  - **액션 버튼**: AI 분석 / IPTC 임베딩 + 다운로드
   - **배치 상태 표시**: 이미지별 처리 상태 (대기 / 분석 중 / 완료 / 실패)
 
-- [ ] `manifest.json` 업데이트
-  - 새 페이지 등록 (chrome_url_overrides 또는 별도 탭 페이지)
+- [x] `manifest.json` 업데이트
+  - `downloads` 퍼미션 추가, `chrome.tabs.create()`로 새 탭에 열기
 
 #### 3-2. 로컬 파일 처리 파이프라인
 
@@ -191,10 +191,10 @@ Response: { title: string, keywords: string[], description: string, ... }
 
 #### 3-3. 배치 처리 흐름
 
-- [ ] 여러 이미지를 대기열(Queue)에 넣고 순차 처리
-- [ ] 이미지별 진행 상태 및 Progress Bar 표시 (대기 / 분석 중 / 완료 / 실패)
-- [ ] 전체 완료 후 일괄 다운로드 (ZIP) 옵션
-- [ ] 플랜별 배치 상한선 적용 (Free: 1장, Pro: 10장, Max: 50장)
+- [ ] 여러 이미지를 대기열(Queue)에 넣고 순차 배치 AI 분석 (Phase 3.1)
+- [x] 이미지별 진행 상태 표시 (대기 / 분석 중 / 완료 / 실패)
+- [ ] 전체 완료 후 일괄 다운로드 (ZIP) 옵션 (Phase 3.1)
+- [ ] 플랜별 배치 상한선 적용 (Free: 1장, Pro: 10장, Max: 50장) (Phase 3.1)
 
 ---
 
@@ -205,7 +205,7 @@ Response: { title: string, keywords: string[], description: string, ... }
 
 #### 4-1. 브라우저용 IPTC 라이브러리 선정 및 구현
 
-- [ ] **접근 방법 A (포맷별 개별 라이브러리)**:
+- [x] **접근 방법 A (포맷별 개별 라이브러리)** — JPEG IPTC APP13을 순수 JS로 직접 구현 (`chrome_extansion/src/core/iptc/`):
 
   | 포맷 | 메타데이터 위치 | 추천 라이브러리 | 난이도 |
   |---|---|---|---|
@@ -220,10 +220,10 @@ Response: { title: string, keywords: string[], description: string, ... }
   - 단점: WASM 번들 사이즈 증가 (~수 MB), 초기 로딩 시간
   - 조사 필요: 기존 Exiv2 WASM 포팅 프로젝트 존재 여부 확인
 
-- [ ] **기술 검증 순서**:
-  1. `piexifjs`로 JPEG IPTC 삽입 테스트 (가장 쉬움, 스톡 사진의 90%+ 차지)
-  2. Exiv2 WASM 빌드 가능 여부 조사
-  3. 결과에 따라 접근 방법 A 또는 B 확정
+- [x] **기술 검증 순서**:
+  1. ~~`piexifjs`~~ → piexifjs는 EXIF만 지원, IPTC 미지원 확인 → 순수 JS IPTC APP13 구현 완료
+  2. Exiv2 WASM — JPEG 외 포맷 필요 시 추후 검토
+  3. 접근 방법 A(JPEG 순수 JS) 확정
 
 #### 4-2. Local-First, Server-Fallback 전략
 

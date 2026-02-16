@@ -27,6 +27,15 @@ export const SITE_PATTERNS = {
 } as const;
 
 /**
+ * 로컬 파일 처리 페이지 설정
+ */
+export const LOCAL_PAGE = {
+  THUMBNAIL_SIZE: 200,
+  MAX_FILE_SIZE_MB: 50,
+  SUPPORTED_FORMATS: ['image/jpeg', 'image/jpg'],
+} as const;
+
+/**
  * 외부 링크
  */
 export const LINKS = {
