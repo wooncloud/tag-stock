@@ -1,52 +1,110 @@
 # TagStock
 
-🌐 **https://tagstock.app**
+**https://tagstock.app**
 
-AI-powered automatic tagging and metadata (IPTC) embedding for stock photographers.
-
----
-
-## 📖 Documentation
-
-Detailed project documentation is available in the [`/docs`](./docs) directory:
-
-- [**Main README**](./docs/README.md) - Project overview, features, and setup
-- [ERD (Database Schema)](./docs/erd.md)
-- [Setup Guide](./docs/SETUP_GUIDE.md)
-- [Testing Checklist](./docs/TESTING_CHECKLIST.md)
+AI-powered automatic tagging and metadata embedding for stock photographers. Analyze images with Google Gemini AI to generate SEO-optimized titles, descriptions, and keywords for Adobe Stock, Shutterstock, and more.
 
 ---
 
-## 🛠 Tech Stack
+## Features
 
-- **Frontend:** Next.js 15 (App Router), Tailwind CSS, Shadcn/UI
-- **Backend:** Supabase (Auth, DB, Storage, Edge Functions)
-- **AI:** Google Gemini 3 Flash
-- **Payments:** Lemon Squeezy
-
----
-
-## ✅ Progress & TODO
-
-- [x] **AI Tagging Engine**: Google Gemini 3 Flash integration
-- [x] **Auth System**: Multi-provider OAuth (Google, Apple)
-- [x] **Dashboard**: Image management and metadata editing
-- [x] **Credit System**: Monthly credit grant via Edge Functions
-- [x] **Payment Integration**: Lemon Squeezy subscription model
-- [x] **Contact Logic**: Discord webhook integration
-- [x] **IPTC Embedding**: Direct metadata injection into image files
-- [ ] **Batch Processing**: Multiple image upload optimization
-- [x] **Landing Page**: Enhanced design and social proofs
-- [x] **Chrome Extension**: Direct metadata capture from browser
-
-- 레몬스퀴지 실제 결제 해봐야함.
-- 레몬스퀴지 설정 디테일하게 해야함.
-- 크롬 익스텐션 셔터스톡 카테고리 자동화
-- 크롬 익스텐션 셔터스톡 설명 자동화
-- 크롬 익스텐션 어도비스톡 "인물, 사유물" 자동화
+- **AI Tagging** - Google Gemini Flash analyzes images and generates platform-optimized metadata (titles, keywords)
+- **Chrome Extension** - Auto-fill metadata directly on Adobe Stock and Shutterstock upload pages with one click or `Cmd+E`
+- **IPTC/XMP Embedding** - Embed metadata directly into JPEG image files for portable, platform-independent tagging
+- **Batch Processing** - Process multiple images at once through the extension's local mode
+- **Credit System** - Flexible pricing with monthly subscriptions and one-time credit packs
 
 ---
 
-## 📄 License
+## Tech Stack
+
+| Layer | Technology |
+|-------|------------|
+| Framework | Next.js 16 (App Router), React 19, TypeScript |
+| Styling | Tailwind CSS v4, Shadcn/UI |
+| Auth & DB | Supabase (OAuth, PostgreSQL, Edge Functions) |
+| AI | Google Gemini Flash |
+| Payments | Lemon Squeezy |
+| Extension | Vite 5, Manifest V3 |
+| Deployment | Vercel |
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 18+
+- Supabase project
+- Google Gemini API key
+- Lemon Squeezy account (for payments)
+
+### Setup
+
+```bash
+# Install dependencies
+npm install
+
+# Copy environment variables
+cp .env.example .env.local
+# Edit .env.local with your keys
+
+# Run development server
+npm run dev
+```
+
+### Build
+
+```bash
+# Lint + production build
+npm run build
+
+# Chrome extension build
+npm run build:ce
+```
+
+---
+
+## Project Structure
+
+```
+tag-stock/
+├── app/              # Next.js App Router (pages, API routes, server actions)
+├── components/       # React components (UI, landing, dashboard, blog)
+├── lib/              # Core libraries (Supabase, blog, validations)
+├── services/         # Business logic (Gemini AI, billing, prompts, Discord)
+├── types/            # TypeScript type definitions
+├── content/blog/     # MDX blog posts
+├── supabase/         # Edge Functions & migrations
+├── chrome_extansion/ # Chrome extension (Vite + TypeScript)
+└── docs/             # Project documentation (Korean)
+```
+
+---
+
+## Documentation
+
+Detailed documentation is available in the [`/docs`](./docs) directory (Korean):
+
+- [Architecture](./docs/architecture.md) - Project structure, database schema, auth system, AI pipeline, billing
+- [Development Guide](./docs/development.md) - Local setup, environment variables, Supabase & Lemon Squeezy configuration
+- [Chrome Extension](./docs/chrome-extension.md) - Extension architecture, build process, module breakdown
+
+---
+
+## Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start development server |
+| `npm run build` | Lint + production build |
+| `npm run start` | Start production server |
+| `npm run lint` | Run ESLint |
+| `npm run format` | Format code with Prettier |
+| `npm run build:ce` | Build Chrome extension |
+
+---
+
+## License
 
 This project is licensed under the MIT License.
