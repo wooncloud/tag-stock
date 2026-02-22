@@ -1,10 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-
 import type { UserPlan } from '@/types/database';
 
-import { BillingCycleToggle } from './components/billing-cycle-toggle';
 import { CreditPacks } from './components/credit-packs';
 import { CreditPolicy } from './components/credit-policy';
 import { PricingCard } from './components/pricing-card';
@@ -17,17 +14,10 @@ interface PricingCardsProps {
 }
 
 export function PricingCards({ currentPlan }: PricingCardsProps) {
-  const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
   const { isLoading, handlePlanAction, handleCreditPackPurchase } = useBilling();
 
   return (
     <div className="space-y-6">
-      <BillingCycleToggle
-        billingCycle={billingCycle}
-        onCycleChange={setBillingCycle}
-        disabled={isLoading}
-      />
-
       <div className="mx-auto grid max-w-5xl gap-6 md:grid-cols-3">
         {PLANS.map((plan) => {
           const action = getPlanAction(currentPlan, plan.plan);
@@ -36,12 +26,8 @@ export function PricingCards({ currentPlan }: PricingCardsProps) {
               key={plan.plan}
               title={plan.title}
               description={plan.description}
-              price={plan.plan === 'free' ? '$0' : plan.price[billingCycle]}
-              period={
-                plan.plan === 'free'
-                  ? 'per month'
-                  : `per ${billingCycle === 'monthly' ? 'month' : 'year'}`
-              }
+              price={plan.price}
+              period="per month"
               features={plan.features}
               isCurrentPlan={currentPlan === plan.plan}
               isPopular={plan.isPopular}
@@ -49,7 +35,7 @@ export function PricingCards({ currentPlan }: PricingCardsProps) {
               buttonText={action.text}
               buttonVariant={action.variant}
               disabled={action.disabled}
-              onAction={() => handlePlanAction(action, getVariantId(plan.plan, billingCycle))}
+              onAction={() => handlePlanAction(action, getVariantId(plan.plan))}
             />
           );
         })}

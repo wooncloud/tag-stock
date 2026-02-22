@@ -31,17 +31,15 @@
 ---
 
 ## 4. Variant ID 확인 (Product 설정)
-Lemon Squeezy에서는 **Product** 아래에 여러 개의 **Variant**(예: 월간 플랜, 연간 플랜)가 존재합니다. 각 Variant의 고유 ID를 가져와야 합니다.
+Lemon Squeezy에서는 **Product** 아래에 여러 개의 **Variant**가 존재합니다. 각 Variant의 고유 ID를 가져와야 합니다.
 
-### 구독 플랜 (Subscriptions)
+### 구독 플랜 (Subscriptions) - 월간 결제만 지원
 1. [Dashboard > Products](https://app.lemonsqueezy.com/products)로 이동합니다.
-2. `Pro`와 `Max` 제품을 각각 생성합니다 (Subscription 타입).
+2. `Pro`와 `Max` 제품을 각각 생성합니다 (Subscription 타입, Monthly).
 3. 각 제품 안에서 **Variants** 탭을 클릭합니다.
-4. 각 요금제(Monthly/Yearly)의 **ID**(숫자)를 확인하여 다음 변수에 각각 넣습니다.
+4. 각 월간 요금제의 **ID**(숫자)를 확인하여 다음 변수에 각각 넣습니다.
    - `NEXT_PUBLIC_LEMON_SQUEEZY_PRO_MONTHLY_VARIANT_ID`
-   - `NEXT_PUBLIC_LEMON_SQUEEZY_PRO_YEARLY_VARIANT_ID`
    - `NEXT_PUBLIC_LEMON_SQUEEZY_MAX_MONTHLY_VARIANT_ID`
-   - `NEXT_PUBLIC_LEMON_SQUEEZY_MAX_YEARLY_VARIANT_ID`
 
 ### 크레딧 팩 (One-time Purchases)
 1. `Credit Pack S` (100 크레딧, $2)와 `Credit Pack L` (1,000 크레딧, $15) 제품을 생성합니다 (One-time 타입).
