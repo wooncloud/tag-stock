@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     'out/**',
     'build/**',
     'next-env.d.ts',
+    // Chrome Extension 빌드 결과물:
+    'chrome_extansion/dist/**',
   ]),
 ]);
 

@@ -1,6 +1,7 @@
 import { getSiteConfig } from '../core/sites/detector';
 import { delay, waitForElement } from '../core/utils/dom';
 import { TIMEOUTS } from '../shared/constants';
+import { isInsufficientCreditsError } from '../shared/errors';
 import { sendLog, sendProgress } from '../shared/messenger';
 import type { SiteType } from '../shared/types';
 import { fillMetadata } from './metadata-filler';
@@ -81,10 +82,7 @@ export async function fillAllMetadata(
         sendLog(`Error on image ${i + 1}/${total}: ${(error as Error).message}`, 'error');
 
         // 크레딧 부족 시 배치 중단
-        if (
-          (error as Error).message.toLowerCase().includes('insufficient') ||
-          (error as Error).message.toLowerCase().includes('credit')
-        ) {
+        if (isInsufficientCreditsError(error)) {
           sendProgress(i + 1, total, 'error', { error: 'Insufficient credits' });
           break;
         }

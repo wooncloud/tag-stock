@@ -4,11 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "eslint && next build",
     "start": "next start",
     "lint": "eslint",
     "format": "prettier --write --log-level warn .",
-    "build:ce": "npm run package --prefix chrome_extansion"
+    "build:ce": "npm run build --prefix chrome_extansion"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",

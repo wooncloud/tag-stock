@@ -50,6 +50,25 @@ export const PLANS: PlanConfig[] = [
   },
 ];
 
+export interface CreditPackConfig {
+  name: string;
+  description: string;
+  price: string;
+}
+
+export const CREDIT_PACKS: CreditPackConfig[] = [
+  {
+    name: 'Credit Pack S',
+    description: '100 credits for one-time use',
+    price: '$2',
+  },
+  {
+    name: 'Credit Pack L',
+    description: '1,000 credits for one-time use',
+    price: '$15',
+  },
+];
+
 export const VARIANT_IDS = {
   pro_monthly: process.env.NEXT_PUBLIC_LEMON_SQUEEZY_PRO_MONTHLY_VARIANT_ID || '',
   max_monthly: process.env.NEXT_PUBLIC_LEMON_SQUEEZY_MAX_MONTHLY_VARIANT_ID || '',

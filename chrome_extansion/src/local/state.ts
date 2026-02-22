@@ -1,7 +1,7 @@
 import type { LocalImageFile, UserProfile } from '../shared/types';
 
 let images: LocalImageFile[] = [];
-let checkedIds: Set<string> = new Set();
+const checkedIds: Set<string> = new Set();
 let lastClickedId: string | null = null;
 let currentProfile: UserProfile | null = null;
 let detailImageId: string | null = null;

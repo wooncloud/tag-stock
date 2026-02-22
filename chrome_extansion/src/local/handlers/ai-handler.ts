@@ -1,5 +1,6 @@
 import { generateMetadata } from '../../core/ai/gemini-client';
 import { resizeImageForAI } from '../../core/utils/image';
+import { InsufficientCreditsError, isInsufficientCreditsError } from '../../shared/errors';
 import { setBatchAnalyzeLoading } from '../components/action-buttons';
 import { showCreditModal } from '../components/credit-modal';
 import { refreshModalIfOpen } from '../components/detail-panel';
@@ -8,21 +9,7 @@ import { refreshCredits } from '../credit-display';
 import { getImageById, updateImage } from '../state';
 import { readFileAsBase64 } from '../utils';
 
-/** Sentinel error to stop batch processing when credits run out */
-class InsufficientCreditsError extends Error {
-  constructor() {
-    super('Insufficient credits');
-    this.name = 'InsufficientCreditsError';
-  }
-}
-
-export function isInsufficientCreditsError(error: unknown): boolean {
-  if (error instanceof InsufficientCreditsError) return true;
-  if (error instanceof Error) {
-    return error.message.toLowerCase().includes('insufficient credits');
-  }
-  return false;
-}
+export { isInsufficientCreditsError };
 
 export async function analyzeImage(imageId: string): Promise<void> {
   const image = getImageById(imageId);

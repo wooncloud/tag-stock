@@ -3,6 +3,7 @@
 import { Check } from 'lucide-react';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { CREDIT_PACKS, PLANS } from '@/components/dashboard/pricing/lib/plans';
 
 export function PricingPreviewSection() {
   return (
@@ -16,91 +17,54 @@ export function PricingPreviewSection() {
         </div>
 
         <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-3">
-          {/* Free Plan */}
-          <Card className="flex flex-col">
-            <CardHeader>
-              <CardTitle className="text-2xl">Free</CardTitle>
-              <CardDescription>Perfect for trying out TagStock</CardDescription>
-              <div className="mt-4">
-                <span className="text-4xl font-bold">$0</span>
-                <span className="text-muted-foreground">/month</span>
-              </div>
-            </CardHeader>
-            <CardContent className="flex-1">
-              <ul className="space-y-3">
-                <PricingFeature text="10 credits per month" />
-                <PricingFeature text="Basic AI tagging (~20 keywords)" />
-                <PricingFeature text="IPTC/XMP metadata embedding" />
-                <PricingFeature text="Export metadata" />
-              </ul>
-            </CardContent>
-          </Card>
-
-          {/* Pro Plan */}
-          <Card className="border-primary relative flex scale-105 flex-col border-2 shadow-lg">
-            <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-              <span className="bg-primary text-primary-foreground rounded-full px-3 py-1 text-sm font-semibold">
-                Popular
-              </span>
-            </div>
-            <CardHeader>
-              <CardTitle className="text-2xl">Pro</CardTitle>
-              <CardDescription>For professional photographers</CardDescription>
-              <div className="mt-4">
-                <span className="text-4xl font-bold">$5</span>
-                <span className="text-muted-foreground">/month</span>
-              </div>
-            </CardHeader>
-            <CardContent className="flex-1">
-              <ul className="space-y-3">
-                <PricingFeature text="500 credits per month" bold />
-                <PricingFeature text="Advanced AI tagging (~50 keywords)" bold />
-                <PricingFeature text="Batch processing" />
-                <PricingFeature text="Multi-upload" />
-                <PricingFeature text="All Free features" />
-              </ul>
-            </CardContent>
-          </Card>
-
-          {/* Max Plan */}
-          <Card className="flex flex-col">
-            <CardHeader>
-              <CardTitle className="text-2xl">Max</CardTitle>
-              <CardDescription>For high-volume creators</CardDescription>
-              <div className="mt-4">
-                <span className="text-4xl font-bold">$19</span>
-                <span className="text-muted-foreground">/month</span>
-              </div>
-            </CardHeader>
-            <CardContent className="flex-1">
-              <ul className="space-y-3">
-                <PricingFeature text="2,000 credits per month" />
-                <PricingFeature text="Priority support" />
-                <PricingFeature text="Early access to new features" />
-                <PricingFeature text="All Pro features" />
-              </ul>
-            </CardContent>
-          </Card>
+          {PLANS.map((plan) => (
+            <Card
+              key={plan.plan}
+              className={`flex flex-col ${plan.isPopular ? 'border-primary relative scale-105 border-2 shadow-lg' : ''}`}
+            >
+              {plan.isPopular && (
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                  <span className="bg-primary text-primary-foreground rounded-full px-3 py-1 text-sm font-semibold">
+                    Popular
+                  </span>
+                </div>
+              )}
+              <CardHeader>
+                <CardTitle className="text-2xl">{plan.title}</CardTitle>
+                <CardDescription>{plan.description}</CardDescription>
+                <div className="mt-4">
+                  <span className="text-4xl font-bold">{plan.price}</span>
+                  <span className="text-muted-foreground">/month</span>
+                </div>
+              </CardHeader>
+              <CardContent className="flex-1">
+                <ul className="space-y-3">
+                  {plan.features.map((feature, i) => (
+                    <PricingFeature
+                      key={feature}
+                      text={feature}
+                      bold={plan.isPopular && i < 2}
+                    />
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          ))}
         </div>
 
         {/* Credit Packs */}
         <div className="mt-16 text-center">
           <h3 className="mb-6 text-2xl font-bold">Need more credits?</h3>
           <div className="mx-auto grid max-w-4xl gap-6 md:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-xl">Credit Pack S</CardTitle>
-                <CardDescription>100 credits for one-time use</CardDescription>
-                <div className="mt-2 text-2xl font-bold">$2</div>
-              </CardHeader>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-xl">Credit Pack L</CardTitle>
-                <CardDescription>1,000 credits for one-time use</CardDescription>
-                <div className="mt-2 text-2xl font-bold">$15</div>
-              </CardHeader>
-            </Card>
+            {CREDIT_PACKS.map((pack) => (
+              <Card key={pack.name}>
+                <CardHeader>
+                  <CardTitle className="text-xl">{pack.name}</CardTitle>
+                  <CardDescription>{pack.description}</CardDescription>
+                  <div className="mt-2 text-2xl font-bold">{pack.price}</div>
+                </CardHeader>
+              </Card>
+            ))}
           </div>
         </div>
 

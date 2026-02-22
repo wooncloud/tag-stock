@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Toaster } from '@/components/ui/sonner';
 
-import { BackButton } from '@/components/back-button';
+import { BackButton } from '@/components/blog/shared';
 import { ContactForm } from '@/components/contact-form';
 
 export const metadata: Metadata = {
@@ -108,7 +108,7 @@ export default function ContactPage() {
 
           {/* Back to Home */}
           <div className="mt-12 text-center">
-            <BackButton />
+            <BackButton href="/" label="Back to Home" />
           </div>
         </div>
       </div>
