@@ -3,7 +3,15 @@
   "name": "TagStock",
   "version": "1.1.0",
   "description": "AI-powered metadata automation for stock photo sites",
-  "permissions": ["activeTab", "sidePanel", "tabs", "storage", "identity", "downloads"],
+  "permissions": [
+    "activeTab",
+    "sidePanel",
+    "tabs",
+    "storage",
+    "identity",
+    "downloads",
+    "scripting"
+  ],
   "host_permissions": [
     "https://tagstock.app/*",
     "http://localhost:3000/*",

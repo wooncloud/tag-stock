@@ -35,7 +35,10 @@ function processMetadataForSite(aiResult: AIMetadataResult, siteType: SiteType):
 /**
  * 메타데이터를 폼 필드에 채우기
  */
-export async function fillMetadata(siteType: SiteType): Promise<ProcessedMetadata> {
+export async function fillMetadata(
+  siteType: SiteType,
+  accessToken?: string
+): Promise<ProcessedMetadata> {
   const config = getSiteConfig(siteType);
 
   if (!config) {
@@ -54,7 +57,7 @@ export async function fillMetadata(siteType: SiteType): Promise<ProcessedMetadat
 
   sendLog(`${config.name} AI metadata generation started...`);
 
-  const aiResult = await generateAIMetadata();
+  const aiResult = await generateAIMetadata(accessToken);
   const processedResult = processMetadataForSite(aiResult, siteType);
 
   setTextareaValue(titleElement, processedResult.title);

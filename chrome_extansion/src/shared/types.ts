@@ -83,6 +83,7 @@ export interface FillAllProgressMessage {
 export interface SidepanelToContentMessage {
   action: MessageAction;
   siteType?: SiteType;
+  accessToken?: string;
 }
 
 /**

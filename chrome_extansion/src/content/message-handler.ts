@@ -1,6 +1,6 @@
 import { detectStockSite, getSiteConfig } from '../core/sites/detector';
 import { onMessage, sendLog } from '../shared/messenger';
-import type { ContentScriptResponse } from '../shared/types';
+import type { ContentScriptResponse, SidepanelToContentMessage } from '../shared/types';
 import { fillAllMetadata } from './batch-metadata-filler';
 import { fillMetadata } from './metadata-filler';
 
@@ -10,12 +10,16 @@ import { fillMetadata } from './metadata-filler';
 export function setupMessageHandler(): void {
   console.log('[TagStock] Message handler registered');
 
-  onMessage((message: any, _sender, sendResponse) => {
-    console.log('[TagStock] Message received:', message);
-    if (message.action === 'generateMetadata') {
-      const siteType = message.siteType || detectStockSite();
+  onMessage((message, _sender, sendResponse) => {
+    if (!('action' in message)) return false;
 
-      fillMetadata(siteType)
+    const msg = message as SidepanelToContentMessage;
+    console.log('[TagStock] Message received:', msg);
+
+    if (msg.action === 'generateMetadata') {
+      const siteType = msg.siteType || detectStockSite();
+
+      fillMetadata(siteType, msg.accessToken)
         .then((result) => {
           const response: ContentScriptResponse = {
             success: true,
@@ -38,10 +42,10 @@ export function setupMessageHandler(): void {
       return true;
     }
 
-    if (message.action === 'generateAllMetadata') {
-      const siteType = message.siteType || detectStockSite();
+    if (msg.action === 'generateAllMetadata') {
+      const siteType = msg.siteType || detectStockSite();
 
-      fillAllMetadata(siteType)
+      fillAllMetadata(siteType, msg.accessToken)
         .then((result) => {
           const response: ContentScriptResponse = {
             success: true,
@@ -64,7 +68,7 @@ export function setupMessageHandler(): void {
       return true;
     }
 
-    if (message.action === 'checkStatus') {
+    if (msg.action === 'checkStatus') {
       const siteType = detectStockSite();
       const config = getSiteConfig(siteType);
       const response: ContentScriptResponse = {

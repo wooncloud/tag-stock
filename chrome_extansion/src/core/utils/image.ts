@@ -1,3 +1,4 @@
+import { sendToBackground } from '../../shared/messenger';
 import { detectStockSite, getSiteConfig } from '../sites/detector';
 
 const RESIZE_MAX_DIMENSION = 1536;
@@ -63,25 +64,7 @@ export async function resizeImageForAI(base64Data: string): Promise<string> {
  */
 export async function getImageAsBase64(imageUrl: string): Promise<string> {
   console.log('[TagStock] Loading image via background:', imageUrl);
-
-  // Background script를 통해 이미지 fetch (CORS 우회)
-  return new Promise((resolve, reject) => {
-    chrome.runtime.sendMessage({ action: 'fetchImage', url: imageUrl }, (response) => {
-      if (chrome.runtime.lastError) {
-        console.error('[TagStock] Background fetch error:', chrome.runtime.lastError);
-        reject(new Error(chrome.runtime.lastError.message || 'Background fetch failed'));
-        return;
-      }
-
-      if (response?.success && response.base64) {
-        console.log('[TagStock] Image fetched via background, length:', response.base64.length);
-        resolve(response.base64);
-      } else {
-        console.error('[TagStock] Background fetch failed:', response?.error);
-        reject(new Error(response?.error || 'Failed to fetch image'));
-      }
-    });
-  });
+  return sendToBackground<string>({ action: 'fetchImage', url: imageUrl });
 }
 
 /**

@@ -50,7 +50,7 @@ function postProcessMetadata(
  * 현재 사이트에 대한 AI 메타데이터를 생성합니다.
  * 서버 프록시(/api/generate)를 통해 Gemini AI를 호출합니다.
  */
-export async function generateAIMetadata(): Promise<AIMetadataResult> {
+export async function generateAIMetadata(accessToken?: string): Promise<AIMetadataResult> {
   try {
     // 현재 사이트 감지
     const siteType = detectStockSite();
@@ -72,7 +72,7 @@ export async function generateAIMetadata(): Promise<AIMetadataResult> {
     const imageBase64 = await resizeImageForAI(rawBase64);
 
     console.debug(`${siteConfig.name} AI metadata generation in progress...`);
-    const result = await generateMetadata(siteType, imageBase64);
+    const result = await generateMetadata(siteType, imageBase64, accessToken);
 
     console.debug('Generated metadata:', result);
 

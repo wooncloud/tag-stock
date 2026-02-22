@@ -1,5 +1,6 @@
 import { getAccessToken, getUser } from '../../lib/supabase/user';
 import { LINKS } from '../../shared/constants';
+import { sendToBackground } from '../../shared/messenger';
 import type { AIMetadataResult, SiteType } from '../../shared/types';
 
 const API_BASE_URL = LINKS.HOME;
@@ -10,37 +11,38 @@ const API_BASE_URL = LINKS.HOME;
  */
 export async function generateMetadata(
   siteType: SiteType,
-  imageBase64: string
+  imageBase64: string,
+  token?: string
 ): Promise<AIMetadataResult> {
   try {
-    // getUser()를 먼저 호출하여 만료된 토큰을 자동 갱신
-    const user = await getUser();
-    if (!user) {
-      throw new Error('Not authenticated. Please login first.');
-    }
+    // 사이드패널에서 전달된 토큰 우선 사용, 없으면 로컬 세션에서 가져오기
+    let accessToken = token;
 
-    const accessToken = await getAccessToken();
     if (!accessToken) {
-      throw new Error('Session expired. Please login again.');
+      const user = await getUser();
+      if (!user) {
+        throw new Error('Not authenticated. Please login first.');
+      }
+
+      accessToken = (await getAccessToken()) ?? undefined;
+      if (!accessToken) {
+        throw new Error('Session expired. Please login again.');
+      }
     }
 
-    const response = await fetch(`${API_BASE_URL}api/generate`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
+    // Background 서비스 워커를 통해 API 호출 (content script CSP 우회)
+    return await sendToBackground<AIMetadataResult>({
+      action: 'proxyFetch',
+      url: `${API_BASE_URL}api/generate`,
+      options: {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ imageBase64, siteType }),
       },
-      body: JSON.stringify({ imageBase64, siteType }),
     });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      const errorMessage =
-        (errorData as { error?: string }).error || `Server error: ${response.status}`;
-      throw new Error(errorMessage);
-    }
-
-    return (await response.json()) as AIMetadataResult;
   } catch (error) {
     console.error('Error during AI generation:', error);
     throw error;

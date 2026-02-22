@@ -95,7 +95,9 @@ export function setupEventListeners(): void {
   });
 
   // 콘텐츠 스크립트로부터의 메시지 수신
-  onMessage((message: any) => {
+  onMessage((message) => {
+    if (!('type' in message)) return;
+
     if (message.type === 'log') {
       const msg = message as ContentToSidepanelMessage;
       addLog(msg.text || '', msg.level || 'info');

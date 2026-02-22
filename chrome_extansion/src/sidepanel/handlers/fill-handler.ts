@@ -1,6 +1,11 @@
 import { hasSufficientCredits } from '../../lib/supabase';
+import { getAccessToken } from '../../lib/supabase/user';
 import { sendToContentScript } from '../../shared/messenger';
-import type { ContentScriptResponse, SidepanelToContentMessage } from '../../shared/types';
+import type {
+  ContentScriptResponse,
+  SidepanelToContentMessage,
+  SiteType,
+} from '../../shared/types';
 import { addLog } from '../components/activity-log';
 import { setButtonError, setButtonLoading, setButtonSuccess } from '../components/fill-button';
 import { getCurrentSiteType } from '../components/status-badge';
@@ -8,57 +13,66 @@ import { refreshProfile } from '../session';
 import { getCurrentProfile, getCurrentTabId } from '../state';
 
 /**
- * 채우기 버튼 클릭 핸들러
+ * Fill 핸들러 공통 사전 검증
+ * 탭, 인증, 크레딧, 사이트 타입을 확인하고 유효하면 tabId와 siteType을 반환합니다.
  */
-export async function handleFillClick(): Promise<void> {
+export function validateFillPrerequisites(): {
+  tabId: number;
+  siteType: SiteType;
+} | null {
   const currentTabId = getCurrentTabId();
-  const currentProfile = getCurrentProfile();
-
   if (!currentTabId) {
     addLog('No valid page detected', 'error');
-    return;
+    return null;
   }
 
-  // 인증 및 크레딧 확인
+  const currentProfile = getCurrentProfile();
   if (!currentProfile) {
     addLog('Please login first', 'error');
-    return;
+    return null;
   }
 
   if (!hasSufficientCredits(currentProfile)) {
     addLog('Not enough credits.', 'error');
-    return;
+    return null;
   }
 
   const siteType = getCurrentSiteType();
   if (!siteType) {
     addLog('No valid page detected', 'error');
-    return;
+    return null;
   }
+
+  return { tabId: currentTabId, siteType };
+}
+
+/**
+ * 채우기 버튼 클릭 핸들러
+ */
+export async function handleFillClick(): Promise<void> {
+  const prereq = validateFillPrerequisites();
+  if (!prereq) return;
+
+  const { tabId, siteType } = prereq;
 
   setButtonLoading(true);
   addLog('Starting AI metadata generation...');
 
   try {
-    console.log('[TagStock] Sending to tab:', currentTabId);
-
+    const accessToken = await getAccessToken();
     const message: SidepanelToContentMessage = {
       action: 'generateMetadata',
-      siteType: siteType,
+      siteType,
+      accessToken: accessToken || undefined,
     };
 
-    console.log('[TagStock] Message:', message);
-    const response: ContentScriptResponse = await sendToContentScript(currentTabId, message);
-    console.log('[TagStock] Response:', response);
+    const response: ContentScriptResponse = await sendToContentScript(tabId, message);
 
     setButtonLoading(false);
 
     if (response && response.success) {
-      // 크레딧은 서버(/api/generate)에서 차감됨
       setButtonSuccess();
       addLog(`Metadata generated: "${response.title}"`, 'success');
-
-      // 서버에서 차감된 크레딧 반영을 위해 프로필 새로고침
       await refreshProfile();
     } else {
       throw new Error(response?.error || 'Unknown error');

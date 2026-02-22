@@ -1,4 +1,4 @@
-import { hasSufficientCredits } from '../../lib/supabase';
+import { getAccessToken } from '../../lib/supabase/user';
 import { LINKS } from '../../shared/constants';
 import { sendToContentScript } from '../../shared/messenger';
 import type { ContentScriptResponse, SidepanelToContentMessage } from '../../shared/types';
@@ -8,29 +8,18 @@ import {
   setFillAllLoading,
   setFillAllSuccess,
 } from '../components/fill-all-button';
-import { getCurrentSiteType } from '../components/status-badge';
 import { refreshProfile } from '../session';
-import { getCurrentProfile, getCurrentTabId } from '../state';
+import { getCurrentProfile } from '../state';
+import { validateFillPrerequisites } from './fill-handler';
 
 /**
  * Fill All Metadata 버튼 클릭 핸들러
  */
 export async function handleFillAllClick(): Promise<void> {
-  const currentTabId = getCurrentTabId();
   const currentProfile = getCurrentProfile();
 
-  if (!currentTabId) {
-    addLog('No valid page detected', 'error');
-    return;
-  }
-
-  if (!currentProfile) {
-    addLog('Please login first', 'error');
-    return;
-  }
-
-  // Free 플랜 제한
-  if (currentProfile.plan === 'free') {
+  // Free 플랜 제한 (공통 검증 전에 체크)
+  if (currentProfile?.plan === 'free') {
     alert(
       'Fill All Metadata is available on Pro and Max plans. Please upgrade to use this feature.'
     );
@@ -38,32 +27,23 @@ export async function handleFillAllClick(): Promise<void> {
     return;
   }
 
-  if (!hasSufficientCredits(currentProfile)) {
-    addLog('Not enough credits.', 'error');
-    return;
-  }
+  const prereq = validateFillPrerequisites();
+  if (!prereq) return;
 
-  const siteType = getCurrentSiteType();
-  if (!siteType) {
-    addLog('No valid page detected', 'error');
-    return;
-  }
-
-  // 실행 전 경고
-  alert(
-    'Fill All Metadata will now process all images.\nPlease do not interact with the page until processing is complete.'
-  );
+  const { tabId, siteType } = prereq;
 
   setFillAllLoading(true);
   addLog('Starting batch metadata generation...');
 
   try {
+    const accessToken = await getAccessToken();
     const message: SidepanelToContentMessage = {
       action: 'generateAllMetadata',
-      siteType: siteType,
+      siteType,
+      accessToken: accessToken || undefined,
     };
 
-    const response: ContentScriptResponse = await sendToContentScript(currentTabId, message);
+    const response: ContentScriptResponse = await sendToContentScript(tabId, message);
 
     setFillAllLoading(false);
 

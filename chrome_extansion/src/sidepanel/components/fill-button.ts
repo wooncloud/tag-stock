@@ -1,54 +1,78 @@
 import { TIMEOUTS } from '../../shared/constants';
 
-const btnIcon = document.getElementById('btnIcon') as HTMLElement;
-const btnText = document.getElementById('btnText') as HTMLSpanElement;
-const btnSpinner = document.getElementById('btnSpinner') as HTMLElement;
-const fillBtn = document.getElementById('fillBtn') as HTMLButtonElement;
+interface ButtonElements {
+  button: HTMLButtonElement;
+  icon: HTMLElement;
+  spinner: HTMLElement;
+  text: HTMLSpanElement;
+}
 
 /**
- * 버튼을 로딩 상태로 설정합니다.
+ * 버튼을 로딩/성공/에러 상태로 전환하는 공통 유틸리티
  */
-export function setButtonLoading(loading: boolean): void {
-  if (loading) {
-    btnIcon.classList.add('hidden');
-    btnSpinner.classList.remove('hidden');
-    btnText.textContent = 'Generating...';
-    fillBtn.disabled = true;
-  } else {
-    btnIcon.classList.remove('hidden');
-    btnSpinner.classList.add('hidden');
-    btnText.textContent = 'Fill Metadata';
-    fillBtn.disabled = false;
+export function createButtonState(
+  elements: ButtonElements,
+  defaultText: string,
+  defaultClass: string,
+  successClass: string,
+  errorClass: string
+) {
+  function setLoading(loading: boolean): void {
+    if (loading) {
+      elements.icon.classList.add('hidden');
+      elements.spinner.classList.remove('hidden');
+      elements.text.textContent = 'Processing...';
+      elements.button.disabled = true;
+    } else {
+      elements.icon.classList.remove('hidden');
+      elements.spinner.classList.add('hidden');
+      elements.text.textContent = defaultText;
+      elements.button.disabled = false;
+    }
   }
+
+  function setSuccess(): void {
+    elements.icon.classList.remove('hidden');
+    elements.spinner.classList.add('hidden');
+    elements.text.textContent = 'Done!';
+    elements.button.className = elements.button.className.replace(defaultClass, successClass);
+
+    setTimeout(() => {
+      elements.text.textContent = defaultText;
+      elements.button.className = elements.button.className.replace(successClass, defaultClass);
+    }, TIMEOUTS.BUTTON_FEEDBACK);
+  }
+
+  function setError(): void {
+    elements.icon.classList.remove('hidden');
+    elements.spinner.classList.add('hidden');
+    elements.text.textContent = 'Error';
+    elements.button.className = elements.button.className.replace(defaultClass, errorClass);
+    elements.button.disabled = false;
+
+    setTimeout(() => {
+      elements.text.textContent = defaultText;
+      elements.button.className = elements.button.className.replace(errorClass, defaultClass);
+    }, TIMEOUTS.BUTTON_FEEDBACK);
+  }
+
+  return { setLoading, setSuccess, setError };
 }
 
-/**
- * 버튼을 성공 상태로 설정합니다.
- */
-export function setButtonSuccess(): void {
-  btnIcon.classList.remove('hidden');
-  btnSpinner.classList.add('hidden');
-  btnText.textContent = 'Done!';
-  fillBtn.className = fillBtn.className.replace('bg-primary', 'bg-green-600');
+// Fill Metadata 버튼
+const fillState = createButtonState(
+  {
+    button: document.getElementById('fillBtn') as HTMLButtonElement,
+    icon: document.getElementById('btnIcon') as HTMLElement,
+    spinner: document.getElementById('btnSpinner') as HTMLElement,
+    text: document.getElementById('btnText') as HTMLSpanElement,
+  },
+  'Fill Metadata',
+  'bg-primary',
+  'bg-green-600',
+  'bg-red-600'
+);
 
-  setTimeout(() => {
-    btnText.textContent = 'Fill Metadata';
-    fillBtn.className = fillBtn.className.replace('bg-green-600', 'bg-primary');
-  }, TIMEOUTS.BUTTON_FEEDBACK);
-}
-
-/**
- * 버튼을 에러 상태로 설정합니다.
- */
-export function setButtonError(): void {
-  btnIcon.classList.remove('hidden');
-  btnSpinner.classList.add('hidden');
-  btnText.textContent = 'Error';
-  fillBtn.className = fillBtn.className.replace('bg-primary', 'bg-red-600');
-  fillBtn.disabled = false;
-
-  setTimeout(() => {
-    btnText.textContent = 'Fill Metadata';
-    fillBtn.className = fillBtn.className.replace('bg-red-600', 'bg-primary');
-  }, TIMEOUTS.BUTTON_FEEDBACK);
-}
+export const setButtonLoading = fillState.setLoading;
+export const setButtonSuccess = fillState.setSuccess;
+export const setButtonError = fillState.setError;

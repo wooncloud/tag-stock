@@ -41,7 +41,15 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     fetchImageAsBase64(message.url)
       .then((base64) => sendResponse({ success: true, base64 }))
       .catch((error) => sendResponse({ success: false, error: error.message }));
-    return true; // 비동기 응답을 위해 true 반환
+    return true;
+  }
+
+  // API 프록시 (content script CSP 우회)
+  if (message.action === 'proxyFetch' && message.url) {
+    proxyFetch(message.url, message.options)
+      .then((data) => sendResponse({ success: true, data }))
+      .catch((error) => sendResponse({ success: false, error: error.message }));
+    return true;
   }
 
   return true;
@@ -71,4 +79,29 @@ async function fetchImageAsBase64(url: string): Promise<string> {
   console.log('[TagStock BG] Image converted, length:', base64.length);
 
   return base64;
+}
+
+/**
+ * API 프록시 (content script의 CSP 우회)
+ */
+async function proxyFetch(
+  url: string,
+  options?: { method?: string; headers?: Record<string, string>; body?: string }
+): Promise<unknown> {
+  console.log('[TagStock BG] Proxy fetch:', url);
+
+  const response = await fetch(url, {
+    method: options?.method || 'GET',
+    headers: options?.headers,
+    body: options?.body,
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    const errorMessage =
+      (errorData as { error?: string }).error || `Server error: ${response.status}`;
+    throw new Error(errorMessage);
+  }
+
+  return response.json();
 }
