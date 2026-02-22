@@ -45,9 +45,13 @@ export interface ProcessedMetadata {
 /**
  * 크롬 메시지 유형
  */
-export type MessageAction = 'generateMetadata' | 'checkStatus' | 'openSidePanel';
+export type MessageAction =
+  | 'generateMetadata'
+  | 'generateAllMetadata'
+  | 'checkStatus'
+  | 'openSidePanel';
 
-export type MessageType = 'log' | 'status';
+export type MessageType = 'log' | 'status' | 'fillAllProgress';
 
 /**
  * 콘텐츠 스크립트에서 사이드패널로 보내는 메시지
@@ -59,6 +63,18 @@ export interface ContentToSidepanelMessage {
   connected?: boolean;
   site?: string;
   info?: string;
+}
+
+/**
+ * Fill All Metadata 진행 상황 메시지
+ */
+export interface FillAllProgressMessage {
+  type: 'fillAllProgress';
+  current: number;
+  total: number;
+  status: 'processing' | 'completed' | 'error';
+  title?: string;
+  error?: string;
 }
 
 /**
@@ -80,6 +96,9 @@ export interface ContentScriptResponse {
   connected?: boolean;
   siteType?: SiteType;
   siteName?: string;
+  totalProcessed?: number;
+  totalImages?: number;
+  errors?: string[];
 }
 
 /**

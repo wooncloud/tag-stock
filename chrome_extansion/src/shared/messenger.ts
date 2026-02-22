@@ -1,6 +1,7 @@
 import type {
   ContentScriptResponse,
   ContentToSidepanelMessage,
+  FillAllProgressMessage,
   LogLevel,
   SidepanelToContentMessage,
 } from './types';
@@ -54,7 +55,7 @@ export async function sendToContentScript(
  */
 export function onMessage(
   callback: (
-    message: ContentToSidepanelMessage | SidepanelToContentMessage,
+    message: ContentToSidepanelMessage | SidepanelToContentMessage | FillAllProgressMessage,
     sender: chrome.runtime.MessageSender,
     sendResponse: (response?: ContentScriptResponse) => void
   ) => boolean | void

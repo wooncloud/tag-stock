@@ -3,6 +3,7 @@ import type { SiteType } from '../../shared/types';
 const statusBadge = document.getElementById('statusBadge') as HTMLSpanElement;
 const statusText = document.getElementById('statusText') as HTMLParagraphElement;
 const fillBtn = document.getElementById('fillBtn') as HTMLButtonElement;
+const fillAllBtn = document.getElementById('fillAllBtn') as HTMLButtonElement;
 
 let currentSiteType: SiteType | null = null;
 
@@ -16,6 +17,7 @@ export function updateStatus(connected: boolean, site: string, info: string = ''
     statusBadge.textContent = site;
     statusText.textContent = info || 'Ready to fill metadata';
     fillBtn.disabled = false;
+    if (fillAllBtn) fillAllBtn.disabled = false;
     currentSiteType = site.toLowerCase().includes('adobe') ? 'adobe' : 'shutterstock';
   } else {
     statusBadge.className =
@@ -23,6 +25,7 @@ export function updateStatus(connected: boolean, site: string, info: string = ''
     statusBadge.textContent = 'Not Connected';
     statusText.textContent = info || 'Navigate to Adobe Stock or Shutterstock upload page';
     fillBtn.disabled = true;
+    if (fillAllBtn) fillAllBtn.disabled = true;
     currentSiteType = null;
   }
 }

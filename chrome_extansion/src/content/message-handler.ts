@@ -1,6 +1,7 @@
 import { detectStockSite, getSiteConfig } from '../core/sites/detector';
 import { onMessage, sendLog } from '../shared/messenger';
-import type { ContentScriptResponse, SidepanelToContentMessage } from '../shared/types';
+import type { ContentScriptResponse } from '../shared/types';
+import { fillAllMetadata } from './batch-metadata-filler';
 import { fillMetadata } from './metadata-filler';
 
 /**
@@ -9,7 +10,7 @@ import { fillMetadata } from './metadata-filler';
 export function setupMessageHandler(): void {
   console.log('[TagStock] Message handler registered');
 
-  onMessage((message: SidepanelToContentMessage, _sender, sendResponse) => {
+  onMessage((message: any, _sender, sendResponse) => {
     console.log('[TagStock] Message received:', message);
     if (message.action === 'generateMetadata') {
       const siteType = message.siteType || detectStockSite();
@@ -34,6 +35,32 @@ export function setupMessageHandler(): void {
         });
 
       // 비동기 응답을 위해 true 반환
+      return true;
+    }
+
+    if (message.action === 'generateAllMetadata') {
+      const siteType = message.siteType || detectStockSite();
+
+      fillAllMetadata(siteType)
+        .then((result) => {
+          const response: ContentScriptResponse = {
+            success: true,
+            totalProcessed: result.totalProcessed,
+            totalImages: result.totalImages,
+            errors: result.errors,
+          };
+          sendResponse(response);
+        })
+        .catch((error: Error) => {
+          console.error('Batch metadata generation failed:', error);
+          sendLog(`Batch error: ${error.message}`, 'error');
+          const response: ContentScriptResponse = {
+            success: false,
+            error: error.message,
+          };
+          sendResponse(response);
+        });
+
       return true;
     }
 

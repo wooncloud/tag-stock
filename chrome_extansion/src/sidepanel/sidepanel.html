@@ -195,6 +195,40 @@
                 >Ctrl+E</kbd
               >
             </p>
+            <button
+              id="fillAllBtn"
+              disabled
+              class="border-primary text-primary hover:bg-primary/10 focus-visible:ring-ring inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg border px-4 text-sm font-medium transition-colors focus-visible:ring-1 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
+            >
+              <img
+                id="fillAllBtnIcon"
+                src="../../assets/icons/sparkles.svg"
+                alt="Sparkles"
+                class="h-4 w-4"
+              />
+              <span id="fillAllBtnText">Fill All Metadata</span>
+              <img
+                id="fillAllBtnSpinner"
+                src="../../assets/icons/loader-circle.svg"
+                alt="Loading"
+                class="hidden h-4 w-4 animate-spin"
+              />
+            </button>
+            <div id="fillAllProgress" class="hidden space-y-1">
+              <div class="text-muted-foreground text-center text-sm">
+                <span id="fillAllProgressText">Processing 0/0...</span>
+              </div>
+              <div class="bg-muted mt-1 h-2 w-full overflow-hidden rounded-full">
+                <div
+                  id="fillAllProgressBar"
+                  class="bg-primary h-full rounded-full transition-all"
+                  style="width: 0%"
+                ></div>
+              </div>
+              <p class="mt-1 text-center text-xs font-medium text-orange-500">
+                Please do not interact with the page during processing.
+              </p>
+            </div>
           </section>
 
           <!-- Quick Links -->

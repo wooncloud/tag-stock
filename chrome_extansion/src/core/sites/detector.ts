@@ -33,7 +33,7 @@ export function detectStockSite(): SiteType {
  * 사이트별 설정을 가져옵니다.
  */
 export function getSiteConfig(siteType: SiteType): SiteConfig | null {
-  const configs: Record<'adobe' | 'shutterstock', SiteConfig> = {
+  const configs: Record<string, SiteConfig> = {
     adobe: {
       name: 'Adobe Stock',
       supportsBilingual: true,
@@ -47,6 +47,7 @@ export function getSiteConfig(siteType: SiteType): SiteConfig | null {
         keywordField: '#content-keywords-ui-textarea',
         saveButton: 'button[data-t="save-work"]',
         buttonId: 'adobe-stock-tool-button',
+        assetListItem: 'img.upload-tile__thumbnail',
       },
     },
     shutterstock: {
